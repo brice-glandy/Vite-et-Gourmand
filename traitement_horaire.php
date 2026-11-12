@@ -1,4 +1,6 @@
 <?php
+require_once 'includes/session.php';
+require_once 'includes/verif_equipe.php';
 require_once 'includes/db.php';
 
 // 1. Ce script n'accepte que les envois de formulaire (POST)

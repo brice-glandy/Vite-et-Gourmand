@@ -1,4 +1,10 @@
-<?php require_once 'includes/db.php'; ?>
+<?php
+require_once 'includes/session.php';
+require_once 'includes/verif_equipe.php';
+require_once 'includes/db.php';
+// L'administrateur voit tout ; l'employé ne voit pas le tableau de bord ni l'équipe
+$est_admin = ($_SESSION['role'] == 'administrateur');
+?>
 <?php
 $sql = "SELECT avis.*, utilisateur.prenom, utilisateur.nom
         FROM avis
@@ -26,23 +32,27 @@ $horaires = $requete->fetchAll(PDO::FETCH_ASSOC);
     
     <!-- Barre de navigation latérale (Sidebar) -->
     <aside class="menu-lateral">
-        <h2>ADMINISTRATEUR</h2>
+        <h2><?php if ($est_admin) { echo 'ADMINISTRATEUR'; } else { echo 'ESPACE EMPLOYÉ'; } ?></h2>
         <nav>
             <ul>
-                <li><a href="#tableau-bord" class="actif">Tableau de bord</a></li>
-                <li><a href="#commandes">Commandes</a></li>
-                <li><a href="#equipe">Équipe</a></li>
-                <li><a href="#menus">Menus</a></li>
-                <li><a href="#horaires">Horaires</a></li>
-                <li><a href="#avis">Avis</a></li>
-                <li><a href="#deconnexion" class="btn-deconnexion">Déconnexion</a></li>
+                <?php if ($est_admin) { ?>
+    <li><a href="#tableau-bord">Tableau de bord</a></li>
+<?php } ?>
+<li><a href="#commandes">Commandes</a></li>
+<?php if ($est_admin) { ?>
+    <li><a href="#equipe">Équipe</a></li>
+<?php } ?>
+<li><a href="#menus">Menus</a></li>
+<li><a href="#horaires">Horaires</a></li>
+<li><a href="#avis">Avis</a></li>
+<li><a href="deconnexion.php" class="btn-deconnexion">Déconnexion</a></li>
             </ul>
         </nav>
     </aside>
 
     <!-- Zone de contenu principale -->
     <section class="contenu-admin">
-        
+        <?php if ($est_admin) { ?>
         <!-- Bloc 1 : Tableau de bord (Graphiques et Statistiques) -->
         <article id="tableau-bord" class="section-admin">
             <h2>Tableau de bord</h2>
@@ -81,6 +91,7 @@ $horaires = $requete->fetchAll(PDO::FETCH_ASSOC);
                 <canvas id="graphique-ca" aria-label="Graphique du chiffre d'affaires" role="img"></canvas>
             </div>
         </article>
+        <?php } ?>
         <!-- Bloc 2 : Gestion des Commandes -->
         <article id="commandes" class="section-admin">
             <h2>Commandes</h2>
@@ -149,6 +160,7 @@ $horaires = $requete->fetchAll(PDO::FETCH_ASSOC);
             </div>
         </article>
             <!-- Bloc 3 : Gestion de l'équipe -->
+             <?php if ($est_admin) { ?>
             <article id="equipe" class="section-admin">
                 <div class="en-tete-section">
                     <h2>Équipe</h2>
@@ -185,6 +197,7 @@ $horaires = $requete->fetchAll(PDO::FETCH_ASSOC);
                 </div>
             </div>
         </article>
+        <?php } ?>
             <!-- Bloc 4 : Gestion des Menus et Plats -->
             <article id="menus" class="section-admin">
                 <div class="en-tete-section">

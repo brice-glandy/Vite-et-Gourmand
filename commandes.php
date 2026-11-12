@@ -1,4 +1,7 @@
-<?php require_once 'includes/db.php'; ?>
+<?php
+require_once 'includes/session.php';
+require_once 'includes/db.php';
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>

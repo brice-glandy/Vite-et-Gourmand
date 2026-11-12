@@ -729,3 +729,125 @@ button:disabled {
 .statut-valide { background-color: #4A7B59; }   /* Vert : comme le bouton Valider */
 .statut-attente { background-color: #d48b2a; }  /* Orange : à traiter */
 .statut-refuse { background-color: #a83232; }   /* Rouge : comme le bouton Refuser */
+/* 9. Page de connexion (réutilisée pour l'inscription) */
+.page-connexion {
+    background-color: #d1b5c4;
+    padding: 2rem 1rem;
+    min-height: 60vh;
+}
+
+.page-connexion h1 {
+    font-size: 1.5rem;
+    text-align: center;
+    color: #6a0b37;
+}
+
+.formulaire-connexion {
+    background-color: white;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.formulaire-connexion input {
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 0.75rem;
+}
+
+.formulaire-connexion input:focus {
+    border-color: #6a0b37;
+    outline: 2px solid #6a0b37;
+    outline-offset: 1px;
+}
+
+.formulaire-connexion .btn-valider {
+    padding: 0.75rem;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+}
+
+.lien-secondaire {
+    text-align: center;
+    color: #6a0b37;
+    font-size: 0.9rem;
+}
+
+.texte-inscription {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.texte-inscription a {
+    color: #6a0b37;
+    font-weight: bold;
+}
+/* 10. Bouton œil pour afficher le mot de passe */
+.champ-mot-de-passe {
+    position: relative;
+    margin-bottom: 0.75rem;
+}
+
+.champ-mot-de-passe input {
+    width: 100%;
+    box-sizing: border-box;
+    padding-right: 3rem;
+    margin-bottom: 0;
+}
+
+.btn-oeil {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+/* 11. Compléments de la page d'inscription */
+.aide-champ {
+    font-size: 0.85rem;
+    color: #555;
+    margin: 0;
+}
+
+.case-rgpd {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.case-rgpd input {
+    margin: 0.2rem 0 0;
+    padding: 0;
+}
+
+.case-rgpd a {
+    color: #6a0b37;
+}
+/* 12. Messages : liste d'erreurs et succès */
+.message-erreur ul {
+    text-align: left;
+    margin: 0.5rem 0 0;
+}
+
+.message-succes {
+    background-color: #d4edda;
+    color: #2e5e3a;
+    border: 1px solid #4A7B59;
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    max-width: 500px;
+    margin: 0 auto 1rem;
+    text-align: center;
+}

@@ -56,10 +56,11 @@ sectionsAdmin.forEach(section => {
     }
 });
 
-// Si l'ancre est absente ou inconnue, on affiche le tableau de bord par défaut
+// Si l'ancre est absente ou inconnue, on affiche la première rubrique disponible
+// (le tableau de bord pour l'administrateur, les commandes pour un employé)
 if (!sectionTrouvee) {
-    rubriqueDemandee = '#tableau-bord';
-    document.querySelector('#tableau-bord').style.display = 'block';
+    rubriqueDemandee = '#' + sectionsAdmin[0].id;
+    sectionsAdmin[0].style.display = 'block';
 }
 
 // On allume dans le menu le lien qui correspond à la rubrique affichée

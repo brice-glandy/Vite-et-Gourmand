@@ -1,4 +1,6 @@
 <?php
+require_once 'includes/session.php';
+require_once 'includes/verif_equipe.php';
 require_once 'includes/db.php';
 
 // 1. Vérifier qu'un id est bien présent dans l'adresse
