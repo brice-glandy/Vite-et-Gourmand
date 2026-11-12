@@ -1,0 +1,731 @@
+/* 1. STYLES GLOBAUX ET MOBILE FIRST */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+header {
+    background-color: #6a0b37;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 20px;
+}
+
+.logo a {
+    color: white;
+    text-decoration: none;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.menu-burger {
+    display: block;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.menu-burger span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    margin: 5px 0;
+}
+
+.navigation-principale {
+    display: none;
+}
+/* Le style du menu mobile lorsqu'il est déployé */
+.navigation-principale.actif {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 70px; /* À ajuster si le menu chevauche ton logo */
+    left: 0;
+    width: 100%;
+    background-color: #6a0b37; /* Le bordeaux de ton thème */
+    padding: 20px 0;
+    z-index: 10;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.navigation-principale.actif ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.navigation-principale.actif a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.conteneur-principal {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    gap: 30px;
+}
+
+.zone-filtres {
+    width: 100%;
+}
+
+.groupe-filtre {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.groupe-filtre label {
+    font-weight: bold;
+    font-style: italic;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.groupe-filtre select, 
+.groupe-filtre input[type="number"] {
+    background-color: #6a0b37;
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 16px;
+    width: 100%;
+    max-width: 250px;
+}
+
+.groupe-filtre input[type="range"] {
+    width: 100%;
+    max-width: 250px;
+}
+
+.actions-filtres {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn-valider {
+    background-color: #4A7B59;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 40px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    max-width: 200px;
+}
+
+.btn-effacer {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+.grille-menus {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    width: 100%;
+}
+
+.carte-menu {
+    display: flex;
+    flex-direction: column;
+    background-color: #e8d4df;
+    border: 1px solid #c9a4b9;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.carte-contenu {
+    padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.carte-contenu h2 {
+    color: #6a0b37;
+    margin-top: 0;
+    text-align: center;
+    font-family: Georgia, serif;
+}
+
+.carte-caracteristiques {
+    padding-left: 20px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.carte-description {
+    font-size: 13px;
+    font-style: italic;
+    text-align: center;
+}
+
+.carte-visuel {
+    position: relative;
+    height: 200px;
+}
+
+.carte-visuel img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.btn-detail {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(223, 196, 209, 0.85);
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    text-decoration: none;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.filtre-prix-inputs {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+.filtre-prix-inputs input,
+.groupe-filtre select, 
+.groupe-filtre input[type="number"] {
+    background-color: #6a0b37;
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.pied-de-page {
+    background-color: #6a0b37;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    gap: 30px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.footer-horaires p, .footer-contact p {
+    margin: 5px 0;
+}
+
+.footer-titre {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px !important;
+}
+
+.footer-liens {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.footer-liens a {
+    color: #6a0b37;
+    background-color: #e5d3dc;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    width: 80%;
+    text-align: center;
+}
+/* 2. ADAPTATION POUR LES ECRANS LARGES (DESKTOP) */
+/* 2. ADAPTATION POUR LES ECRANS LARGES (DESKTOP) */
+@media (min-width: 768px) {
+    header {
+        padding: 25px 30px;
+    }
+
+    .logo a {
+        font-size: 28px;
+    }
+
+    .menu-burger {
+        display: none;
+    }
+
+    .navigation-principale {
+        display: block;
+    }
+
+    .navigation-principale ul {
+        list-style: none;
+        display: flex;
+        gap: 15px;
+        margin: 0;
+        padding: 0;
+    }
+
+    .navigation-principale a {
+        color: white;
+        text-decoration: none;
+        text-transform: uppercase;
+        font-size: 14px;
+        padding: 8px 12px;
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 5px;
+    }
+
+    .conteneur-principal {
+        flex-direction: row;
+        padding: 0;
+        align-items: flex-start;
+    }
+
+    .zone-filtres {
+        width: 250px;
+        flex-shrink: 0;
+        padding: 30px 20px;
+        background-color: white;
+    }
+
+    .grille-menus {
+        flex-grow: 1;
+        background-color: #dfc4d1;
+        padding: 30px;
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .pied-de-page {
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: flex-start;
+        text-align: center;
+    }
+}
+/* --- STYLES DE LA PAGE COMMANDE --- */
+
+/* Base pour mobile (1 seule colonne) */
+.page-commande {
+    background-color: #d1b5c4;
+    padding: 3rem 1.5rem;
+    color: #000;
+}
+
+.page-commande h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+#formulaire-commande {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.page-commande fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+.champ-saisie {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.5rem;
+}
+
+.champ-saisie label, .champ-choix-menu p {
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.champ-saisie input {
+    padding: 0.8rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: #ffffff;
+}
+
+/* Organisation des boutons radio pour qu'ils s'alignent proprement */
+.options-menu {
+    display: flex;
+    flex-direction: column; /* Force l'affichage en liste verticale stricte */
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+}
+
+.options-menu label {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 0.9rem;
+    font-weight: normal;
+}
+
+.bouton-payer {
+    background-color: #4A7B59;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 1rem;
+}
+.zone-recap {
+    margin-top: 2rem;
+}
+
+.titre-recap {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.ligne-recap {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.ligne-recap label {
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+/* Le secret : rendre l'input invisible mais garder le texte */
+.ligne-recap input {
+    background-color: transparent;
+    border: none;
+    text-align: right;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #000;
+    width: 80px;
+    padding: 0;
+}
+
+.total-recap label, .total-recap input {
+    font-size: 1.2rem;
+}
+/* Adaptation pour les écrans larges (Desktop) */
+@media (min-width: 768px) {
+    .page-commande h1 {
+        margin-bottom: 4rem;
+    }
+    
+    #formulaire-commande {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+    }
+}
+/* --- STYLES DE LA PAGE ADMINISTRATION --- */
+
+/* 1. Structure globale Mobile */
+.page-admin {
+    display: flex;
+    flex-direction: column;
+    background-color: #d1b5c4;
+    min-height: 100vh;
+}
+
+/* 2. Menu latéral (Navigation de l'admin) */
+.menu-lateral {
+    background-color: #ffffff;
+    padding: 1.5rem;
+}
+
+.menu-lateral h2 {
+    font-size: 1.2rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #6a0b37;
+}
+
+.menu-lateral ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap; /* Sur mobile, les boutons s'alignent horizontalement */
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.menu-lateral a {
+    display: block;
+    padding: 0.8rem 1rem;
+    text-decoration: none;
+    color: #000;
+    background-color: #e5d3dc;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.menu-lateral a.actif {
+    background-color: #6a0b37;
+    color: #ffffff;
+}
+
+/* 3. Zone de contenu principale */
+.contenu-admin {
+    padding: 1.5rem;
+}
+
+.section-admin h2 {
+    margin-bottom: 1.5rem;
+    color: #000;
+    border-bottom: 2px solid #6a0b37;
+    padding-bottom: 0.5rem;
+}
+
+/* 4. Design commun des cartes blanches (Commandes, Equipe, Menus...) */
+.carte-commande, .carte-employe, .carte-menu-admin, .carte-avis {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* L'ombre portée légère de ta maquette */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1rem;
+}
+.liste-horaires {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 700px;
+}
+
+.ligne-horaire {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.jour-horaire {
+    width: 100px;
+    font-weight: bold;
+}
+
+.heures-horaire {
+    flex-grow: 1;
+    text-align: center;
+}
+
+.bouton-modifier {
+    text-decoration: none;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+/* 5. Mise en forme des badges de statuts */
+.badge-statut {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: white;
+}
+
+.statut-accepte, .statut-actif { background-color: #4A7B59; } /* Vert */
+.statut-preparation { background-color: #d48b2a; } /* Orange */
+
+/* 6. Mise en forme des boutons d'action */
+.actions-commande, .actions-employe, .actions-menu, .actions-avis, .actions-horaires {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+    border-top: 1px solid #eee;
+    padding-top: 1rem;
+}
+
+.btn-modifier, .btn-valider, .btn-ajouter {
+    background-color: #4A7B59;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-supprimer, .btn-refuser {
+    background-color: #a83232; /* Rouge sombre pour les actions destructrices */
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* Le style visuel pour un bouton désactivé (ex: l'admin ne peut pas se supprimer lui-même) */
+button:disabled {
+    background-color: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+}
+.liste-checkbox-scroll {
+    max-height: 110px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+    border-radius: 4px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+/* --- ADAPTATION POUR ECRANS LARGES (DESKTOP) --- */
+@media (min-width: 1024px) {
+    
+    /* On active la grille pour scinder l'écran en deux */
+    .page-admin {
+        display: grid;
+        grid-template-columns: 250px 1fr; /* 250px figés pour le menu, le reste fluide pour le contenu */
+        align-items: start;
+    }
+
+    /* Le menu devient une colonne figée à gauche */
+    .menu-lateral {
+        min-height: 100vh;
+        border-right: 1px solid #c9a4b9;
+        position: sticky;
+        top: 0;
+    }
+
+    .menu-lateral ul {
+        flex-direction: column; /* Les liens s'empilent verticalement */
+    }
+
+    .menu-lateral a {
+        background-color: transparent;
+        border-radius: 0;
+        border-left: 4px solid transparent;
+        color: #000;
+    }
+
+    /* L'indicateur de page active change de style sur bureau */
+    .menu-lateral a.actif {
+        background-color: #f9f9f9;
+        color: #6a0b37;
+        border-left: 4px solid #6a0b37;
+    }
+
+    /* On affiche les cartes en grille de 2 colonnes pour exploiter l'espace */
+    .grille-commandes, .grille-equipe, .grille-menus-admin, .grille-horaires, .grille-avis {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+}
+/* Conteneur du graphique pour bloquer sa hauteur maximale */
+.graphique-conteneur {
+    position: relative;
+    height: 300px;
+    width: 100%;
+    margin-top: 2rem;
+}
+/* 7. Page de modification des horaires */
+.page-modifier-horaire {
+    background-color: #d1b5c4;
+    padding: 2rem 1rem;
+    min-height: 60vh;
+}
+
+.page-modifier-horaire h1 {
+    font-size: 1.5rem;
+    text-align: center;
+    color: #6a0b37;
+}
+
+.formulaire-horaire {
+    background-color: white;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.formulaire-horaire fieldset {
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.formulaire-horaire legend {
+    font-weight: bold;
+    color: #6a0b37;
+}
+
+.formulaire-horaire input[type="time"] {
+    padding: 0.5rem;
+    font-size: 1rem;
+}
+
+.actions-horaires a {
+    text-decoration: none;
+}
+.message-erreur {
+    background-color: #f8d7da;
+    color: #a83232;
+    border: 1px solid #a83232;
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    max-width: 500px;
+    margin: 0 auto 1rem;
+    text-align: center;
+}
+ /* 8. Couleurs des statuts d'avis */
+.statut-valide { background-color: #4A7B59; }   /* Vert : comme le bouton Valider */
+.statut-attente { background-color: #d48b2a; }  /* Orange : à traiter */
+.statut-refuse { background-color: #a83232; }   /* Rouge : comme le bouton Refuser */
