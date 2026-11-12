@@ -11,8 +11,17 @@
             <ul>
                 <li><a href="menus.php">NOS MENUS</a></li>
                 <li><a href="contacts.php">CONTACTS</a></li>
-                <li><a href="connexion.php">CONNEXION</a></li>
-                <li><a href="inscription.php">INSCRIPTION</a></li>
+                <?php if (isset($_SESSION['utilisateur_id'])) { ?>
+    <?php if ($_SESSION['role'] == 'administrateur') { ?>
+    <li><a href="admin.php">ADMINISTRATION</a></li>
+<?php } else { ?>
+    <li><a href="admin.php">ESPACE EMPLOYÉ</a></li>
+<?php } ?>
+    <li><a href="deconnexion.php">DÉCONNEXION</a></li>
+<?php } else { ?>
+    <li><a href="connexion.php">CONNEXION</a></li>
+    <li><a href="inscription.php">INSCRIPTION</a></li>
+<?php } ?>
             </ul>
         </nav>
     </header>
