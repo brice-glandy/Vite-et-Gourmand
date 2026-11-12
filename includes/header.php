@@ -10,9 +10,9 @@
         <nav class="navigation-principale">
             <ul>
                 <li><a href="menus.php">NOS MENUS</a></li>
-                <li><a href="#">CONTACTS</a></li>
-                <li><a href="#">CONNEXION</a></li>
-                <li><a href="#">INSCRIPTION</a></li>
+                <li><a href="contacts.php">CONTACTS</a></li>
+                <li><a href="connexion.php">CONNEXION</a></li>
+                <li><a href="inscription.php">INSCRIPTION</a></li>
             </ul>
         </nav>
     </header>
