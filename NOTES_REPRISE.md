@@ -2,7 +2,7 @@
 
 Fichier de suivi du projet. À lire en début de séance (ou à donner à Claude dans une nouvelle conversation, avec l'accès au dossier `v_et_g`).
 
-Dernière mise à jour : mercredi 11 novembre 2026, 23h20.
+Dernière mise à jour : jeudi 12 novembre 2026, 14h.
 
 ---
 
@@ -21,6 +21,7 @@ Dernière mise à jour : mercredi 11 novembre 2026, 23h20.
 - **Droit de veto** : si un code paraît illogique ou trop abstrait, il est refusé et remplacé par une approche plus directe.
 - Format des explications : texte simple, paragraphes ou listes à puces. **Pas de tableaux.**
 - Claude lit les fichiers du projet, mais c'est Brice qui tape et applique les modifications (sauf demande explicite).
+- **Un commit par bloc qui fonctionne**, avec un message qui décrit ce qui a été fait.
 
 ## 3. Environnement de travail
 
@@ -29,23 +30,43 @@ Dernière mise à jour : mercredi 11 novembre 2026, 23h20.
   - service `web` : PHP 8.2 + Apache (Dockerfile avec `pdo_mysql`), port **8000**
   - service `db` : MySQL 8.0, utf8mb4, port **3307** côté PC, base `v_et_g`, utilisateur `root` / mot de passe `root`
   - `database/init.sql` est monté dans `/docker-entrypoint-initdb.d/` : il s'exécute **uniquement quand le volume est vide**
-- Recréer la base après une modification de `init.sql` : `docker compose down -v` puis `docker compose up -d` (efface toutes les données saisies depuis le site)
+- Recréer la base après une modification de `init.sql` : `docker compose down -v` puis `docker compose up -d` (efface toutes les données saisies depuis le site, y compris les comptes créés par l'inscription)
 - Voir les erreurs MySQL : `docker compose logs db`
-- Sur PC : `http://localhost:8000/admin.php`
-- Sur iPhone (même Wi-Fi) : `http://192.168.1.60:8000/admin.php` (vérifier l'IP avec `ipconfig` si besoin)
+- Exécuter une requête SQL depuis le terminal :
+  `docker compose exec db mysql -uroot -proot v_et_g -e "SELECT ... ;"`
+  (ou via l'extension base de données de VS Code : cylindre > v_et_g > Query > Run)
+- Sur PC : `http://localhost:8000/`
+- Sur iPhone (même Wi-Fi) : `http://192.168.1.60:8000/` (vérifier l'IP avec `ipconfig` si besoin)
 - Recharger sans cache dans Chrome : **Ctrl + Fn + F5**
+- Tester « déconnecté » : fenêtre de navigation privée (**Ctrl + Maj + N**)
 - Live Server (port 5500) ne sert plus : il ne sait pas exécuter le PHP.
-- Connexion PHP : `includes/db.php` (PDO, hôte `db`, `charset=utf8mb4`, mode exceptions)
+- VS Code : barre de menus masquée → Ctrl + Maj + P > « View: Toggle Menu Bar »
 
-## 4. GitHub et gestion de projet
+## 4. Git, GitHub et gestion de projet
 
 - Dépôt : https://github.com/brice-glandy/Vite-et-Gourmand (public)
-- Branches existantes sur GitHub : `main` et `dev` (un seul commit « Initial commit » avec README.md)
-- **Le dossier local `v_et_g` n'est pas encore relié au dépôt** : étape prévue le jeudi 12 au matin.
-- Organisation prévue : `main` (stable) ← `dev` (développement) ← `feature/...` (une branche par fonctionnalité)
-- Git installé (2.55), nom et email déjà configurés.
-- Trello « ECF - Vite & Gourmand » : 19 cartes. À mettre à jour (cartes 1 à 8 en grande partie terminées).
-- Figma : wireframes et mockups desktop + mobile des 3 pages principales (vue globale des menus, commande, tableau de bord admin).
+- Le dossier local est relié au dépôt (`origin`).
+- Branches :
+  - `main` : version stable, reçoit `dev` uniquement au moment des livraisons / du déploiement (pas encore fusionnée)
+  - `dev` : branche de développement
+  - `feature/connexion` : **terminée et fusionnée dans `dev` par pull request** (branche conservée volontairement sur GitHub pour montrer le workflow au jury)
+- Historique : premier commit sur `dev` (« Intégration front-end, base de données MySQL alignée sur le MCD, gestion des horaires et modération des avis »), puis un commit par bloc de la connexion.
+
+Cycle pour chaque fonctionnalité :
+
+1. `git switch dev` puis `git pull` (partir d'une `dev` à jour)
+2. `git switch -c feature/nom-de-la-fonctionnalite` puis `git push -u origin feature/nom-de-la-fonctionnalite`
+3. À chaque bloc qui marche : `git add .` → `git commit -m "..."` → `git push`
+4. Fonctionnalité terminée et testée : sur GitHub, **Pull requests > New pull request**, **base : `dev`** (attention, GitHub propose `main` par défaut), **compare : `feature/...`** → Create pull request → Merge pull request → Confirm merge (ne pas supprimer la branche)
+5. En local : `git switch dev` puis `git pull`
+
+Repères VS Code : **U** = nouveau fichier non suivi, **M** = modifié depuis le dernier commit, point sur un dossier = il contient un changement, `*` après le nom de branche = changements non commités. Toujours vérifier avec `git status` avant `git add .`.
+
+- `.gitignore` : fichiers système (Thumbs.db, desktop.ini, .DS_Store) et `.vscode/`
+- `info.php` supprimé avant le premier commit (il affichait la configuration du serveur).
+- Git 2.55 installé, nom et email configurés.
+- Trello « ECF - Vite & Gourmand » : 19 cartes. **À mettre à jour** (cartes 1 à 8, 10 et une partie de 11 et 14 terminées).
+- Figma : wireframes et mockups desktop + mobile des 3 pages principales (vue globale des menus, commande, tableau de bord admin). À exporter en PDF pour la charte graphique.
 
 ## 5. Base de données (réalignée sur le MCD de l'énoncé, page 10)
 
@@ -84,37 +105,61 @@ Améliorations apportées au MCD (à reprendre dans la documentation) :
 - Administrateur : `jose@viteetgourmand.fr` / `Jose@Admin2026`
 - Employée : `julie@viteetgourmand.fr` / `Julie@Employe2026`
 - Clients (même mot de passe `Client@Test2026`) : `marie.dupont@mail.fr`, `thomas.martin@mail.fr`, `sophie.laurent@mail.fr`, `daniele.durand@mail.fr`, `christine.thomas@mail.fr`, `marc.dubois@mail.fr`
+- Compte « Etienne Durand » créé par l'inscription pour les tests : il disparaîtra au prochain `docker compose down -v` (il n'est pas dans `init.sql`).
 - **Changer le mot de passe de José avant la mise en ligne.**
+- Attention au **pavé numérique** : si Verr Num est désactivé, les chiffres ne sont pas tapés (cause du faux bug de connexion du 12/11).
 
 ## 7. Ce qui fonctionne
 
+Structure générale :
+
 - Header / footer en `includes`, pages en `.php`
 - Footer : horaires lus en base
-- Admin (SPA en JavaScript) :
-  - navigation par rubriques ; l'ancre de l'URL (`admin.php#horaires`) affiche la bonne rubrique au chargement et survit à F5 (`history.replaceState`)
-  - **Horaires** : affichage depuis la base + modification complète
-    - `modifier_horaire.php?id=X` : formulaire pré-rempli (requête préparée, `TIME_FORMAT`), cases « Fermé le matin / le soir / toute la journée »
-    - `traitement_horaire.php` : POST uniquement, champs vides → NULL, vérification de cohérence côté serveur, UPDATE préparé, redirection Post/Redirect/Get vers `admin.php#horaires`, message d'erreur `role="alert"`
-  - **Avis** : affichage avec jointure sur `utilisateur` (prénom + initiale du nom), date au format français, badge de statut coloré + texte
-    - boutons Valider / Refuser en **fetch** (`js/admin.js`) → `traitement_avis.php` (POST, liste blanche des statuts, UPDATE préparé, réponse JSON avec codes HTTP)
-  - `htmlspecialchars()` sur les données saisies par les utilisateurs (protection XSS)
-- Page Commande : calcul JavaScript (réduction 10 % si ≥ minimum + 5 personnes, livraison 5 € + 0,59 €/km hors Bordeaux) – **pas encore relié à la base**
-- Page Menus : encore en HTML statique
+- Chaque page commence par `require_once 'includes/session.php';` puis `require_once 'includes/db.php';`
+
+Connexion, inscription et sécurité (fonctionnalité `feature/connexion`) :
+
+- `includes/session.php` : cookie de session `HttpOnly` + `SameSite=Lax`, puis `session_start()`
+- `connexion.php` : formulaire (POST, `autocomplete`, champs en 16 px contre le zoom iPhone, contour `:focus` visible), message d'erreur unique « Email ou mot de passe incorrect », message « compte désactivé », message de succès après inscription
+- `traitement_connexion.php` : recherche par email (requête préparée + jointure sur `role`), `password_verify`, refus des comptes inactifs, `session_regenerate_id(true)`, session = id + prénom + rôle uniquement, redirection selon le rôle (équipe → `admin.php`, client → `menus.php`)
+- `js/mot_de_passe.js` : bouton œil afficher / masquer (type `button`, `aria-label`, `aria-pressed`), fonctionne pour plusieurs champs
+- `inscription.php` + `traitement_inscription.php` : validation serveur complète (champs obligatoires, `filter_var` pour l'email, GSM `06`/`07` sur 10 chiffres, mot de passe : 10 caractères, majuscule, minuscule, chiffre, caractère spécial, confirmation identique, consentement RGPD, email déjà utilisé), toutes les erreurs affichées en une fois, saisie conservée via la session (jamais les mots de passe), rôle « utilisateur » par sous-requête, `password_hash`
+- `includes/verif_equipe.php` : accès réservé à l'administrateur et aux employés, inclus dans `admin.php`, `modifier_horaire.php`, `traitement_horaire.php`
+- `traitement_avis.php` : renvoie un **code 403 en JSON** si l'utilisateur n'est pas de l'équipe
+- `deconnexion.php` : vide la session, supprime le cookie, détruit la session
+- Header dynamique : CONNEXION / INSCRIPTION si déconnecté ; ADMINISTRATION (administrateur) ou ESPACE EMPLOYÉ (employé) + DÉCONNEXION si connecté ; rien de plus pour un client
+- `admin.php` adapté au rôle (`$est_admin`) : l'employé ne reçoit ni le Tableau de bord ni l'Équipe (PHP ne les envoie pas), titre « ESPACE EMPLOYÉ » ; le JavaScript affiche la première rubrique disponible
+
+Administration :
+
+- Navigation par rubriques en JavaScript ; l'ancre de l'URL (`admin.php#horaires`) affiche la bonne rubrique et survit à F5 (`history.replaceState`)
+- **Horaires** : affichage + modification complète (`modifier_horaire.php`, `traitement_horaire.php` : POST, champs vides → NULL, cases « Fermé le matin / le soir / toute la journée », vérification de cohérence côté serveur, Post/Redirect/Get)
+- **Avis** : jointure sur `utilisateur` (prénom + initiale), date au format français, badge de statut ; Valider / Refuser en **fetch** → `traitement_avis.php` (liste blanche, JSON, codes HTTP)
+- `htmlspecialchars()` sur toutes les données saisies par les utilisateurs (XSS)
+
+Front encore statique :
+
+- Page Commande : calcul JavaScript (réduction 10 %, livraison 5 € + 0,59 €/km hors Bordeaux), pas encore relié à la base
+- Page Menus : HTML statique
 
 ## 8. Points en attente / à ne pas oublier
 
-- **Sécurité** : `admin.php`, `modifier_horaire.php`, `traitement_horaire.php` et `traitement_avis.php` ne sont pas encore protégés → à faire avec la connexion (vérification de session et de rôle en haut de chaque fichier).
-- Supprimer `info.php` avant la mise en ligne (il affiche la configuration du serveur).
-- `db.php` contient le mot de passe en clair : prévoir une configuration propre pour le déploiement.
-- Les prix sont en dur dans `js/commandes.js` (et différents de `menus.php`) → à remplacer par les données de la base.
+- **Actions réservées à l'administrateur** (créer / désactiver un employé, statistiques) : chaque fichier de traitement devra vérifier le rôle `administrateur` côté serveur (prévoir `includes/verif_admin.php`).
+- Pages à créer : `contacts.php` (lien déjà dans le menu), `mentions_legales.php` (lien dans l'inscription), CGV, `index.php` (le logo pointe déjà vers `index.php`).
+- Espace client : ajouter « MON ESPACE » dans le header pour le rôle `utilisateur`.
+- « Mot de passe oublié ? » : lien présent mais vide (nécessite l'envoi de mails).
+- Mails de l'énoncé (bienvenue, confirmation de commande, etc.) : décider envoi réel ou simulation.
 - MongoDB obligatoire pour les statistiques du graphique admin (« base de données non relationnelle », énoncé page 9).
+- Les prix sont en dur dans `js/commandes.js` (et différents de `menus.php`) → à remplacer par les données de la base.
+- Déploiement : `db.php` contient le mot de passe en clair → configuration propre ; activer l'option `secure` du cookie de session en HTTPS.
 - Ligne `version:` obsolète à retirer de `docker-compose.yml` (simple avertissement).
+- VS Code signale « Problems 1 » : à regarder.
 - Améliorations CSS proposées par Claude à la fin du projet (demande de Brice).
 
 ## 9. Planning
 
-- **Jeudi 12** : relier le dossier à GitHub, premier commit sur `dev`, branche `feature/connexion` → connexion (email + mot de passe), déconnexion, inscription, protection de l'admin et des fichiers de traitement par rôle
-- **Vendredi 13** : MongoDB dans Docker, statistiques réelles dans Chart.js via fetch, chiffre d'affaires par menu avec filtres
+- ~~**Jeudi 12** : Git + connexion, inscription, déconnexion, protection par rôle~~ → **fait** (en avance)
+- **Jeudi 12 après-midi / vendredi 13** : MongoDB dans Docker, statistiques réelles dans Chart.js via fetch, chiffre d'affaires par menu avec filtres
 - **Samedi 14** : premier déploiement en ligne + page d'accueil `index.php` (présentation, avis validés)
 - **Dimanche 15** : page Menus depuis la base + filtres en fetch, page détail d'un menu, commande enregistrée en base
 - **Lundi 16** : espace client (ses commandes), gestion des commandes dans l'admin, contact, mentions légales, CGV
@@ -122,16 +167,35 @@ Améliorations apportées au MCD (à reprendre dans la documentation) :
 - **Mercredi 18** : fusion `dev` → `main`, déploiement final, tests complets, **dépôt sur Studi**
 - **Jeudi 19** : journée de sécurité
 
-Simplifications possibles si retard : espace employé fusionné avec l'admin, mails simulés, pages secondaires minimales.
+Simplifications possibles si retard : mails simulés, pages secondaires minimales, mot de passe oublié non réalisé.
 
 ## 10. Arguments clés pour l'oral (résumé)
 
+Sécurité :
+
 - Requêtes préparées PDO partout où une donnée vient de l'utilisateur → protection contre l'injection SQL
 - `htmlspecialchars()` à l'affichage → protection contre le XSS
-- Mots de passe hachés (`password_hash` / `password_verify`), jamais en clair, même dans les données de test
-- Vérifications côté serveur, car le navigateur peut toujours être contourné ; liste blanche pour les valeurs attendues
+- Mots de passe hachés (`password_hash` / `password_verify`, bcrypt + sel), jamais en clair, même dans les données de test ou temporairement en session
+- Message de connexion identique que l'email existe ou non (pas de découverte des comptes)
+- Session : `session_regenerate_id` à la connexion (fixation de session), cookie `HttpOnly` (vol par script) et `SameSite=Lax` (CSRF), session limitée à l'id, au prénom et au rôle
+- Contrôle d'accès côté serveur sur **chaque** point d'entrée (pages et scripts de traitement), centralisé dans un fichier inclus ; 403 en JSON pour l'API ; « cacher un bouton ne protège rien »
+- Rubriques réservées à l'administrateur non envoyées par PHP (et non masquées en CSS)
+- Vérifications côté serveur, car le navigateur peut toujours être contourné ; liste blanche pour les valeurs attendues ; `required` / `minlength` = confort seulement
+- Comptes désactivables (`actif`) au lieu d'être supprimés : historique et clés étrangères préservés
+- Fichier de diagnostic `phpinfo` supprimé avant le premier commit public
+
+Architecture et bonnes pratiques :
+
 - Séparation affichage / traitement, POST pour modifier, GET pour lire, Post/Redirect/Get
+- La session comme « boîte aux lettres » pour renvoyer erreurs et saisie au formulaire (affichées une seule fois)
 - Base de données = source unique de vérité (les prix ne doivent être écrits qu'à un seul endroit)
+- Rôle récupéré par sous-requête plutôt qu'un identifiant écrit en dur
 - Dates stockées au format MySQL, formatées seulement à l'affichage
-- Accessibilité RGAA : `fieldset`/`legend`, `role="alert"`, statut affiché en texte et pas seulement en couleur
-- Mobile first, testé sur un vrai iPhone
+- Workflow Git : `main` / `dev` / `feature/...`, pull request pour chaque fusion, un commit par étape
+- Débogage méthodique : page de test isolant chaque maillon (base, formulaire, vérification)
+
+Accessibilité et ergonomie :
+
+- RGAA : `fieldset`/`legend`, `role="alert"` / `role="status"`, statut affiché en texte et pas seulement en couleur, `aria-describedby` pour les règles du mot de passe, `aria-label` / `aria-pressed` sur le bouton œil, contour `:focus` visible
+- Mobile first, testé sur un vrai iPhone ; champs à 16 px (pas de zoom automatique de Safari) ; `type="email"` / `type="tel"` / `autocomplete` pour les claviers et le remplissage automatique
+- RGPD : consentement explicite à l'inscription, prénom + initiale du nom seulement sur les avis
