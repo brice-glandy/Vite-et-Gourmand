@@ -789,3 +789,26 @@ button:disabled {
     color: #6a0b37;
     font-weight: bold;
 }
+/* 10. Bouton œil pour afficher le mot de passe */
+.champ-mot-de-passe {
+    position: relative;
+    margin-bottom: 0.75rem;
+}
+
+.champ-mot-de-passe input {
+    width: 100%;
+    box-sizing: border-box;
+    padding-right: 3rem;
+    margin-bottom: 0;
+}
+
+.btn-oeil {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
