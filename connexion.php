@@ -15,7 +15,9 @@ require_once 'includes/db.php';
 
     <main class="page-connexion">
         <h1>Connexion</h1>
-
+        <?php if (isset($_GET['inscription'])) { ?>
+    <p class="message-succes" role="status">Votre compte a bien été créé. Vous pouvez maintenant vous connecter.</p>
+<?php } ?>
        <?php if (isset($_GET['erreur'])) { ?>
     <?php if ($_GET['erreur'] == 'inactif') { ?>
         <p class="message-erreur" role="alert">Ce compte a été désactivé. Veuillez contacter l'administrateur.</p>

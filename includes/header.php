@@ -14,7 +14,7 @@
                 <?php if (isset($_SESSION['utilisateur_id'])) { ?>
     <?php if ($_SESSION['role'] == 'administrateur') { ?>
     <li><a href="admin.php">ADMINISTRATION</a></li>
-<?php } else { ?>
+<?php } elseif ($_SESSION['role'] == 'employe') { ?>
     <li><a href="admin.php">ESPACE EMPLOYÉ</a></li>
 <?php } ?>
     <li><a href="deconnexion.php">DÉCONNEXION</a></li>

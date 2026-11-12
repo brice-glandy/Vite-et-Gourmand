@@ -812,3 +812,42 @@ button:disabled {
     font-size: 1.2rem;
     cursor: pointer;
 }
+/* 11. Compléments de la page d'inscription */
+.aide-champ {
+    font-size: 0.85rem;
+    color: #555;
+    margin: 0;
+}
+
+.case-rgpd {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.case-rgpd input {
+    margin: 0.2rem 0 0;
+    padding: 0;
+}
+
+.case-rgpd a {
+    color: #6a0b37;
+}
+/* 12. Messages : liste d'erreurs et succès */
+.message-erreur ul {
+    text-align: left;
+    margin: 0.5rem 0 0;
+}
+
+.message-succes {
+    background-color: #d4edda;
+    color: #2e5e3a;
+    border: 1px solid #4A7B59;
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    max-width: 500px;
+    margin: 0 auto 1rem;
+    text-align: center;
+}
