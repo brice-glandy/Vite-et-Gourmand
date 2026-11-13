@@ -160,6 +160,7 @@ Front encore statique :
 
 - ~~**Jeudi 12** : Git + connexion, inscription, déconnexion, protection par rôle~~ → **fait** (en avance)
 - **Jeudi 12 après-midi / vendredi 13** : MongoDB dans Docker, statistiques réelles dans Chart.js via fetch, chiffre d'affaires par menu avec filtres
+Si mongo s’arrête juste après le premier démarrage (logs : « Address already in use » juste après « init process complete »), relancer docker compose up -d : l’initialisation est faite, le second démarrage fonctionne.
 - **Samedi 14** : premier déploiement en ligne + page d'accueil `index.php` (présentation, avis validés)
 - **Dimanche 15** : page Menus depuis la base + filtres en fetch, page détail d'un menu, commande enregistrée en base
 - **Lundi 16** : espace client (ses commandes), gestion des commandes dans l'admin, contact, mentions légales, CGV
