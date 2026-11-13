@@ -83,6 +83,8 @@ if (conteneurGraphique) {
     const messageStatistiques = document.getElementById('message-statistiques');
     const casesMenus = document.querySelectorAll('input[name="filtre-menu"]');
     const caseTous = document.querySelector('input[name="filtre-menu"][value="tous"]');
+    const champDateDebut = document.getElementById('date-debut');
+    const champDateFin = document.getElementById('date-fin');
     // 2. Création du graphique, vide au départ
     const graphiqueCommandes = new Chart(conteneurGraphique, {
         type: 'bar',
@@ -181,18 +183,27 @@ if (conteneurGraphique) {
         // On prépare les filtres à placer dans l'adresse
         const parametres = new URLSearchParams();
         parametres.append('menus', menusCoches.join(','));
+                // Les dates ne sont ajoutées que si elles sont remplies
+        if (champDateDebut.value !== '') {
+            parametres.append('debut', champDateDebut.value);
+        }
+        if (champDateFin.value !== '') {
+            parametres.append('fin', champDateFin.value);
+        }
         try {
             const reponse = await fetch('statistiques.php?' + parametres.toString());
             const resultat = await reponse.json();
 
             if (resultat.succes) {
                 afficherStatistiques(resultat.statistiques);
-            } else {
-                // Le serveur a refusé la demande : on affiche son message
+                    } else {
+                // Le serveur a refusé la demande : on vide l'affichage et on montre son message
+                afficherStatistiques([]);
                 messageStatistiques.textContent = 'Erreur : ' + resultat.message;
             }
         } catch (erreur) {
             // Le serveur n'a pas pu être contacté du tout
+            afficherStatistiques([]);
             messageStatistiques.textContent = 'Impossible de contacter le serveur. Réessayez plus tard.';
         }
     }
@@ -218,6 +229,9 @@ if (conteneurGraphique) {
             chargerStatistiques();
         });
     });
+        // Les dates : chaque changement met à jour les statistiques
+    champDateDebut.addEventListener('change', chargerStatistiques);
+    champDateFin.addEventListener('change', chargerStatistiques);
     // 6. Premier affichage au chargement de la page
     chargerStatistiques();
 }
