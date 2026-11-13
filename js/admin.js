@@ -81,7 +81,8 @@ if (conteneurGraphique) {
     const listeChiffreAffaires = document.getElementById('liste-chiffre-affaires');
     const totalChiffreAffaires = document.getElementById('total-chiffre-affaires');
     const messageStatistiques = document.getElementById('message-statistiques');
-
+    const casesMenus = document.querySelectorAll('input[name="filtre-menu"]');
+    const caseTous = document.querySelector('input[name="filtre-menu"][value="tous"]');
     // 2. Création du graphique, vide au départ
     const graphiqueCommandes = new Chart(conteneurGraphique, {
         type: 'bar',
@@ -156,11 +157,32 @@ if (conteneurGraphique) {
             messageStatistiques.textContent = 'Statistiques mises à jour : ' + statistiques.length + ' menu(s), total ' + formaterMontant(total) + '.';
         }
     }
-
+    // Lire les identifiants des menus cochés (sans la case "Tous les menus")
+    function lireMenusCoches() {
+        const menusCoches = [];
+        casesMenus.forEach(caseMenu => {
+            if (caseMenu.checked && caseMenu.value !== 'tous') {
+                menusCoches.push(caseMenu.value);
+            }
+        });
+        return menusCoches;
+    }
     // 5. Demander les statistiques au serveur
     async function chargerStatistiques() {
+                const menusCoches = lireMenusCoches();
+
+        // Aucun menu coché : on ne demande rien au serveur
+        if (menusCoches.length === 0) {
+            afficherStatistiques([]);
+            messageStatistiques.textContent = 'Cochez au moins un menu pour afficher les statistiques.';
+            return;
+        }
+
+        // On prépare les filtres à placer dans l'adresse
+        const parametres = new URLSearchParams();
+        parametres.append('menus', menusCoches.join(','));
         try {
-            const reponse = await fetch('statistiques.php');
+            const reponse = await fetch('statistiques.php?' + parametres.toString());
             const resultat = await reponse.json();
 
             if (resultat.succes) {
@@ -174,7 +196,28 @@ if (conteneurGraphique) {
             messageStatistiques.textContent = 'Impossible de contacter le serveur. Réessayez plus tard.';
         }
     }
+    // Les cases à cocher : chaque changement met à jour les statistiques
+    casesMenus.forEach(caseMenu => {
+        caseMenu.addEventListener('change', function () {
 
+            if (caseMenu.value === 'tous') {
+                // "Tous les menus" coche ou décoche toutes les cases d'un coup
+                casesMenus.forEach(autreCase => {
+                    autreCase.checked = caseMenu.checked;
+                });
+            } else {
+                // Un menu a changé : "Tous" n'est coché que si tous les menus le sont
+                const nombreDeMenus = casesMenus.length - 1;
+                if (lireMenusCoches().length === nombreDeMenus) {
+                    caseTous.checked = true;
+                } else {
+                    caseTous.checked = false;
+                }
+            }
+
+            chargerStatistiques();
+        });
+    });
     // 6. Premier affichage au chargement de la page
     chargerStatistiques();
 }
