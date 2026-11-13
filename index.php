@@ -1,6 +1,15 @@
 <?php
 require_once 'includes/session.php';
 require_once 'includes/db.php';
+// Les avis validés, du plus récent au plus ancien (6 au maximum)
+$sql = "SELECT avis.note, avis.commentaire, avis.date_publication, utilisateur.prenom, utilisateur.nom
+        FROM avis
+        JOIN utilisateur ON avis.utilisateur_id = utilisateur.id
+        WHERE avis.statut = 'validé'
+        ORDER BY avis.date_publication DESC
+        LIMIT 6";
+$requete = $pdo->query($sql);
+$avis_valides = $requete->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -38,13 +47,19 @@ require_once 'includes/db.php';
         <!-- 3. Les avis clients validés (écrits en dur pour l'instant, lus en base au bloc 3) -->
         <section class="accueil-avis" aria-labelledby="titre-avis">
             <h2 id="titre-avis">Ils nous ont fait confiance</h2>
-            <div class="grille-avis-accueil">
-                <article class="carte-avis-accueil">
-                    <p class="note-avis-accueil">Note : 5 sur 5</p>
-                    <p class="texte-avis-accueil">« Le menu Burger Artisan a fait l'unanimité auprès de tous nos invités. »</p>
-                    <p class="auteur-avis-accueil">Sophie L. – 15/09/2026</p>
-                </article>
-            </div>
+            <?php if (count($avis_valides) == 0) { ?>
+                <p>Aucun avis pour le moment.</p>
+            <?php } else { ?>
+                <div class="grille-avis-accueil">
+                    <?php foreach ($avis_valides as $un_avis) { ?>
+                        <article class="carte-avis-accueil">
+                            <p class="note-avis-accueil">Note : <?php echo $un_avis['note']; ?> sur 5</p>
+                            <p class="texte-avis-accueil">« <?php echo htmlspecialchars($un_avis['commentaire']); ?> »</p>
+                            <p class="auteur-avis-accueil"><?php echo htmlspecialchars($un_avis['prenom'] . ' ' . mb_substr($un_avis['nom'], 0, 1) . '.'); ?> – <?php echo date('d/m/Y', strtotime($un_avis['date_publication'])); ?></p>
+                        </article>
+                    <?php } ?>
+                </div>
+            <?php } ?>  
         </section>
 
     </main>
