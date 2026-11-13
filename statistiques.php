@@ -4,12 +4,15 @@ require_once 'includes/mongo.php';
 
 // La réponse sera du JSON, pas une page HTML
 header('Content-Type: application/json');
-
+// Petite fonction pour répondre une erreur et arrêter le script
+function repondre_erreur($code, $message) {
+    http_response_code($code);
+    echo json_encode(['succes' => false, 'message' => $message]);
+    exit;
+}
 // 0. Accès réservé à l'administrateur : sinon, code 403 "accès interdit"
 if (!isset($_SESSION['role']) || $_SESSION['role'] != 'administrateur') {
-    http_response_code(403);
-    echo json_encode(['succes' => false, 'message' => 'Accès réservé à l\'administrateur']);
-    exit;
+    repondre_erreur(403, 'Accès réservé à l\'administrateur');
 }
 
 // 1. Le calcul demandé à MongoDB, étape par étape
@@ -37,9 +40,7 @@ $commande = new MongoDB\Driver\Command([
 try {
     $curseur = $mongo->executeCommand($mongo_base, $commande);
 } catch (MongoDB\Driver\Exception\Exception $e) {
-    http_response_code(500);
-    echo json_encode(['succes' => false, 'message' => 'Statistiques indisponibles pour le moment']);
-    exit;
+    repondre_erreur(500, 'Statistiques indisponibles pour le moment');
 }
 
 // 3. On met le résultat en forme pour le JavaScript
