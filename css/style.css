@@ -946,3 +946,124 @@ button:disabled {
     margin: 0 auto 1rem;
     text-align: center;
 }
+/* --- STYLES DE LA PAGE D'ACCUEIL --- */
+
+/* Le fond rose et l'espacement entre les trois parties */
+.page-accueil {
+    background-color: #d1b5c4;
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Chaque partie est une carte blanche, centrée et de largeur limitée */
+.page-accueil section {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+/* Les titres aux couleurs du site */
+.page-accueil h1 {
+    color: #6a0b37;
+    font-size: 1.6rem;
+    margin-top: 0;
+}
+
+.page-accueil h2 {
+    color: #6a0b37;
+    border-bottom: 2px solid #6a0b37;
+    padding-bottom: 0.5rem;
+    margin-top: 0;
+}
+
+/* 1. La présentation, centrée */
+.accueil-presentation {
+    text-align: center;
+}
+
+.accueil-presentation p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+/* Le lien "Découvrir nos menus" présenté comme un bouton */
+.bouton-principal {
+    display: inline-block;
+    background-color: #6a0b37;
+    color: #ffffff;
+    padding: 0.8rem 1.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 0.5rem;
+}
+
+.bouton-principal:hover {
+    background-color: #4a0727;
+}
+
+.bouton-principal:focus-visible {
+    outline: 3px solid #4A7B59;
+    outline-offset: 3px;
+}
+
+/* 2. La liste des engagements */
+.liste-engagements {
+    padding-left: 1.2rem;
+    line-height: 1.6;
+}
+
+.liste-engagements li {
+    margin-bottom: 0.5rem;
+}
+
+/* 3. Les avis : une colonne sur mobile */
+.grille-avis-accueil {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.carte-avis-accueil {
+    background-color: #f9f3f6;
+    border-left: 4px solid #6a0b37;
+    border-radius: 4px;
+    padding: 1rem;
+}
+
+.note-avis-accueil {
+    font-weight: bold;
+    color: #6a0b37;
+    margin-top: 0;
+}
+
+.texte-avis-accueil {
+    font-style: italic;
+    line-height: 1.5;
+}
+
+.auteur-avis-accueil {
+    text-align: right;
+    font-size: 0.9rem;
+    color: #555555;
+    margin-bottom: 0;
+}
+
+/* Sur les écrans à partir de 768 px : titre plus grand, avis sur deux colonnes */
+@media (min-width: 768px) {
+    .page-accueil h1 {
+        font-size: 2rem;
+    }
+
+    .grille-avis-accueil {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

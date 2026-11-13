@@ -34,3 +34,4 @@ $horaires = $requete->fetchAll(PDO::FETCH_ASSOC);
         <a href="#">Mentions Légales</a>
     </div>
 </footer>
+<script src="js/menu.js"></script>

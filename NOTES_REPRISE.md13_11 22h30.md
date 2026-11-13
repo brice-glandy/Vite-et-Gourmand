@@ -2,7 +2,7 @@
 
 Fichier de suivi du projet. À lire en début de séance (ou à donner à Claude dans une nouvelle conversation, avec l'accès au dossier `v_et_g`).
 
-Dernière mise à jour : vendredi 13 novembre 2026, 14h.
+Dernière mise à jour : vendredi 13 novembre 2026, 22h30.
 
 ---
 
@@ -60,7 +60,8 @@ Dernière mise à jour : vendredi 13 novembre 2026, 14h.
   - `dev` : branche de développement
   - `feature/connexion` : **terminée et fusionnée dans `dev` par pull request** (branche conservée volontairement sur GitHub pour montrer le workflow au jury)
   - `feature/statistiques` : **terminée et fusionnée dans `dev` par pull request** (branche conservée)
-- Historique : premier commit sur `dev` (« Intégration front-end, base de données MySQL alignée sur le MCD, gestion des horaires et modération des avis »), puis un commit par bloc de la connexion, puis un commit par bloc des statistiques.
+  - `feature/accueil` : **terminée et fusionnée dans `dev` par pull request** (branche conservée)
+- Historique : premier commit sur `dev` (« Intégration front-end, base de données MySQL alignée sur le MCD, gestion des horaires et modération des avis »), puis un commit par bloc de la connexion, puis un commit par bloc des statistiques, puis un commit par bloc de la page d'accueil.
 
 Cycle pour chaque fonctionnalité :
 
@@ -126,6 +127,15 @@ Structure générale :
 - Header / footer en `includes`, pages en `.php`
 - Footer : horaires lus en base
 - Chaque page commence par `require_once 'includes/session.php';` puis `require_once 'includes/db.php';`
+- `js/menu.js` : menu burger commun à toutes les pages, chargé une seule fois depuis `includes/footer.php` (code retiré de `admin.js` et `commandes.js`), `aria-expanded` / `aria-controls` / `aria-label` mis à jour à l'ouverture et à la fermeture
+
+Page d'accueil (fonctionnalité `feature/accueil`) :
+
+- `index.php` : trois sections exigées par l'énoncé (présentation de l'entreprise, professionnalisme de l'équipe, avis clients validés), un seul `h1` puis des `h2`, sections reliées à leur titre par `aria-labelledby`, `meta description`
+- Lien « Découvrir nos menus » (un lien, pas un bouton, car il change de page), état `:focus-visible` bien visible
+- Avis : uniquement le statut `validé`, du plus récent au plus ancien, 6 au maximum, colonnes strictement nécessaires (pas d'email ni de téléphone), `htmlspecialchars` sur les textes des clients, initiale du nom avec `mb_substr` (lettres accentuées), date au format français, message si aucun avis
+- CSS : charte du site (bordeaux, fond rose, cartes blanches), largeur de texte limitée à 900 px, mobile first, avis sur deux colonnes à partir de 768 px
+- Test de démonstration pour le jury : valider un avis dans l'administration → il apparaît aussitôt sur l'accueil
 
 Connexion, inscription et sécurité (fonctionnalité `feature/connexion`) :
 
@@ -165,14 +175,21 @@ Front encore statique :
 ## 8. Points en attente / à ne pas oublier
 
 - **Actions réservées à l'administrateur** (créer / désactiver un employé, statistiques) : chaque fichier de traitement devra vérifier le rôle `administrateur` côté serveur (prévoir `includes/verif_admin.php`).
-- Pages à créer : `contacts.php` (lien déjà dans le menu), `mentions_legales.php` (lien dans l'inscription), CGV, `index.php` (le logo pointe déjà vers `index.php`).
+- Pages à créer : `contacts.php` (lien déjà dans le menu), `mentions_legales.php` (lien dans l'inscription et le pied de page), CGV (lien dans le pied de page).
+- `admin.php` : remplacer `substr` par `mb_substr` pour l'initiale du nom dans la liste des avis (même correction que sur l'accueil).
+- `index.php` : le commentaire de la section des avis dit encore « écrits en dur pour l'instant » → à corriger (« lus en base de données »).
 - Espace client : ajouter « MON ESPACE » dans le header pour le rôle `utilisateur`.
 - « Mot de passe oublié ? » : lien présent mais vide (nécessite l'envoi de mails).
 - Mails de l'énoncé (bienvenue, confirmation de commande, etc.) : décider envoi réel ou simulation.
 - **Commandes → MongoDB** : quand `traitement_commande.php` enregistrera une commande dans MySQL, il devra aussi insérer sa fiche dans la collection `commandes` de MongoDB ; une commande annulée devra y passer au statut exact `annulée` (c'est la valeur exclue par `statistiques.php`).
 - `includes/verif_admin.php` : à créer avec la gestion de l'équipe (créer / désactiver un employé).
 - Mails : piste **Mailpit** (faux serveur mail qui affiche les mails dans une page web), déjà utilisé par l'autre projet Docker du PC.
-- Déploiement MongoDB : base en ligne (MongoDB Atlas, offre gratuite) + mot de passe `root` à remplacer, comme pour MySQL.
+- **Déploiement (décidé le 13/11)** : PHP + MySQL chez **alwaysdata** (hébergeur français, offre gratuite à vie sans carte bancaire, HTTPS automatique, SSH) et MongoDB chez **MongoDB Atlas** (cluster gratuit M0, 512 Mo).
+  - Fly.io (cité dans le cours) écarté : plus d'offre gratuite durable (essai de 2 h de machine ou 7 jours, puis carte bancaire), alors que le jury consultera le site après le 19/11.
+  - Aiven (proposé par Gemini) écarté : MySQL gratuit supprimé pour les nouveaux services depuis le 6 novembre 2026.
+  - **Premier test, le plus risqué** : compiler l'extension PHP `mongodb` chez alwaysdata par SSH avec `ad_install_pecl mongodb`, puis l'ajouter au `php.ini` (`extension = /home/[compte]/mongodb.so`).
+  - Le MySQL d'alwaysdata est en réalité MariaDB : vérifier que `init.sql` passe tel quel.
+  - Sortir les identifiants de `db.php` et `mongo.php` (configuration propre), mot de passe de José à changer, option `secure` du cookie de session en HTTPS.
 - **Avant de rédiger la documentation et de préparer l'oral** : petit tour de F12 avec Claude (onglets **Réseau** et **Console**) pour savoir expliquer au jury comment je vérifie une requête fetch et je débogue le JavaScript.
 - Les prix sont en dur dans `js/commandes.js` (et différents de `menus.php`) → à remplacer par les données de la base.
 - Déploiement : `db.php` contient le mot de passe en clair → configuration propre ; activer l'option `secure` du cookie de session en HTTPS.
@@ -184,7 +201,8 @@ Front encore statique :
 
 - ~~**Jeudi 12** : Git + connexion, inscription, déconnexion, protection par rôle~~ → **fait** (en avance)
 - ~~**Jeudi 12 après-midi / vendredi 13** : MongoDB dans Docker, statistiques réelles dans Chart.js via fetch, chiffre d'affaires par menu avec filtres~~ → **fait** (vendredi 13 à 14h)
-- **Samedi 14** : premier déploiement en ligne + page d'accueil `index.php` (présentation, avis validés)
+- ~~Page d'accueil `index.php` (présentation, avis validés)~~ → **faite en avance** (vendredi 13 au soir), avec le menu burger commun
+- **Samedi 14** : premier déploiement en ligne (alwaysdata + MongoDB Atlas)
 - **Dimanche 15** : page Menus depuis la base + filtres en fetch, page détail d'un menu, commande enregistrée en base
 - **Lundi 16** : espace client (ses commandes), gestion des commandes dans l'admin, contact, mentions légales, CGV
 - **Mardi 17** : documentation (README, manuel PDF, charte graphique PDF, doc technique, gestion de projet) + copie à rendre
@@ -230,8 +248,21 @@ Bases de données SQL et NoSQL :
 - Débogage par hypothèses : lire les logs, formuler deux causes possibles, faire un test qui tranche (raté de premier démarrage de MongoDB)
 - Éditeur ≠ environnement d'exécution : un soulignement d'Intelephense n'est pas une erreur PHP
 
+Hébergement et veille :
+
+- Choix d'hébergement vérifié sur les conditions actuelles plutôt que sur une seule source (cours, IA) : Fly.io sans offre gratuite durable, Aiven sans MySQL gratuit depuis novembre 2026 → alwaysdata (PHP + MySQL, gratuit, français, HTTPS) + MongoDB Atlas (service officiel, gratuit)
+- Déploiement tôt (avant les autres pages) : la partie la plus incertaine traitée en premier, puis livraison continue des fonctionnalités
+
+Page d'accueil et code commun :
+
+- Page publique : seuls les avis validés par l'équipe sont affichés, textes échappés (XSS), colonnes strictement nécessaires (RGPD)
+- `mb_substr` au lieu de `substr` : `substr` coupe les lettres accentuées en deux en UTF-8
+- `query()` acceptable quand la requête ne contient aucune donnée venant de l'utilisateur ; requêtes préparées dès qu'une valeur vient d'un formulaire ou de l'adresse
+- Code du menu burger centralisé dans un seul fichier chargé par le pied de page commun : une correction à un seul endroit pour toutes les pages (il était dupliqué dans deux scripts et absent des autres pages)
+- Un `const` ne peut être déclaré qu'une fois par page : la duplication aurait cassé `admin.js` et `commandes.js`
+
 Accessibilité et ergonomie :
 
-- RGAA : `fieldset`/`legend` (aussi pour les cases du tableau de bord), graphique décrit par `aria-label` + liste chiffrée en alternative textuelle, `role="alert"` / `role="status"`, statut affiché en texte et pas seulement en couleur, `aria-describedby` pour les règles du mot de passe, `aria-label` / `aria-pressed` sur le bouton œil, contour `:focus` visible
+- RGAA : `fieldset`/`legend` (aussi pour les cases du tableau de bord), un seul `h1` par page et sections nommées par `aria-labelledby`, menu burger avec `aria-expanded` / `aria-controls`, lien principal avec `:focus-visible`, lien pour changer de page et bouton pour une action, graphique décrit par `aria-label` + liste chiffrée en alternative textuelle, `role="alert"` / `role="status"`, statut affiché en texte et pas seulement en couleur, `aria-describedby` pour les règles du mot de passe, `aria-label` / `aria-pressed` sur le bouton œil, contour `:focus` visible
 - Mobile first, testé sur un vrai iPhone ; champs à 16 px (pas de zoom automatique de Safari) ; `type="email"` / `type="tel"` / `autocomplete` pour les claviers et le remplissage automatique
 - RGPD : consentement explicite à l'inscription, prénom + initiale du nom seulement sur les avis

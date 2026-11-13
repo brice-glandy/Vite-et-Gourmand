@@ -2,12 +2,12 @@
         <div class="logo">
             <a href="index.php">Vite & Gourmand</a>
         </div>
-        <button class="menu-burger" aria-label="Ouvrir le menu">
+        <button class="menu-burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="navigation-principale">
             <span></span>
             <span></span>
             <span></span>
         </button>
-        <nav class="navigation-principale">
+        <nav class="navigation-principale" id="navigation-principale">
             <ul>
                 <li><a href="menus.php">NOS MENUS</a></li>
                 <li><a href="contacts.php">CONTACTS</a></li>
