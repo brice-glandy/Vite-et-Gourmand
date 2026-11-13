@@ -70,32 +70,29 @@ liensMenu.forEach(lien => {
         lien.classList.add('actif');
     }
 });
-// --- GÉNÉRATION DU GRAPHIQUE DES STATISTIQUES ---
-
-// --- GÉNÉRATION ET MISE À JOUR DU GRAPHIQUE ---
+// --- TABLEAU DE BORD : GRAPHIQUE ET CHIFFRE D'AFFAIRES ---
 
 const conteneurGraphique = document.getElementById('graphique-ca');
-let graphiqueCommandes; // Variable qui va stocker notre instance Chart.js
 
-// 1. Notre base de données fictive pour le front-end
-const baseDonneesMenus = {
-    'burger': { titre: 'Burger Artisan', commandes: 45 },
-    'brunch': { titre: 'Brunch Complet', commandes: 32 },
-    'tradition': { titre: 'Tradition Française', commandes: 28 },
-    'oceane': { titre: 'Fraicheur Océane', commandes: 15 },
-    'vegetal': { titre: 'Plaisir Végétal', commandes: 10 },
-    'italienne': { titre: 'Evasion Italienne', commandes: 22 }
-};
-
+// Le tableau de bord n'existe que pour l'administrateur : sans lui, on ne fait rien
 if (conteneurGraphique) {
-    // 2. Initialisation du graphique à vide
-    graphiqueCommandes = new Chart(conteneurGraphique, {
+
+    // 1. Les zones de la page que l'on va remplir
+    const listeChiffreAffaires = document.getElementById('liste-chiffre-affaires');
+    const totalChiffreAffaires = document.getElementById('total-chiffre-affaires');
+    const messageStatistiques = document.getElementById('message-statistiques');
+    const casesMenus = document.querySelectorAll('input[name="filtre-menu"]');
+    const caseTous = document.querySelector('input[name="filtre-menu"][value="tous"]');
+    const champDateDebut = document.getElementById('date-debut');
+    const champDateFin = document.getElementById('date-fin');
+    // 2. Création du graphique, vide au départ
+    const graphiqueCommandes = new Chart(conteneurGraphique, {
         type: 'bar',
         data: {
-            labels: [], // Sera rempli par la fonction
+            labels: [],
             datasets: [{
                 label: 'Nombre de commandes',
-                data: [], // Sera rempli par la fonction
+                data: [],
                 backgroundColor: '#4A7B59',
                 borderRadius: 4
             }]
@@ -103,58 +100,140 @@ if (conteneurGraphique) {
         options: {
             responsive: true,
             maintainAspectRatio: false,
-            plugins: { legend: { display: false } }, // On cache la légende inutile ici
-            scales: { y: { beginAtZero: true, ticks: { stepSize: 10 } } }
+            plugins: { legend: { display: false } },
+            scales: { y: { beginAtZero: true, ticks: { precision: 0 } } }
         }
     });
 
-    const checkboxesMenus = document.querySelectorAll('input[name="filtre-menu"]');
-    const checkboxTous = document.querySelector('input[value="tous"]');
-
-    // 3. Fonction centrale qui met à jour le dessin
-    function actualiserGraphique() {
-        const nouveauxLabels = [];
-        const nouvellesDonnees = [];
-
-        // On boucle sur toutes les cases, et on lit celles qui sont cochées
-        checkboxesMenus.forEach(caseCochee => {
-            if (caseCochee.checked) {
-                let cle = caseCochee.value;
-                // Si la clé existe dans notre fausse base de données
-                if (baseDonneesMenus[cle]) {
-                    nouveauxLabels.push(baseDonneesMenus[cle].titre);
-                    nouvellesDonnees.push(baseDonneesMenus[cle].commandes);
-                }
-            }
-        });
-
-        // On injecte les nouvelles données dans le graphique et on lance l'animation
-        graphiqueCommandes.data.labels = nouveauxLabels;
-        graphiqueCommandes.data.datasets[0].data = nouvellesDonnees;
-        graphiqueCommandes.update();
+    // 3. Écrire un montant à la française : 1 234,56 €
+    function formaterMontant(montant) {
+        return montant.toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' });
     }
 
-    // 4. Gestion intelligente de la case "Tous les menus"
-    checkboxesMenus.forEach(checkbox => {
-        checkbox.addEventListener('change', function() {
-            
-            // Si l'utilisateur clique spécifiquement sur "Tous les menus"
-            if (this.value === 'tous') {
-                let etat = this.checked;
-                checkboxesMenus.forEach(cb => cb.checked = etat);
-            } 
-            // Si l'utilisateur décoche un menu classique, on décoche "Tous" automatiquement
-            else if (!this.checked && checkboxTous) {
-                checkboxTous.checked = false;
+    // 4. Mettre à jour le graphique, la liste et le total avec les données reçues
+    function afficherStatistiques(statistiques) {
+        const titres = [];
+        const nombres = [];
+        let total = 0;
+
+        // On vide la liste avant de la remplir à nouveau
+        listeChiffreAffaires.innerHTML = '';
+
+        statistiques.forEach(ligne => {
+            titres.push(ligne.titre);
+            nombres.push(ligne.nombre_commandes);
+            total = total + ligne.chiffre_affaires;
+
+            // "commande" au singulier, "commandes" au pluriel
+            let mot = 'commandes';
+            if (ligne.nombre_commandes === 1) {
+                mot = 'commande';
             }
 
-            // On redessine le graphique après chaque clic
-            actualiserGraphique();
+            // Une ligne de la liste : le nom à gauche, le montant à droite
+            const element = document.createElement('li');
+
+            const texte = document.createElement('span');
+            texte.textContent = ligne.titre + ' (' + ligne.nombre_commandes + ' ' + mot + ')';
+
+            const montant = document.createElement('span');
+            montant.className = 'montant-chiffre-affaires';
+            montant.textContent = formaterMontant(ligne.chiffre_affaires);
+
+            element.appendChild(texte);
+            element.appendChild(montant);
+            listeChiffreAffaires.appendChild(element);
+        });
+
+        // On donne les nouvelles données au graphique et on le redessine
+        graphiqueCommandes.data.labels = titres;
+        graphiqueCommandes.data.datasets[0].data = nombres;
+        graphiqueCommandes.update();
+
+        totalChiffreAffaires.textContent = formaterMontant(total);
+
+        // Message annoncé aux lecteurs d'écran (zone role="status")
+        if (statistiques.length === 0) {
+            messageStatistiques.textContent = 'Aucune commande pour ces critères.';
+        } else {
+            messageStatistiques.textContent = 'Statistiques mises à jour : ' + statistiques.length + ' menu(s), total ' + formaterMontant(total) + '.';
+        }
+    }
+    // Lire les identifiants des menus cochés (sans la case "Tous les menus")
+    function lireMenusCoches() {
+        const menusCoches = [];
+        casesMenus.forEach(caseMenu => {
+            if (caseMenu.checked && caseMenu.value !== 'tous') {
+                menusCoches.push(caseMenu.value);
+            }
+        });
+        return menusCoches;
+    }
+    // 5. Demander les statistiques au serveur
+    async function chargerStatistiques() {
+                const menusCoches = lireMenusCoches();
+
+        // Aucun menu coché : on ne demande rien au serveur
+        if (menusCoches.length === 0) {
+            afficherStatistiques([]);
+            messageStatistiques.textContent = 'Cochez au moins un menu pour afficher les statistiques.';
+            return;
+        }
+
+        // On prépare les filtres à placer dans l'adresse
+        const parametres = new URLSearchParams();
+        parametres.append('menus', menusCoches.join(','));
+                // Les dates ne sont ajoutées que si elles sont remplies
+        if (champDateDebut.value !== '') {
+            parametres.append('debut', champDateDebut.value);
+        }
+        if (champDateFin.value !== '') {
+            parametres.append('fin', champDateFin.value);
+        }
+        try {
+            const reponse = await fetch('statistiques.php?' + parametres.toString());
+            const resultat = await reponse.json();
+
+            if (resultat.succes) {
+                afficherStatistiques(resultat.statistiques);
+                    } else {
+                // Le serveur a refusé la demande : on vide l'affichage et on montre son message
+                afficherStatistiques([]);
+                messageStatistiques.textContent = 'Erreur : ' + resultat.message;
+            }
+        } catch (erreur) {
+            // Le serveur n'a pas pu être contacté du tout
+            afficherStatistiques([]);
+            messageStatistiques.textContent = 'Impossible de contacter le serveur. Réessayez plus tard.';
+        }
+    }
+    // Les cases à cocher : chaque changement met à jour les statistiques
+    casesMenus.forEach(caseMenu => {
+        caseMenu.addEventListener('change', function () {
+
+            if (caseMenu.value === 'tous') {
+                // "Tous les menus" coche ou décoche toutes les cases d'un coup
+                casesMenus.forEach(autreCase => {
+                    autreCase.checked = caseMenu.checked;
+                });
+            } else {
+                // Un menu a changé : "Tous" n'est coché que si tous les menus le sont
+                const nombreDeMenus = casesMenus.length - 1;
+                if (lireMenusCoches().length === nombreDeMenus) {
+                    caseTous.checked = true;
+                } else {
+                    caseTous.checked = false;
+                }
+            }
+
+            chargerStatistiques();
         });
     });
-
-    // 5. Premier affichage au chargement de la page
-    actualiserGraphique();
+        // Les dates : chaque changement met à jour les statistiques
+    champDateDebut.addEventListener('change', chargerStatistiques);
+    champDateFin.addEventListener('change', chargerStatistiques);
+    // 6. Premier affichage au chargement de la page
+    chargerStatistiques();
 }
 // --- MODÉRATION DES AVIS AVEC FETCH ---
 

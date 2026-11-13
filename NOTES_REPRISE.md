@@ -2,7 +2,7 @@
 
 Fichier de suivi du projet. À lire en début de séance (ou à donner à Claude dans une nouvelle conversation, avec l'accès au dossier `v_et_g`).
 
-Dernière mise à jour : jeudi 12 novembre 2026, 14h.
+Dernière mise à jour : vendredi 13 novembre 2026, 14h.
 
 ---
 
@@ -25,22 +25,31 @@ Dernière mise à jour : jeudi 12 novembre 2026, 14h.
 
 ## 3. Environnement de travail
 
-- Dossier local : `C:\projets web et mobile\v_et_g`
+- Dossier local : `C:\projets web et mobile\v_et_g` (PC) et `C:\dev\v_et_g` (laptop)
+- Deux machines : toujours `git pull` en début de séance et `git push` en fin de séance
 - Docker (`docker-compose.yml`) :
   - service `web` : PHP 8.2 + Apache (Dockerfile avec `pdo_mysql`), port **8000**
   - service `db` : MySQL 8.0, utf8mb4, port **3307** côté PC, base `v_et_g`, utilisateur `root` / mot de passe `root`
   - `database/init.sql` est monté dans `/docker-entrypoint-initdb.d/` : il s'exécute **uniquement quand le volume est vide**
+  - service `mongo` : MongoDB 7.0, port **27018** côté PC (27017 déjà pris par un autre projet), utilisateur `root` / `root`, base `v_et_g`
+  - `database/init_mongo.js` est monté dans `/docker-entrypoint-initdb.d/` : il s'exécute **uniquement quand le volume est vide**
+  - Si `mongo` s'arrête juste après le premier démarrage (logs : « Address already in use » juste après « init process complete »), relancer `docker compose up -d` : l'initialisation est faite, le second démarrage fonctionne.
 - Recréer la base après une modification de `init.sql` : `docker compose down -v` puis `docker compose up -d` (efface toutes les données saisies depuis le site, y compris les comptes créés par l'inscription)
-- Voir les erreurs MySQL : `docker compose logs db`
+- Recréer **uniquement** MongoDB (sans toucher à MySQL) : `docker compose rm -sf mongo`, puis `docker volume rm v_et_g_mongo_data`, puis `docker compose up -d`
+- Après une modification du `Dockerfile` : `docker compose up -d --build`
+- Voir les erreurs MySQL : `docker compose logs db` (MongoDB : `docker compose logs mongo`)
 - Exécuter une requête SQL depuis le terminal :
   `docker compose exec db mysql -uroot -proot v_et_g -e "SELECT ... ;"`
   (ou via l'extension base de données de VS Code : cylindre > v_et_g > Query > Run)
+- Terminal MongoDB : `docker compose exec mongo mongosh -u root -p root --authenticationDatabase admin v_et_g` (invite `v_et_g>`, sortie avec `exit`, Ctrl + C si l'invite affiche `|`)
 - Sur PC : `http://localhost:8000/`
 - Sur iPhone (même Wi-Fi) : `http://192.168.1.60:8000/` (vérifier l'IP avec `ipconfig` si besoin)
 - Recharger sans cache dans Chrome : **Ctrl + Fn + F5**
 - Tester « déconnecté » : fenêtre de navigation privée (**Ctrl + Maj + N**)
 - Live Server (port 5500) ne sert plus : il ne sait pas exécuter le PHP.
 - VS Code : barre de menus masquée → Ctrl + Maj + P > « View: Toggle Menu Bar »
+- VS Code (Intelephense) souligne les classes `MongoDB\Driver\...` : fausse alerte, l'extension `mongodb` est installée dans Docker, pas sous Windows (choix : on laisse tel quel)
+- Autre projet Docker sur le PC (`vg_php`, `vg_pma`, `vg_mailpit`, `vg_mongo`) : sans rapport avec `v_et_g`, à arrêter avec `docker stop` s'il ne sert plus
 
 ## 4. Git, GitHub et gestion de projet
 
@@ -50,7 +59,8 @@ Dernière mise à jour : jeudi 12 novembre 2026, 14h.
   - `main` : version stable, reçoit `dev` uniquement au moment des livraisons / du déploiement (pas encore fusionnée)
   - `dev` : branche de développement
   - `feature/connexion` : **terminée et fusionnée dans `dev` par pull request** (branche conservée volontairement sur GitHub pour montrer le workflow au jury)
-- Historique : premier commit sur `dev` (« Intégration front-end, base de données MySQL alignée sur le MCD, gestion des horaires et modération des avis »), puis un commit par bloc de la connexion.
+  - `feature/statistiques` : **terminée et fusionnée dans `dev` par pull request** (branche conservée)
+- Historique : premier commit sur `dev` (« Intégration front-end, base de données MySQL alignée sur le MCD, gestion des horaires et modération des avis »), puis un commit par bloc de la connexion, puis un commit par bloc des statistiques.
 
 Cycle pour chaque fonctionnalité :
 
@@ -130,6 +140,16 @@ Connexion, inscription et sécurité (fonctionnalité `feature/connexion`) :
 - Header dynamique : CONNEXION / INSCRIPTION si déconnecté ; ADMINISTRATION (administrateur) ou ESPACE EMPLOYÉ (employé) + DÉCONNEXION si connecté ; rien de plus pour un client
 - `admin.php` adapté au rôle (`$est_admin`) : l'employé ne reçoit ni le Tableau de bord ni l'Équipe (PHP ne les envoie pas), titre « ESPACE EMPLOYÉ » ; le JavaScript affiche la première rubrique disponible
 
+Statistiques (fonctionnalité `feature/statistiques`) :
+
+- MongoDB dans Docker (`mongo:7.0`, authentification activée), extension PHP `mongodb` installée par PECL dans le `Dockerfile` (sans Composer)
+- `database/init_mongo.js` : collection `commandes` (copie dénormalisée des 8 commandes de `init.sql` : numéro, `menu_id`, `menu_titre`, date en `Date`, nombre de personnes, `prix_menu`, `prix_total`, statut), index unique sur `numero_commande`
+- `includes/mongo.php` : connexion (équivalent de `db.php`)
+- `statistiques.php` : API JSON réservée à l'administrateur (403 sinon), fonction `repondre_erreur`, filtres GET facultatifs `menus=1,3`, `debut=AAAA-MM-JJ`, `fin=AAAA-MM-JJ`, validés côté serveur (entiers, dates réelles, ordre début / fin → 400), agrégation MongoDB `$match` / `$group` / `$sort`, commandes annulées exclues, 500 si MongoDB est indisponible
+- Chiffre d'affaires par menu calculé sur `prix_menu` (sans la livraison), période filtrée sur la date de commande
+- `admin.php` : cases des menus générées depuis la table `menu` (MySQL, avec les identifiants), `fieldset` / `legend`, graphique avec `aria-label`, liste du chiffre d'affaires (alternative textuelle du graphique), total, zone `role="status"`
+- `js/admin.js` : fetch vers `statistiques.php` avec `URLSearchParams`, mise à jour du graphique Chart.js, de la liste et du total sans rechargement, montants formatés avec `toLocaleString('fr-FR')`, insertion avec `textContent` (pas d'`innerHTML`), case « Tous les menus » synchronisée, aucun appel si aucun menu n'est coché, affichage vidé en cas d'erreur
+
 Administration :
 
 - Navigation par rubriques en JavaScript ; l'ancre de l'URL (`admin.php#horaires`) affiche la bonne rubrique et survit à F5 (`history.replaceState`)
@@ -149,7 +169,11 @@ Front encore statique :
 - Espace client : ajouter « MON ESPACE » dans le header pour le rôle `utilisateur`.
 - « Mot de passe oublié ? » : lien présent mais vide (nécessite l'envoi de mails).
 - Mails de l'énoncé (bienvenue, confirmation de commande, etc.) : décider envoi réel ou simulation.
-- MongoDB obligatoire pour les statistiques du graphique admin (« base de données non relationnelle », énoncé page 9).
+- **Commandes → MongoDB** : quand `traitement_commande.php` enregistrera une commande dans MySQL, il devra aussi insérer sa fiche dans la collection `commandes` de MongoDB ; une commande annulée devra y passer au statut exact `annulée` (c'est la valeur exclue par `statistiques.php`).
+- `includes/verif_admin.php` : à créer avec la gestion de l'équipe (créer / désactiver un employé).
+- Mails : piste **Mailpit** (faux serveur mail qui affiche les mails dans une page web), déjà utilisé par l'autre projet Docker du PC.
+- Déploiement MongoDB : base en ligne (MongoDB Atlas, offre gratuite) + mot de passe `root` à remplacer, comme pour MySQL.
+- **Avant de rédiger la documentation et de préparer l'oral** : petit tour de F12 avec Claude (onglets **Réseau** et **Console**) pour savoir expliquer au jury comment je vérifie une requête fetch et je débogue le JavaScript.
 - Les prix sont en dur dans `js/commandes.js` (et différents de `menus.php`) → à remplacer par les données de la base.
 - Déploiement : `db.php` contient le mot de passe en clair → configuration propre ; activer l'option `secure` du cookie de session en HTTPS.
 - Ligne `version:` obsolète à retirer de `docker-compose.yml` (simple avertissement).
@@ -159,7 +183,7 @@ Front encore statique :
 ## 9. Planning
 
 - ~~**Jeudi 12** : Git + connexion, inscription, déconnexion, protection par rôle~~ → **fait** (en avance)
-- **Jeudi 12 après-midi / vendredi 13** : MongoDB dans Docker, statistiques réelles dans Chart.js via fetch, chiffre d'affaires par menu avec filtres
+- ~~**Jeudi 12 après-midi / vendredi 13** : MongoDB dans Docker, statistiques réelles dans Chart.js via fetch, chiffre d'affaires par menu avec filtres~~ → **fait** (vendredi 13 à 14h)
 - **Samedi 14** : premier déploiement en ligne + page d'accueil `index.php` (présentation, avis validés)
 - **Dimanche 15** : page Menus depuis la base + filtres en fetch, page détail d'un menu, commande enregistrée en base
 - **Lundi 16** : espace client (ses commandes), gestion des commandes dans l'admin, contact, mentions légales, CGV
@@ -194,8 +218,20 @@ Architecture et bonnes pratiques :
 - Workflow Git : `main` / `dev` / `feature/...`, pull request pour chaque fusion, un commit par étape
 - Débogage méthodique : page de test isolant chaque maillon (base, formulaire, vérification)
 
+Bases de données SQL et NoSQL :
+
+- MySQL = source de vérité (commandes, contraintes, clés étrangères) ; MongoDB = copie dénormalisée pour les statistiques (titre du menu recopié dans chaque document, pas de jointure)
+- Calcul fait par MongoDB lui-même (pipeline d'agrégation `$match` / `$group` / `$sort`), PHP ne fait que transmettre le JSON
+- Filtres validés côté serveur avant d'entrer dans la requête (entiers, dates réelles) : l'équivalent NoSQL des requêtes préparées
+- Séparation données / affichage : `statistiques.php` est une API JSON, réutilisable par un autre écran
+- Liste des menus des filtres lue dans MySQL (source de vérité) : un menu jamais commandé apparaît quand même
+- Données de départ MongoDB dans un fichier versionné, exécuté automatiquement comme `init.sql`
+- Authentification MongoDB activée dès le développement ; ports décalés côté PC (3307, 27018), ports standards à l'intérieur de Docker
+- Débogage par hypothèses : lire les logs, formuler deux causes possibles, faire un test qui tranche (raté de premier démarrage de MongoDB)
+- Éditeur ≠ environnement d'exécution : un soulignement d'Intelephense n'est pas une erreur PHP
+
 Accessibilité et ergonomie :
 
-- RGAA : `fieldset`/`legend`, `role="alert"` / `role="status"`, statut affiché en texte et pas seulement en couleur, `aria-describedby` pour les règles du mot de passe, `aria-label` / `aria-pressed` sur le bouton œil, contour `:focus` visible
+- RGAA : `fieldset`/`legend` (aussi pour les cases du tableau de bord), graphique décrit par `aria-label` + liste chiffrée en alternative textuelle, `role="alert"` / `role="status"`, statut affiché en texte et pas seulement en couleur, `aria-describedby` pour les règles du mot de passe, `aria-label` / `aria-pressed` sur le bouton œil, contour `:focus` visible
 - Mobile first, testé sur un vrai iPhone ; champs à 16 px (pas de zoom automatique de Safari) ; `type="email"` / `type="tel"` / `autocomplete` pour les claviers et le remplissage automatique
 - RGPD : consentement explicite à l'inscription, prénom + initiale du nom seulement sur les avis
