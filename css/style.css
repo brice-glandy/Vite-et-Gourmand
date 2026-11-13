@@ -627,6 +627,13 @@ button:disabled {
         display: grid;
         grid-template-columns: 250px 1fr; /* 250px figés pour le menu, le reste fluide pour le contenu */
         align-items: start;
+            /* Les trois filtres côte à côte sur grand écran */
+    .filtres-dashboard {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 3rem;
+    }
     }
 
     /* Le menu devient une colonne figée à gauche */
@@ -668,6 +675,94 @@ button:disabled {
     height: 300px;
     width: 100%;
     margin-top: 2rem;
+}
+/* 8. Tableau de bord : filtres, graphique et chiffre d'affaires */
+
+/* Le groupe des menus : on retire le cadre gris ajouté par le navigateur */
+.filtres-dashboard fieldset {
+    border: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+}
+
+/* Le titre du groupe prend le même style que les autres titres de filtres */
+.filtres-dashboard legend {
+    font-weight: bold;
+    font-style: italic;
+    font-size: 14px;
+    padding: 0;
+    margin: 0 auto 8px auto;
+}
+
+/* Les noms des menus à côté des cases restent en texte normal */
+.liste-checkbox-scroll label {
+    font-weight: normal;
+    font-style: normal;
+    font-size: 16px;
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+/* Les champs de date : lisibles, et en 16 px pour éviter le zoom de l'iPhone */
+.groupe-filtre input[type="date"] {
+    font-size: 16px;
+    padding: 8px;
+    border: 1px solid #6a0b37;
+    border-radius: 4px;
+    background-color: #ffffff;
+}
+/* Les sous-titres du tableau de bord */
+.section-admin h3 {
+    color: #6a0b37;
+    margin-top: 2rem;
+}
+
+/* Le graphique dans une carte blanche, comme les autres blocs de l'administration */
+.graphique-conteneur {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 1rem;
+    box-sizing: border-box;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+/* La liste du chiffre d'affaires : une carte blanche, une ligne par menu */
+.liste-chiffre-affaires {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.liste-chiffre-affaires li {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid #eeeeee;
+}
+
+/* Pas de trait sous la dernière ligne */
+.liste-chiffre-affaires li:last-child {
+    border-bottom: none;
+}
+
+/* Le montant : en gras, et jamais coupé sur deux lignes */
+.montant-chiffre-affaires {
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+/* Le total général, aligné à droite sous la liste */
+.total-chiffre-affaires {
+    text-align: right;
+    font-size: 1.1rem;
+    margin-top: 1rem;
+}
+
+.total-chiffre-affaires strong {
+    color: #6a0b37;
 }
 /* 7. Page de modification des horaires */
 .page-modifier-horaire {
