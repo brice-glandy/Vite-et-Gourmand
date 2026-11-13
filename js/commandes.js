@@ -1,11 +1,3 @@
-// --- GESTION DU MENU BURGER MOBILE ---
-const boutonBurger = document.querySelector('.menu-burger');
-const menuNavigation = document.querySelector('.navigation-principale');
-
-boutonBurger.addEventListener('click', function() {
-    menuNavigation.classList.toggle('actif');
-});
-// -------------------------------------
 const donneesMenus = {
     'burger': { prix: 15, minPersonnes: 2 },
     'brunch': { prix: 22, minPersonnes: 4 },

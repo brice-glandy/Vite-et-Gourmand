@@ -1,11 +1,3 @@
-// --- GESTION DU MENU BURGER MOBILE ---
-const boutonBurger = document.querySelector('.menu-burger');
-const menuNavigation = document.querySelector('.navigation-principale');
-
-boutonBurger.addEventListener('click', function() {
-    menuNavigation.classList.toggle('actif');
-});
-// -------------------------------------
 // 1. Récupération des éléments HTML
 // On sélectionne tous les liens du menu SAUF le bouton de déconnexion
 const liensMenu = document.querySelectorAll('.menu-lateral a:not(.btn-deconnexion)');
