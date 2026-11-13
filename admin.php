@@ -18,6 +18,14 @@ $sql = "SELECT * FROM horaires";
 $requete = $pdo->query($sql);
 $horaires = $requete->fetchAll(PDO::FETCH_ASSOC);
 ?>
+<?php
+// Liste des menus pour les filtres du tableau de bord (administrateur uniquement)
+if ($est_admin) {
+    $sql = "SELECT id, titre FROM menu ORDER BY titre";
+    $requete = $pdo->query($sql);
+    $menus_filtre = $requete->fetchAll(PDO::FETCH_ASSOC);
+}
+?>
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -59,18 +67,15 @@ $horaires = $requete->fetchAll(PDO::FETCH_ASSOC);
             
             <!-- Zone des filtres du graphique -->
             <div class="filtres-dashboard">
-                <div class="groupe-filtre">
-                <label>Filtres menus (plusieurs choix) :</label>
-                    <div class="liste-checkbox-scroll">
-                        <label><input type="checkbox" name="filtre-menu" value="tous" checked> Tous les menus</label>
-                        <label><input type="checkbox" name="filtre-menu" value="burger"> Burger Artisan</label>
-                        <label><input type="checkbox" name="filtre-menu" value="brunch"> Brunch Complet</label>
-                        <label><input type="checkbox" name="filtre-menu" value="tradition"> Tradition Française</label>
-                        <label><input type="checkbox" name="filtre-menu" value="oceane"> Fraicheur Océane</label>
-                        <label><input type="checkbox" name="filtre-menu" value="vegetal"> Plaisir Végétal</label>
-                        <label><input type="checkbox" name="filtre-menu" value="italienne"> Evasion Italienne</label>
-                    </div>
-                </div>
+                <fieldset class="groupe-filtre">
+    <legend>Menus à afficher (plusieurs choix) :</legend>
+    <div class="liste-checkbox-scroll">
+        <label><input type="checkbox" name="filtre-menu" value="tous" checked> Tous les menus</label>
+        <?php foreach ($menus_filtre as $un_menu) { ?>
+            <label><input type="checkbox" name="filtre-menu" value="<?php echo $un_menu['id']; ?>" checked> <?php echo htmlspecialchars($un_menu['titre']); ?></label>
+        <?php } ?>
+    </div>
+</fieldset>
                
 
                 <div class="groupe-filtre">
@@ -86,10 +91,18 @@ $horaires = $requete->fetchAll(PDO::FETCH_ASSOC);
             </div>
                
 
-            <!-- Conteneur physique pour le futur graphique JS -->
+           <!-- Graphique : nombre de commandes par menu -->
+            <h3>Nombre de commandes par menu</h3>
             <div class="graphique-conteneur">
-                <canvas id="graphique-ca" aria-label="Graphique du chiffre d'affaires" role="img"></canvas>
+                <canvas id="graphique-ca" role="img" aria-label="Graphique en barres : nombre de commandes par menu. Le détail chiffré est disponible dans la liste qui suit."></canvas>
             </div>
+
+            <!-- Chiffre d'affaires par menu (rempli par JavaScript) -->
+            <h3>Chiffre d'affaires par menu</h3>
+            <p id="message-statistiques" role="status"></p>
+            <ul id="liste-chiffre-affaires" class="liste-chiffre-affaires">
+            </ul>
+            <p class="total-chiffre-affaires">Total : <strong id="total-chiffre-affaires">—</strong></p>
         </article>
         <?php } ?>
         <!-- Bloc 2 : Gestion des Commandes -->
