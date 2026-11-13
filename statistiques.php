@@ -14,11 +14,26 @@ function repondre_erreur($code, $message) {
 if (!isset($_SESSION['role']) || $_SESSION['role'] != 'administrateur') {
     repondre_erreur(403, 'Accès réservé à l\'administrateur');
 }
-
+// Filtre de base : on écarte toujours les commandes annulées
+$filtre = ['statut' => ['$ne' => 'annulée']];
+// Filtre par menus (facultatif), reçu sous la forme "menus=1,3,6"
+if (!empty($_GET['menus'])) {
+    $menus_choisis = [];
+    foreach (explode(',', $_GET['menus']) as $morceau) {
+        $id = (int) $morceau;
+        if ($id > 0) {
+            $menus_choisis[] = $id;
+        }
+    }
+    if (count($menus_choisis) == 0) {
+        repondre_erreur(400, 'Filtre des menus invalide');
+    }
+    $filtre['menu_id'] = ['$in' => $menus_choisis];
+}
 // 1. Le calcul demandé à MongoDB, étape par étape
 $etapes = [
     // On écarte les commandes annulées
-    ['$match' => ['statut' => ['$ne' => 'annulée']]],
+    ['$match' => $filtre],
     // On regroupe par menu : on compte les commandes et on additionne les prix
     ['$group' => [
         '_id' => '$menu_id',
