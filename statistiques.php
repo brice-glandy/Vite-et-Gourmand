@@ -30,6 +30,28 @@ if (!empty($_GET['menus'])) {
     }
     $filtre['menu_id'] = ['$in' => $menus_choisis];
 }
+// Filtre par période (facultatif), dates reçues au format AAAA-MM-JJ
+$fuseau = new DateTimeZone('UTC');
+$debut = null;
+$fin = null;
+
+if (!empty($_GET['debut'])) {
+    $debut = DateTime::createFromFormat('Y-m-d H:i:s', $_GET['debut'] . ' 00:00:00', $fuseau);
+    if (!$debut || $debut->format('Y-m-d') !== $_GET['debut']) {
+        repondre_erreur(400, 'Date de début invalide');
+    }
+    $filtre['date_commande']['$gte'] = new MongoDB\BSON\UTCDateTime($debut);
+}
+if (!empty($_GET['fin'])) {
+    $fin = DateTime::createFromFormat('Y-m-d H:i:s', $_GET['fin'] . ' 23:59:59', $fuseau);
+    if (!$fin || $fin->format('Y-m-d') !== $_GET['fin']) {
+        repondre_erreur(400, 'Date de fin invalide');
+    }
+    $filtre['date_commande']['$lte'] = new MongoDB\BSON\UTCDateTime($fin);
+}
+if ($debut && $fin && $debut > $fin) {
+    repondre_erreur(400, 'La date de début doit précéder la date de fin');
+}
 // 1. Le calcul demandé à MongoDB, étape par étape
 $etapes = [
     // On écarte les commandes annulées
