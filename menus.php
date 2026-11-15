@@ -24,7 +24,7 @@ $regimes = $requete->fetchAll(PDO::FETCH_ASSOC);
    <?php include_once 'includes/header.php'; ?>
     <main class="conteneur-principal">
   <aside class="zone-filtres">
-    <form action="#" method="GET">
+    <form action="#" method="GET" id="formulaire-filtres">
         <fieldset class="groupe-filtre">
             <legend>Filtre par Prix (€ / personne)</legend>
             <div class="filtre-prix-inputs">
@@ -86,5 +86,6 @@ $regimes = $requete->fetchAll(PDO::FETCH_ASSOC);
     </section>
 </main>
 <?php include_once 'includes/footer.php'; ?>
+<script src="js/filtres_menus.js"></script>
 </body>
 </html>
