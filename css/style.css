@@ -143,7 +143,13 @@ header {
     gap: 20px;
     width: 100%;
 }
-
+#titre-menus {
+    grid-column: 1 / -1;
+    margin: 0;
+    color: #6a0b37;
+    font-family: Georgia, serif;
+    text-align: center;
+}
 .carte-menu {
     display: flex;
     flex-direction: column;

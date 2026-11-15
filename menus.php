@@ -27,13 +27,13 @@ $regimes = $requete->fetchAll(PDO::FETCH_ASSOC);
     <main class="conteneur-principal">
   <aside class="zone-filtres">
     <form action="#" method="GET">
-        <div class="groupe-filtre">
-    <label>Filtre par Prix (€)</label>
-        <div class="filtre-prix-inputs">
-            <input type="number" id="prix-min" name="prix_min" placeholder="Min">
-             <input type="number" id="prix-max" name="prix_max" placeholder="Max">
-        </div>
-    </div>
+        <fieldset class="groupe-filtre">
+            <legend>Filtre par Prix (€ / personne)</legend>
+            <div class="filtre-prix-inputs">
+                <input type="number" id="prix-min" name="prix_min" placeholder="Min" min="0" aria-label="Prix minimum par personne">
+                <input type="number" id="prix-max" name="prix_max" placeholder="Max" min="0" aria-label="Prix maximum par personne">
+            </div>
+        </fieldset> 
 
         <div class="groupe-filtre">
             <label for="filtre-theme">Filtre par Thème</label>
@@ -67,7 +67,8 @@ $regimes = $requete->fetchAll(PDO::FETCH_ASSOC);
     </form>
 </aside>
     
-    <section class="grille-menus">
+    <section class="grille-menus" aria-labelledby="titre-menus">
+        <h1 id="titre-menus">Nos menus</h1>
        <?php foreach ($menus as $un_menu) { ?>
     <article class="carte-menu">
         <div class="carte-contenu">
