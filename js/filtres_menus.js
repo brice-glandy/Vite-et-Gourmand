@@ -96,3 +96,8 @@ document.getElementById('filtre-theme').addEventListener('change', function () {
 document.getElementById('filtre-regime').addEventListener('change', function () {
     formulaireFiltres.requestSubmit();
 });
+// Effacer : on vide tous les champs, puis on relance la recherche (donc sans aucun filtre)
+document.getElementById('bouton-effacer').addEventListener('click', function () {
+    formulaireFiltres.reset();
+    formulaireFiltres.requestSubmit();
+});

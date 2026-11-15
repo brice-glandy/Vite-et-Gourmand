@@ -60,7 +60,7 @@ $regimes = $requete->fetchAll(PDO::FETCH_ASSOC);
 
         <div class="actions-filtres">
             <button type="submit" class="btn-valider">Valider</button>
-            <button type="reset" class="btn-effacer">Effacer</button>
+            <button type="button" class="btn-effacer" id="bouton-effacer">Effacer</button>
         </div>
     </form>
 </aside>
