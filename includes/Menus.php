@@ -17,7 +17,7 @@ class Menus {
         $requete = $this->pdo->query($sql);
         return $requete->fetchAll(PDO::FETCH_ASSOC);
     }
-        // Les menus qui correspondent aux filtres choisis.
+    // Les menus qui correspondent aux filtres choisis.
     // $filtres contient des valeurs déjà vérifiées, par exemple ['prix_max' => 20].
     public function trouver_filtres($filtres) {
         $conditions = [];
@@ -39,7 +39,7 @@ class Menus {
             $conditions[] = "regime_id = :regime";
             $parametres['regime'] = $filtres['regime'];
         }
-                if (isset($filtres['personnes'])) {
+        if (isset($filtres['personnes'])) {
             $conditions[] = "nombre_personne_minimum <= :personnes";
             $parametres['personnes'] = $filtres['personnes'];
         }
