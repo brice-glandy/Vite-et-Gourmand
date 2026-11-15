@@ -150,6 +150,12 @@ header {
     font-family: Georgia, serif;
     text-align: center;
 }
+#message-filtres {
+    grid-column: 1 / -1;
+    margin: 0;
+    text-align: center;
+    font-weight: bold;
+}
 .carte-menu {
     display: flex;
     flex-direction: column;

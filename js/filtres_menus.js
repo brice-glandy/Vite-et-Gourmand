@@ -47,6 +47,8 @@ function creerCarte(menu) {
     article.append(contenu, visuel);
     return article;
 }
+const messageFiltres = document.getElementById('message-filtres');
+
 formulaireFiltres.addEventListener('submit', async function (event) {
     // On empêche le navigateur de recharger la page
     event.preventDefault();
@@ -54,17 +56,43 @@ formulaireFiltres.addEventListener('submit', async function (event) {
     // On transforme les champs du formulaire en paramètres d'adresse : prix_min=...&theme=...
     const parametres = new URLSearchParams(new FormData(formulaireFiltres));
 
-    // On interroge l'API, puis on lit sa réponse JSON
-    const reponse = await fetch('api_menus.php?' + parametres.toString());
-    const resultat = await reponse.json();
-        // On retire les anciennes cartes (le titre « Nos menus » reste en place)
-    document.querySelectorAll('.carte-menu').forEach(function (carte) {
-        carte.remove();
-    });
+    try {
+        // On interroge l'API, puis on lit sa réponse JSON
+        const reponse = await fetch('api_menus.php?' + parametres.toString());
+        const resultat = await reponse.json();
 
-    // On ajoute une carte par menu reçu
-    const grille = document.querySelector('.grille-menus');
-    resultat.menus.forEach(function (menu) {
-        grille.appendChild(creerCarte(menu));
-    });
+        // L'API a refusé les filtres (par exemple une fourchette à l'envers) : on affiche son message
+        if (!resultat.succes) {
+            messageFiltres.textContent = resultat.message;
+            return;
+        }
+
+        // On retire les anciennes cartes (le titre « Nos menus » reste en place)
+        document.querySelectorAll('.carte-menu').forEach(function (carte) {
+            carte.remove();
+        });
+
+        // On ajoute une carte par menu reçu
+        const grille = document.querySelector('.grille-menus');
+        resultat.menus.forEach(function (menu) {
+            grille.appendChild(creerCarte(menu));
+        });
+
+        // On annonce le résultat
+        if (resultat.menus.length === 0) {
+            messageFiltres.textContent = 'Aucun menu ne correspond à ces filtres.';
+        } else {
+            messageFiltres.textContent = resultat.menus.length + ' menu(s) trouvé(s).';
+        }
+    } catch (erreur) {
+        // Le serveur ne répond pas (connexion coupée, panne...)
+        messageFiltres.textContent = 'Impossible de contacter le serveur. Réessayez plus tard.';
+    }
+});
+// Thème et régime : les cartes se mettent à jour dès qu'on change de choix
+document.getElementById('filtre-theme').addEventListener('change', function () {
+    formulaireFiltres.requestSubmit();
+});
+document.getElementById('filtre-regime').addEventListener('change', function () {
+    formulaireFiltres.requestSubmit();
 });

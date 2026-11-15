@@ -67,6 +67,7 @@ $regimes = $requete->fetchAll(PDO::FETCH_ASSOC);
     
     <section class="grille-menus" aria-labelledby="titre-menus">
         <h1 id="titre-menus">Nos menus</h1>
+        <p id="message-filtres" role="status"></p>
        <?php foreach ($menus as $un_menu) { ?>
     <article class="carte-menu">
         <div class="carte-contenu">
