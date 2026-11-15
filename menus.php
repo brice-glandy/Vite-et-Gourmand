@@ -54,7 +54,7 @@ $regimes = $requete->fetchAll(PDO::FETCH_ASSOC);
         </div>
 
         <div class="groupe-filtre">
-            <label for="filtre-personnes">Nombre de personnes minimum</label>
+            <label for="filtre-personnes">Nombre d'invités</label>
             <input type="number" id="filtre-personnes" name="personnes" min="1">
         </div>
 
