@@ -1,9 +1,7 @@
 <?php
 // Connexion à MongoDB (base non relationnelle des statistiques)
-// Même rôle que db.php pour MySQL
-$mongo_hote = 'mongo';
-$mongo_utilisateur = 'root';
-$mongo_mot_de_passe = 'root';
-$mongo_base = 'v_et_g';
+// Même rôle que db.php pour MySQL. Les identifiants viennent de config.php.
+require_once __DIR__ . '/config.php';
 
-$mongo = new MongoDB\Driver\Manager("mongodb://$mongo_utilisateur:$mongo_mot_de_passe@$mongo_hote:27017");
+$mongo_base = $config_mongo_base;
+$mongo = new MongoDB\Driver\Manager($config_mongo_adresse);
