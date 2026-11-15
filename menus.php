@@ -7,6 +7,12 @@ $sql = "SELECT id, titre, description, nombre_personne_minimum, prix_par_personn
         ORDER BY id";
 $requete = $pdo->query($sql);
 $menus = $requete->fetchAll(PDO::FETCH_ASSOC);
+// Les thèmes et les régimes, pour remplir les listes des filtres
+$requete = $pdo->query("SELECT id, libelle FROM theme ORDER BY libelle");
+$themes = $requete->fetchAll(PDO::FETCH_ASSOC);
+
+$requete = $pdo->query("SELECT id, libelle FROM regime ORDER BY libelle");
+$regimes = $requete->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -32,14 +38,20 @@ $menus = $requete->fetchAll(PDO::FETCH_ASSOC);
         <div class="groupe-filtre">
             <label for="filtre-theme">Filtre par Thème</label>
             <select id="filtre-theme" name="theme">
-                <option value="">Sélectionner</option>
+                <option value="">Tous</option>
+                <?php foreach ($themes as $un_theme) { ?>
+                    <option value="<?php echo $un_theme['id']; ?>"><?php echo htmlspecialchars($un_theme['libelle']); ?></option>
+                <?php } ?>
             </select>
         </div>
 
         <div class="groupe-filtre">
             <label for="filtre-regime">Filtre par Régime</label>
             <select id="filtre-regime" name="regime">
-                <option value="">Sélectionner</option>
+                <option value="">Tous</option>
+                <?php foreach ($regimes as $un_regime) { ?>
+                    <option value="<?php echo $un_regime['id']; ?>"><?php echo htmlspecialchars($un_regime['libelle']); ?></option>
+                <?php } ?>
             </select>
         </div>
 
