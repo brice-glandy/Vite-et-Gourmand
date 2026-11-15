@@ -1,5 +1,6 @@
 SET NAMES utf8mb4;
-USE v_et_g;
+-- Pas de "USE" : la base est choisie par la commande qui exécute ce script
+-- (MYSQL_DATABASE dans Docker, nom de la base dans la commande d'import en ligne).
 CREATE TABLE role (
 id INT AUTO_INCREMENT PRIMARY KEY,
 libelle VARCHAR(50) NOT NULL
