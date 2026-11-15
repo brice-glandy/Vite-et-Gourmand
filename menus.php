@@ -1,12 +1,10 @@
 <?php
 require_once 'includes/session.php';
 require_once 'includes/db.php';
-// Tous les menus, dans l'ordre de leur création
-$sql = "SELECT id, titre, description, nombre_personne_minimum, prix_par_personne, image_url
-        FROM menu
-        ORDER BY id";
-$requete = $pdo->query($sql);
-$menus = $requete->fetchAll(PDO::FETCH_ASSOC);
+require_once 'includes/Menus.php';
+// On fabrique l'objet (instancier), puis on lui demande les menus
+$modele_menus = new Menus($pdo);
+$menus = $modele_menus->trouver_tous();
 // Les thèmes et les régimes, pour remplir les listes des filtres
 $requete = $pdo->query("SELECT id, libelle FROM theme ORDER BY libelle");
 $themes = $requete->fetchAll(PDO::FETCH_ASSOC);
