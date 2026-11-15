@@ -5,3 +5,5 @@ desktop.ini
 
 # Configuration personnelle de l'éditeur
 .vscode/
+# Identifiants propres à chaque machine (jamais sur GitHub)
+includes/config.php
