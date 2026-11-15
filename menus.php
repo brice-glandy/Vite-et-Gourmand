@@ -1,6 +1,12 @@
 <?php
 require_once 'includes/session.php';
 require_once 'includes/db.php';
+// Tous les menus, dans l'ordre de leur création
+$sql = "SELECT id, titre, description, nombre_personne_minimum, prix_par_personne, image_url
+        FROM menu
+        ORDER BY id";
+$requete = $pdo->query($sql);
+$menus = $requete->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -50,97 +56,22 @@ require_once 'includes/db.php';
 </aside>
     
     <section class="grille-menus">
-        <article class="carte-menu">
-    <div class="carte-contenu">
-        <h2>Burger Artisan</h2>
-        <ul class="carte-caracteristiques">
-            <li>4 personnes minimum</li>
-            <li>19 € / personne</li>
-        </ul>
-        <p class="carte-description">Pain brioché fait maison garni d'un steak boucher, de fromage fondu. Avec ou sans frites.</p>
-    </div>
-    
-    <div class="carte-visuel">
-        <img src="images/burger.jpg" alt="Menu Burger Artisan">
-        <a href="#" class="btn-detail">VOIR LE DETAIL</a>
-    </div>
-        </article>
-         <article class="carte-menu">
-    <div class="carte-contenu">
-        <h2>Brunch Complet</h2>
-        <ul class="carte-caracteristiques">
-            <li>4 personnes minimum</li>
-            <li>22 € / personne</li>
-        </ul>
-        <p class="carte-description">Assortiment sucré-salé mêlant des oeufs brouillés, de l'avocat frais et des pancakes moelleux.</p>
-    </div>
-    
-    <div class="carte-visuel">
-        <img src="images/brunch.jpg" alt="Menu Brunch">
-        <a href="#" class="btn-detail">VOIR LE DETAIL</a>
-    </div>
-        </article>
-         <article class="carte-menu">
-    <div class="carte-contenu">
-        <h2>Tradition Française</h2>
-        <ul class="carte-caracteristiques">
-            <li>8 personnes minimum</li>
-            <li>26 € / personne</li>
-        </ul>
-        <p class="carte-description">Grand classique qui mets à l'honneur le terroir, viande mijotée et légumes de saison.</p>
-    </div>
-    
-    <div class="carte-visuel">
-        <img src="images/trad.jpg" alt="Menu Traditionnel">
-        <a href="#" class="btn-detail">VOIR LE DETAIL</a>
-    </div>
-        </article>
-         <article class="carte-menu">
-    <div class="carte-contenu">
-        <h2>Fraîcheur Océane</h2>
-        <ul class="carte-caracteristiques">
-            <li>4 personnes minimum</li>
-            <li>22 € / personne</li>
-        </ul>
-        <p class="carte-description">Sélection raffinée de poissons grillés et de fruits de mer, et risotto au citron confit.</p>
-    </div>
-    
-    <div class="carte-visuel">
-        <img src="images/ocean.jpg" alt="Menu Fraîcheur Océane">
-        <a href="#" class="btn-detail">VOIR LE DETAIL</a>
-    </div>
-        </article>
-         <article class="carte-menu">
-    <div class="carte-contenu">
-        <h2>Plaisir Végétal</h2>
-        <ul class="carte-caracteristiques">
-            <li>4 personnes minimum</li>
-            <li>16 € / personne</li>
-        </ul>
-        <p class="carte-description">Composition gourmande à base de céréales anciennes, de légumes croquants et de houmous maison.</p>
-    </div>
-    
-    <div class="carte-visuel">
-        <img src="images/vegetal.jpg" alt="Menu Plaisir Végétal">
-        <a href="#" class="btn-detail">VOIR LE DETAIL</a>
-    </div>
-        </article>
-         <article class="carte-menu">
-    <div class="carte-contenu">
-        <h2>Evasion Italienne</h2>
-        <ul class="carte-caracteristiques">
-            <li>8 personnes minimum</li>
-            <li>21 € / personne</li>
-        </ul>
-        <p class="carte-description">Pâtes fraîches enrobées d'une sauce au pesto de basilic et de copeaux de parmesan.</p>
-    </div>
-    
-    <div class="carte-visuel">
-        <img src="images/italienne.jpg" alt="Menu Evasion Italienne">
-        <a href="#" class="btn-detail">VOIR LE DETAIL</a>
-    </div>
-        </article>
-        <!-- Les cartes des menus viendront ici -->
+       <?php foreach ($menus as $un_menu) { ?>
+    <article class="carte-menu">
+        <div class="carte-contenu">
+            <h2><?php echo htmlspecialchars($un_menu['titre']); ?></h2>
+            <ul class="carte-caracteristiques">
+                <li><?php echo $un_menu['nombre_personne_minimum']; ?> personnes minimum</li>
+                <li><?php echo number_format($un_menu['prix_par_personne'], 2, ',', ' '); ?> € / personne</li>
+            </ul>
+            <p class="carte-description"><?php echo htmlspecialchars($un_menu['description']); ?></p>
+        </div>
+        <div class="carte-visuel">
+            <img src="<?php echo htmlspecialchars($un_menu['image_url']); ?>" alt="Menu <?php echo htmlspecialchars($un_menu['titre']); ?>">
+            <a href="#" class="btn-detail">VOIR LE DETAIL</a>
+        </div>
+    </article>
+<?php } ?>
     </section>
 </main>
 <?php include_once 'includes/footer.php'; ?>
