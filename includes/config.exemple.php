@@ -13,3 +13,7 @@ $config_db_mot_de_passe = 'root';
 // MongoDB
 $config_mongo_adresse = 'mongodb://root:root@mongo:27017';
 $config_mongo_base = 'v_et_g';
+
+
+// Cookie de session : true seulement si le site est servi en HTTPS
+$config_cookie_secure = false;
