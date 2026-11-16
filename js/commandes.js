@@ -49,10 +49,10 @@ function calculerFacture() {
         let totalNet = sousTotal + fraisDePort - montantReduction;
 
         // Mise à jour de l'interface avec formatage à 2 décimales
-        affichagePrixUnitaire.value = prixUnitaire.toFixed(2) + " €";
-        affichageFrais.value = fraisDePort.toFixed(2) + " €";
-        affichageReduction.value = montantReduction.toFixed(2) + " €";
-        affichageTotal.value = totalNet.toFixed(2) + " €";
+        affichagePrixUnitaire.value = prixUnitaire.toFixed(2).replace('.', ',') + " €";
+        affichageFrais.value = fraisDePort.toFixed(2).replace('.', ',') + " €";
+        affichageReduction.value = montantReduction.toFixed(2).replace('.', ',') + " €";
+        affichageTotal.value = totalNet.toFixed(2).replace('.', ',') + " €"; 
     }
 }
 

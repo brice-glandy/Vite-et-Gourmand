@@ -66,7 +66,8 @@ if (isset($_GET['menu']) && ctype_digit($_GET['menu'])) {
                 </div>
                
             <div class="champ-choix-menu">
-            <p>Choix du menu :</p>
+            <fieldset>
+            <legend>Choix du menu :</legend>
             <div class="options-menu">
                 <?php foreach ($menus as $un_menu) { ?>
                     <label>
@@ -81,6 +82,7 @@ if (isset($_GET['menu']) && ctype_digit($_GET['menu'])) {
                     </label>
                 <?php } ?>
             </div>
+            </fieldset>
                 <div class="champ-saisie">
                     <label for="nombre-personnes">Nombre de personnes :</label>
                     <input type="number" id="nombre-personnes" name="nombre-personnes" min="1" required>

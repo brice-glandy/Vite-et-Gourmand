@@ -372,7 +372,7 @@ header {
     margin-bottom: 1.5rem;
 }
 
-.champ-saisie label, .champ-choix-menu p {
+.champ-saisie label, .champ-choix-menu legend {
     font-weight: bold;
     font-size: 0.9rem;
     margin-bottom: 0.5rem;
