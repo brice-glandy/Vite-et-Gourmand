@@ -13,6 +13,16 @@ $sql = "SELECT nom, prenom, email, telephone FROM utilisateur WHERE id = :id";
 $requete = $pdo->prepare($sql);
 $requete->execute(['id' => $_SESSION['utilisateur_id']]);
 $client = $requete->fetch(PDO::FETCH_ASSOC);
+// La liste des menus, lue en base
+require_once 'includes/Menus.php';
+$modele_menus = new Menus($pdo);
+$menus = $modele_menus->trouver_tous();
+
+// Le menu choisi sur la page détail (commandes.php?menu=3), 0 si aucun
+$menu_choisi = 0;
+if (isset($_GET['menu']) && ctype_digit($_GET['menu'])) {
+    $menu_choisi = (int) $_GET['menu'];
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -45,16 +55,22 @@ $client = $requete->fetch(PDO::FETCH_ASSOC);
                     <input type="tel" id="telephone" name="telephone" value="<?php echo htmlspecialchars($client['telephone']); ?>" readonly>
                 </div>
                
-             <div class="champ-choix-menu">
+            <div class="champ-choix-menu">
             <p>Choix du menu :</p>
-                <div class="options-menu">
-                    <label><input type="radio" name="menu" value="burger" required> Burger Artisan</label>
-                    <label><input type="radio" name="menu" value="brunch"> Brunch Complet</label>
-                    <label><input type="radio" name="menu" value="tradition"> Tradition Française</label>
-                    <label><input type="radio" name="menu" value="oceane"> Fraicheur Océane</label>
-                    <label><input type="radio" name="menu" value="vegetal"> Végétal Equilibre</label>
-                    <label><input type="radio" name="menu" value="italienne"> Evasion Italienne</label>
-                </div>
+            <div class="options-menu">
+                <?php foreach ($menus as $un_menu) { ?>
+                    <label>
+                        <input type="radio" name="menu" value="<?php echo $un_menu['id']; ?>"
+                            data-prix="<?php echo $un_menu['prix_par_personne']; ?>"
+                            data-minimum="<?php echo $un_menu['nombre_personne_minimum']; ?>"
+                            <?php if ($un_menu['id'] == $menu_choisi) { echo 'checked'; } ?>
+                            <?php if ($un_menu['quantite_restante'] <= 0) { echo 'disabled'; } ?>
+                            required>
+                        <?php echo htmlspecialchars($un_menu['titre']); ?>
+                        (<?php echo number_format($un_menu['prix_par_personne'], 2, ',', ' '); ?> € / pers., <?php echo $un_menu['nombre_personne_minimum']; ?> pers. minimum)
+                    </label>
+                <?php } ?>
+            </div>
                 <div class="champ-saisie">
                     <label for="nombre-personnes">Nombre de personnes :</label>
                     <input type="number" id="nombre-personnes" name="nombre-personnes" min="1" required>

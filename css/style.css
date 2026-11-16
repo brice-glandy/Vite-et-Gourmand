@@ -401,7 +401,16 @@ header {
     font-size: 0.9rem;
     font-weight: normal;
 }
+.options-menu label {
+    cursor: pointer;
+}
 
+.options-menu input[type="radio"] {
+    width: 1.3rem;
+    height: 1.3rem;
+    accent-color: #6a0b37;
+    flex-shrink: 0;
+}
 .bouton-payer {
     background-color: #4A7B59;
     color: white;

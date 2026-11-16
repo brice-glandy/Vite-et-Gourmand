@@ -11,7 +11,7 @@ class Menus {
 
     // Tous les menus, dans l'ordre de leur création
     public function trouver_tous() {
-        $sql = "SELECT id, titre, description, nombre_personne_minimum, prix_par_personne, image_url
+        $sql = "SELECT id, titre, description, nombre_personne_minimum, prix_par_personne, image_url, quantite_restante
                 FROM menu
                 ORDER BY id";
         $requete = $this->pdo->query($sql);
