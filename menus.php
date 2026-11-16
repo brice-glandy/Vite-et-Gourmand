@@ -80,7 +80,7 @@ $regimes = $requete->fetchAll(PDO::FETCH_ASSOC);
         </div>
         <div class="carte-visuel">
             <img src="<?php echo htmlspecialchars($un_menu['image_url']); ?>" alt="Menu <?php echo htmlspecialchars($un_menu['titre']); ?>">
-            <a href="#" class="btn-detail">Voir le détail<span class="texte-cache"> du menu <?php echo htmlspecialchars($un_menu['titre']); ?></span></a>
+            <a href="detail_menu.php?id=<?php echo $un_menu['id']; ?>" class="btn-detail">Voir le détail<span class="texte-cache"> du menu <?php echo htmlspecialchars($un_menu['titre']); ?></span></a>
         </div>
     </article>
 <?php } ?>

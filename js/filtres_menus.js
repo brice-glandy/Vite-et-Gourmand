@@ -35,7 +35,7 @@ function creerCarte(menu) {
     image.alt = 'Menu ' + menu.titre;
 
     const lien = document.createElement('a');
-    lien.href = '#';
+    lien.href = 'detail_menu.php?id=' + menu.id;
     lien.className = 'btn-detail';
     lien.textContent = 'Voir le détail';
     const texteCache = document.createElement('span');

@@ -54,4 +54,16 @@ class Menus {
         $requete->execute($parametres);
         return $requete->fetchAll(PDO::FETCH_ASSOC);
     }
+        // Un menu précis, avec le nom de son thème et de son régime.
+    // Renvoie false si aucun menu ne porte ce numéro.
+    public function trouver_par_id($id) {
+        $sql = "SELECT menu.*, theme.libelle AS theme, regime.libelle AS regime
+                FROM menu
+                JOIN theme ON menu.theme_id = theme.id
+                JOIN regime ON menu.regime_id = regime.id
+                WHERE menu.id = :id";
+        $requete = $this->pdo->prepare($sql);
+        $requete->execute(['id' => $id]);
+        return $requete->fetch(PDO::FETCH_ASSOC);
+    }
 }
