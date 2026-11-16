@@ -103,6 +103,7 @@ libelle VARCHAR(50) NOT NULL
 CREATE TABLE menu_plat (
 menu_id INT NOT NULL,
 plat_id INT NOT NULL,
+par_defaut BOOLEAN NOT NULL DEFAULT FALSE,
 PRIMARY KEY (menu_id, plat_id),
 FOREIGN KEY (menu_id) REFERENCES menu(id),
 FOREIGN KEY (plat_id) REFERENCES plat(id)
@@ -151,6 +152,17 @@ INSERT INTO menu_plat (menu_id, plat_id) VALUES
 (4, 9), (4, 10), (4, 5),
 (5, 11), (5, 12), (5, 5),
 (6, 13), (6, 14), (6, 15);
+-- Les plats ci-dessus sont ceux d'origine : ils deviennent les choix par défaut
+UPDATE menu_plat SET par_defaut = TRUE;
+
+-- Les alternatives proposées au client (même régime, même prix de menu)
+INSERT INTO menu_plat (menu_id, plat_id) VALUES
+(1, 13), (1, 5),
+(2, 8),
+(3, 9), (3, 3),
+(4, 6), (4, 8),
+(5, 13),
+(6, 1), (6, 3);
 
 INSERT INTO plat_allergene (plat_id, allergene_id) VALUES
 (1, 1), (1, 5),
@@ -251,3 +263,19 @@ INSERT INTO avis (utilisateur_id, commande_id, note, commentaire, statut, date_p
 (7, 7, 5, 'J''ai commandé le menu Tradition Française pour un repas de famille et les cuissons étaient maîtrisées à la perfection. Un service traiteur d''une grande qualité que je recommande les yeux fermés.', 'validé', '2026-10-06 18:00:00'),
 (8, 8, 5, 'Le menu Fraîcheur Océane était un pur délice, mettant en valeur des produits de la mer d''une excellente qualité. Merci à toute l''équipe pour ce repas gourmand et le soin apporté à la présentation.', 'validé', '2026-10-20 12:00:00'),
 (3, 1, 4, 'Très bon burger, livraison à l''heure. Un peu plus de frites la prochaine fois !', 'en attente', '2026-10-12 09:30:00');
+
+-- Les plats choisis pour chaque commande
+CREATE TABLE commande_plat (
+commande_id INT NOT NULL,
+plat_id INT NOT NULL,
+PRIMARY KEY (commande_id, plat_id),
+FOREIGN KEY (commande_id) REFERENCES commande(id),
+FOREIGN KEY (plat_id) REFERENCES plat(id)
+);
+
+-- Les commandes déjà passées reçoivent les plats par défaut de leur menu
+INSERT INTO commande_plat (commande_id, plat_id)
+SELECT commande.id, menu_plat.plat_id
+FROM commande
+JOIN menu_plat ON menu_plat.menu_id = commande.menu_id
+WHERE menu_plat.par_defaut = TRUE;
