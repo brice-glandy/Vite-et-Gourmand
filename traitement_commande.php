@@ -2,6 +2,7 @@
 require_once 'includes/session.php';
 require_once 'includes/db.php';
 require_once 'includes/Menus.php';
+require_once 'includes/Commandes.php';
 
 // 1. Réservé aux clients connectés, et seulement par l'envoi du formulaire (POST)
 if (!isset($_SESSION['role']) || $_SESSION['role'] != 'utilisateur') {
@@ -87,18 +88,12 @@ if (count($erreurs) > 0) {
     exit;
 }
 
-// 9. Le prix est RECALCULÉ ici : on ne fait jamais confiance au prix affiché par le navigateur
-$prix_menu = $menu['prix_par_personne'] * $nombre_personnes;
-if ($nombre_personnes >= $menu['nombre_personne_minimum'] + 5) {
-    $prix_menu = $prix_menu * 0.9;
-}
-$prix_menu = round($prix_menu, 2);
-
-$prix_livraison = 0;
-if (!$a_bordeaux) {
-    $prix_livraison = round(5 + 0.59 * $distance, 2);
-}
-$prix_total = round($prix_menu + $prix_livraison, 2);
+// 9. Le prix est RECALCULÉ ici, par la classe Commandes : on ne fait jamais confiance au navigateur
+$modele_commandes = new Commandes($pdo);
+$prix = $modele_commandes->calculer_prix($menu, $nombre_personnes, $a_bordeaux, $distance);
+$prix_menu = $prix['prix_menu'];
+$prix_livraison = $prix['prix_livraison'];
+$prix_total = $prix['prix_total'];
 
 // 10. Le numéro de commande : l'année + 6 caractères tirés au hasard
 $numero = 'CMD-' . date('Y') . '-' . strtoupper(bin2hex(random_bytes(3)));

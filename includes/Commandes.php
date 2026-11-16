@@ -37,4 +37,26 @@ class Commandes {
         $requete->execute(['commande_id' => $commande_id]);
         return $requete->fetchAll(PDO::FETCH_ASSOC);
     }
+        // Le prix d'une commande, calculé à partir des données de la base (jamais à partir du navigateur).
+    // Renvoie les trois montants : prix du menu, livraison et total.
+    public function calculer_prix($menu, $nombre_personnes, $a_bordeaux, $distance) {
+        $prix_menu = $menu['prix_par_personne'] * $nombre_personnes;
+        // Réduction de 10 % à partir du minimum + 5 personnes
+        if ($nombre_personnes >= $menu['nombre_personne_minimum'] + 5) {
+            $prix_menu = $prix_menu * 0.9;
+        }
+        $prix_menu = round($prix_menu, 2);
+
+        // Livraison : gratuite à Bordeaux, sinon 5 € + 0,59 € par kilomètre
+        $prix_livraison = 0;
+        if (!$a_bordeaux) {
+            $prix_livraison = round(5 + 0.59 * $distance, 2);
+        }
+
+        return [
+            'prix_menu' => $prix_menu,
+            'prix_livraison' => $prix_livraison,
+            'prix_total' => round($prix_menu + $prix_livraison, 2)
+        ];
+    }
 }
