@@ -16,6 +16,8 @@
     <li><a href="admin.php">ADMINISTRATION</a></li>
 <?php } elseif ($_SESSION['role'] == 'employe') { ?>
     <li><a href="admin.php">ESPACE EMPLOYÉ</a></li>
+<?php } elseif ($_SESSION['role'] == 'utilisateur') { ?>
+    <li><a href="espace_client.php">MON ESPACE</a></li>
 <?php } ?>
     <li><a href="deconnexion.php">DÉCONNEXION</a></li>
 <?php } else { ?>

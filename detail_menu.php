@@ -75,7 +75,7 @@ if (!$menu) {
             }
             ?>
             <?php if (count($plats_du_type) > 0) { ?>
-                <h3><?php echo $type; ?></h3>
+                <h3><?php echo $type; ?><?php if (count($plats_du_type) > 1) { echo ' (au choix)'; } ?></h3>
                 <ul>
                     <?php foreach ($plats_du_type as $un_plat) { ?>
                         <li>
