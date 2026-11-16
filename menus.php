@@ -1,6 +1,16 @@
 <?php
 require_once 'includes/session.php';
 require_once 'includes/db.php';
+require_once 'includes/Menus.php';
+// On fabrique l'objet (instancier), puis on lui demande les menus
+$modele_menus = new Menus($pdo);
+$menus = $modele_menus->trouver_tous();
+// Les thèmes et les régimes, pour remplir les listes des filtres
+$requete = $pdo->query("SELECT id, libelle FROM theme ORDER BY libelle");
+$themes = $requete->fetchAll(PDO::FETCH_ASSOC);
+
+$requete = $pdo->query("SELECT id, libelle FROM regime ORDER BY libelle");
+$regimes = $requete->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -14,135 +24,69 @@ require_once 'includes/db.php';
    <?php include_once 'includes/header.php'; ?>
     <main class="conteneur-principal">
   <aside class="zone-filtres">
-    <form action="#" method="GET">
-        <div class="groupe-filtre">
-    <label>Filtre par Prix (€)</label>
-        <div class="filtre-prix-inputs">
-            <input type="number" id="prix-min" name="prix_min" placeholder="Min">
-             <input type="number" id="prix-max" name="prix_max" placeholder="Max">
-        </div>
-    </div>
+    <form action="#" method="GET" id="formulaire-filtres">
+        <fieldset class="groupe-filtre">
+            <legend>Filtre par Prix (€ / personne)</legend>
+            <div class="filtre-prix-inputs">
+                <input type="number" id="prix-min" name="prix_min" placeholder="Min" min="0" aria-label="Prix minimum par personne">
+                <input type="number" id="prix-max" name="prix_max" placeholder="Max" min="0" aria-label="Prix maximum par personne">
+            </div>
+        </fieldset> 
 
         <div class="groupe-filtre">
             <label for="filtre-theme">Filtre par Thème</label>
             <select id="filtre-theme" name="theme">
-                <option value="">Sélectionner</option>
+                <option value="">Tous</option>
+                <?php foreach ($themes as $un_theme) { ?>
+                    <option value="<?php echo $un_theme['id']; ?>"><?php echo htmlspecialchars($un_theme['libelle']); ?></option>
+                <?php } ?>
             </select>
         </div>
 
         <div class="groupe-filtre">
             <label for="filtre-regime">Filtre par Régime</label>
             <select id="filtre-regime" name="regime">
-                <option value="">Sélectionner</option>
+                <option value="">Tous</option>
+                <?php foreach ($regimes as $un_regime) { ?>
+                    <option value="<?php echo $un_regime['id']; ?>"><?php echo htmlspecialchars($un_regime['libelle']); ?></option>
+                <?php } ?>
             </select>
         </div>
 
         <div class="groupe-filtre">
-            <label for="filtre-personnes">Nombre de personnes minimum</label>
+            <label for="filtre-personnes">Nombre d'invités</label>
             <input type="number" id="filtre-personnes" name="personnes" min="1">
         </div>
 
         <div class="actions-filtres">
             <button type="submit" class="btn-valider">Valider</button>
-            <button type="reset" class="btn-effacer">Effacer</button>
+            <button type="button" class="btn-effacer" id="bouton-effacer">Effacer</button>
         </div>
     </form>
 </aside>
     
-    <section class="grille-menus">
-        <article class="carte-menu">
-    <div class="carte-contenu">
-        <h2>Burger Artisan</h2>
-        <ul class="carte-caracteristiques">
-            <li>4 personnes minimum</li>
-            <li>19 € / personne</li>
-        </ul>
-        <p class="carte-description">Pain brioché fait maison garni d'un steak boucher, de fromage fondu. Avec ou sans frites.</p>
-    </div>
-    
-    <div class="carte-visuel">
-        <img src="images/burger.jpg" alt="Menu Burger Artisan">
-        <a href="#" class="btn-detail">VOIR LE DETAIL</a>
-    </div>
-        </article>
-         <article class="carte-menu">
-    <div class="carte-contenu">
-        <h2>Brunch Complet</h2>
-        <ul class="carte-caracteristiques">
-            <li>4 personnes minimum</li>
-            <li>22 € / personne</li>
-        </ul>
-        <p class="carte-description">Assortiment sucré-salé mêlant des oeufs brouillés, de l'avocat frais et des pancakes moelleux.</p>
-    </div>
-    
-    <div class="carte-visuel">
-        <img src="images/brunch.jpg" alt="Menu Brunch">
-        <a href="#" class="btn-detail">VOIR LE DETAIL</a>
-    </div>
-        </article>
-         <article class="carte-menu">
-    <div class="carte-contenu">
-        <h2>Tradition Française</h2>
-        <ul class="carte-caracteristiques">
-            <li>8 personnes minimum</li>
-            <li>26 € / personne</li>
-        </ul>
-        <p class="carte-description">Grand classique qui mets à l'honneur le terroir, viande mijotée et légumes de saison.</p>
-    </div>
-    
-    <div class="carte-visuel">
-        <img src="images/trad.jpg" alt="Menu Traditionnel">
-        <a href="#" class="btn-detail">VOIR LE DETAIL</a>
-    </div>
-        </article>
-         <article class="carte-menu">
-    <div class="carte-contenu">
-        <h2>Fraîcheur Océane</h2>
-        <ul class="carte-caracteristiques">
-            <li>4 personnes minimum</li>
-            <li>22 € / personne</li>
-        </ul>
-        <p class="carte-description">Sélection raffinée de poissons grillés et de fruits de mer, et risotto au citron confit.</p>
-    </div>
-    
-    <div class="carte-visuel">
-        <img src="images/ocean.jpg" alt="Menu Fraîcheur Océane">
-        <a href="#" class="btn-detail">VOIR LE DETAIL</a>
-    </div>
-        </article>
-         <article class="carte-menu">
-    <div class="carte-contenu">
-        <h2>Plaisir Végétal</h2>
-        <ul class="carte-caracteristiques">
-            <li>4 personnes minimum</li>
-            <li>16 € / personne</li>
-        </ul>
-        <p class="carte-description">Composition gourmande à base de céréales anciennes, de légumes croquants et de houmous maison.</p>
-    </div>
-    
-    <div class="carte-visuel">
-        <img src="images/vegetal.jpg" alt="Menu Plaisir Végétal">
-        <a href="#" class="btn-detail">VOIR LE DETAIL</a>
-    </div>
-        </article>
-         <article class="carte-menu">
-    <div class="carte-contenu">
-        <h2>Evasion Italienne</h2>
-        <ul class="carte-caracteristiques">
-            <li>8 personnes minimum</li>
-            <li>21 € / personne</li>
-        </ul>
-        <p class="carte-description">Pâtes fraîches enrobées d'une sauce au pesto de basilic et de copeaux de parmesan.</p>
-    </div>
-    
-    <div class="carte-visuel">
-        <img src="images/italienne.jpg" alt="Menu Evasion Italienne">
-        <a href="#" class="btn-detail">VOIR LE DETAIL</a>
-    </div>
-        </article>
-        <!-- Les cartes des menus viendront ici -->
+    <section class="grille-menus" aria-labelledby="titre-menus">
+        <h1 id="titre-menus">Nos menus</h1>
+        <p id="message-filtres" role="status"></p>
+       <?php foreach ($menus as $un_menu) { ?>
+    <article class="carte-menu">
+        <div class="carte-contenu">
+            <h2><?php echo htmlspecialchars($un_menu['titre']); ?></h2>
+            <ul class="carte-caracteristiques">
+                <li><?php echo $un_menu['nombre_personne_minimum']; ?> personnes minimum</li>
+                <li><?php echo number_format($un_menu['prix_par_personne'], 2, ',', ' '); ?> € / personne</li>
+            </ul>
+            <p class="carte-description"><?php echo htmlspecialchars($un_menu['description']); ?></p>
+        </div>
+        <div class="carte-visuel">
+            <img src="<?php echo htmlspecialchars($un_menu['image_url']); ?>" alt="Menu <?php echo htmlspecialchars($un_menu['titre']); ?>">
+            <a href="detail_menu.php?id=<?php echo $un_menu['id']; ?>" class="btn-detail">Voir le détail<span class="texte-cache"> du menu <?php echo htmlspecialchars($un_menu['titre']); ?></span></a>
+        </div>
+    </article>
+<?php } ?>
     </section>
 </main>
 <?php include_once 'includes/footer.php'; ?>
+<script src="js/filtres_menus.js"></script>
 </body>
 </html>

@@ -143,7 +143,19 @@ header {
     gap: 20px;
     width: 100%;
 }
-
+#titre-menus {
+    grid-column: 1 / -1;
+    margin: 0;
+    color: #6a0b37;
+    font-family: Georgia, serif;
+    text-align: center;
+}
+#message-filtres {
+    grid-column: 1 / -1;
+    margin: 0;
+    text-align: center;
+    font-weight: bold;
+}
 .carte-menu {
     display: flex;
     flex-direction: column;
@@ -197,7 +209,7 @@ header {
     bottom: 0;
     left: 0;
     width: 100%;
-    background-color: rgba(223, 196, 209, 0.85);
+    background-color: rgba(106, 11, 55, 0.85);
     color: white;
     text-align: center;
     padding: 15px 0;
@@ -1066,4 +1078,117 @@ button:disabled {
         display: grid;
         grid-template-columns: repeat(2, 1fr);
     }
+}
+/* Texte invisible à l'écran, mais lu par les lecteurs d'écran */
+.texte-cache {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+/* --- PAGE DÉTAIL D'UN MENU --- */
+.page-detail-menu {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px 15px;
+}
+
+.page-detail-menu h1 {
+    color: #6a0b37;
+    font-family: Georgia, serif;
+    text-align: center;
+}
+
+/* Galerie : couverture en grand, les autres photos en vignettes */
+.galerie-menu {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.galerie-menu img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 5px;
+    display: block;
+}
+
+.galerie-menu img:first-child {
+    grid-column: 1 / -1;
+    height: 250px;
+}
+
+@media (min-width: 768px) {
+    .galerie-menu {
+        grid-template-columns: 2fr 1fr;
+        grid-auto-rows: 190px;
+    }
+
+    .galerie-menu img {
+        height: 100%;
+    }
+
+    .galerie-menu img:first-child {
+        grid-column: auto;
+        grid-row: span 2;
+        height: 100%;
+    }
+}
+.description-detail-menu {
+    font-style: italic;
+    text-align: center;
+}
+
+/* Les informations clés dans un bloc rose, comme les cartes de la vue globale */
+.infos-detail-menu {
+    list-style: none;
+    padding: 15px 20px;
+    background-color: #e8d4df;
+    border-radius: 5px;
+}
+
+.infos-detail-menu li {
+    padding: 4px 0;
+}
+
+.plats-menu h2,
+.conditions-menu h2 {
+    color: #6a0b37;
+    font-family: Georgia, serif;
+}
+
+.plats-menu h3 {
+    margin-bottom: 5px;
+}
+
+.plats-menu ul {
+    margin-top: 0;
+}
+
+.plats-menu small {
+    color: #555555;
+}
+
+/* Conditions bien mises en évidence (demande de l'énoncé) */
+.conditions-menu {
+    background-color: #fdf0f5;
+    border: 2px solid #6a0b37;
+    border-left-width: 10px;
+    border-radius: 5px;
+    padding: 5px 20px 15px;
+    margin: 30px 0;
+}
+
+/* Le bouton Commander, centré sous les conditions */
+.page-detail-menu .bouton-principal {
+    display: block;
+    max-width: 300px;
+    margin: 20px auto;
+    text-align: center;
 }

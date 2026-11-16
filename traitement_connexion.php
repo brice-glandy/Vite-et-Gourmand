@@ -47,6 +47,11 @@ $_SESSION['role'] = $utilisateur['role'];
 // 7. Redirection selon le rôle
 if ($utilisateur['role'] == 'administrateur' || $utilisateur['role'] == 'employe') {
     header('Location: admin.php');
+} elseif (isset($_SESSION['menu_a_commander'])) {
+    // Le client venait de cliquer sur « Commander » : on le ramène sur la commande de ce menu
+    $menu_id = $_SESSION['menu_a_commander'];
+    unset($_SESSION['menu_a_commander']);
+    header('Location: commandes.php?menu=' . $menu_id);
 } else {
     header('Location: menus.php');
 }
