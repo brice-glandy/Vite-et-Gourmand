@@ -1,6 +1,18 @@
 <?php
 require_once 'includes/session.php';
 require_once 'includes/db.php';
+
+// Page réservée aux clients connectés (rôle utilisateur)
+if (!isset($_SESSION['role']) || $_SESSION['role'] != 'utilisateur') {
+    header('Location: connexion.php');
+    exit;
+}
+
+// Les informations du client, lues dans son compte
+$sql = "SELECT nom, prenom, email, telephone FROM utilisateur WHERE id = :id";
+$requete = $pdo->prepare($sql);
+$requete->execute(['id' => $_SESSION['utilisateur_id']]);
+$client = $requete->fetch(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -18,19 +30,19 @@ require_once 'includes/db.php';
             <div class="colonne-gauche">
                 <div class="champ-saisie">
                     <label for="nom">Nom :</label>
-                    <input type="text" id="nom" name="nom" required>
+                    <input type="text" id="nom" name="nom" value="<?php echo htmlspecialchars($client['nom']); ?>" readonly>
                 </div>
                 <div class="champ-saisie">
                     <label for="prenom">Prénom :</label>
-                    <input type="text" id="prenom" name="prenom" required>
+                    <input type="text" id="prenom" name="prenom" value="<?php echo htmlspecialchars($client['prenom']); ?>" readonly>
                 </div>
                 <div class="champ-saisie">
                     <label for="email">Adresse mail :</label>
-                    <input type="email" id="email" name="email" required>
+                    <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($client['email']); ?>" readonly>
                 </div>
                 <div class="champ-saisie">
                     <label for="telephone">Numéro de téléphone :</label>
-                    <input type="tel" id="telephone" name="telephone" required>
+                    <input type="tel" id="telephone" name="telephone" value="<?php echo htmlspecialchars($client['telephone']); ?>" readonly>
                 </div>
                
              <div class="champ-choix-menu">
