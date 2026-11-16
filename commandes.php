@@ -1,6 +1,28 @@
 <?php
 require_once 'includes/session.php';
 require_once 'includes/db.php';
+
+// Page réservée aux clients connectés (rôle utilisateur)
+if (!isset($_SESSION['role']) || $_SESSION['role'] != 'utilisateur') {
+    header('Location: connexion.php');
+    exit;
+}
+
+// Les informations du client, lues dans son compte
+$sql = "SELECT nom, prenom, email, telephone FROM utilisateur WHERE id = :id";
+$requete = $pdo->prepare($sql);
+$requete->execute(['id' => $_SESSION['utilisateur_id']]);
+$client = $requete->fetch(PDO::FETCH_ASSOC);
+// La liste des menus, lue en base
+require_once 'includes/Menus.php';
+$modele_menus = new Menus($pdo);
+$menus = $modele_menus->trouver_tous();
+
+// Le menu choisi sur la page détail (commandes.php?menu=3), 0 si aucun
+$menu_choisi = 0;
+if (isset($_GET['menu']) && ctype_digit($_GET['menu'])) {
+    $menu_choisi = (int) $_GET['menu'];
+}
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -14,35 +36,53 @@ require_once 'includes/db.php';
    <?php include_once 'includes/header.php'; ?>  
     <main class="page-commande">
     <h1>Détails de votre commande</h1>
-        <form action="#" method="POST" id="formulaire-commande">
+    <?php if (isset($_SESSION['erreurs_commande'])) { ?>
+    <div class="message-erreur" role="alert">
+        <ul>
+            <?php foreach ($_SESSION['erreurs_commande'] as $erreur) { ?>
+                <li><?php echo htmlspecialchars($erreur); ?></li>
+            <?php } ?>
+        </ul>
+    </div>
+    <?php unset($_SESSION['erreurs_commande']); ?>
+<?php } ?>
+        <form action="traitement_commande.php" method="POST" id="formulaire-commande">
             <div class="colonne-gauche">
                 <div class="champ-saisie">
                     <label for="nom">Nom :</label>
-                    <input type="text" id="nom" name="nom" required>
+                    <input type="text" id="nom" name="nom" value="<?php echo htmlspecialchars($client['nom']); ?>" readonly>
                 </div>
                 <div class="champ-saisie">
                     <label for="prenom">Prénom :</label>
-                    <input type="text" id="prenom" name="prenom" required>
+                    <input type="text" id="prenom" name="prenom" value="<?php echo htmlspecialchars($client['prenom']); ?>" readonly>
                 </div>
                 <div class="champ-saisie">
                     <label for="email">Adresse mail :</label>
-                    <input type="email" id="email" name="email" required>
+                    <input type="email" id="email" name="email" value="<?php echo htmlspecialchars($client['email']); ?>" readonly>
                 </div>
                 <div class="champ-saisie">
                     <label for="telephone">Numéro de téléphone :</label>
-                    <input type="tel" id="telephone" name="telephone" required>
+                    <input type="tel" id="telephone" name="telephone" value="<?php echo htmlspecialchars($client['telephone']); ?>" readonly>
                 </div>
                
-             <div class="champ-choix-menu">
-            <p>Choix du menu :</p>
-                <div class="options-menu">
-                    <label><input type="radio" name="menu" value="burger" required> Burger Artisan</label>
-                    <label><input type="radio" name="menu" value="brunch"> Brunch Complet</label>
-                    <label><input type="radio" name="menu" value="tradition"> Tradition Française</label>
-                    <label><input type="radio" name="menu" value="oceane"> Fraicheur Océane</label>
-                    <label><input type="radio" name="menu" value="vegetal"> Végétal Equilibre</label>
-                    <label><input type="radio" name="menu" value="italienne"> Evasion Italienne</label>
-                </div>
+            <div class="champ-choix-menu">
+            <fieldset>
+            <legend>Choix du menu :</legend>
+            <div class="options-menu">
+                <?php foreach ($menus as $un_menu) { ?>
+                    <label>
+                        <input type="radio" name="menu" value="<?php echo $un_menu['id']; ?>"
+                            data-prix="<?php echo $un_menu['prix_par_personne']; ?>"
+                            data-minimum="<?php echo $un_menu['nombre_personne_minimum']; ?>"
+                            <?php if ($un_menu['id'] == $menu_choisi) { echo 'checked'; } ?>
+                            <?php if ($un_menu['quantite_restante'] <= 0) { echo 'disabled'; } ?>
+                            required>
+                        <?php echo htmlspecialchars($un_menu['titre']); ?>
+                        (<?php echo number_format($un_menu['prix_par_personne'], 2, ',', ' '); ?> € / pers., <?php echo $un_menu['nombre_personne_minimum']; ?> pers. minimum)
+                    </label>
+                <?php } ?>
+            </div>
+            </fieldset>
                 <div class="champ-saisie">
                     <label for="nombre-personnes">Nombre de personnes :</label>
                     <input type="number" id="nombre-personnes" name="nombre-personnes" min="1" required>
@@ -98,7 +138,7 @@ require_once 'includes/db.php';
                 </div>
             </div>
            
-        <button type="submit" class="bouton-payer">Payer</button>
+        <button type="submit" class="bouton-payer">Valider la commande</button>
         </div>
     </form>
     </main>

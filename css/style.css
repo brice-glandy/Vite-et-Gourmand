@@ -233,6 +233,7 @@ header {
     font-size: 14px;
     width: 100%;
     box-sizing: border-box;
+    border-radius: 0;
 }
 
 .pied-de-page {
@@ -371,7 +372,7 @@ header {
     margin-bottom: 1.5rem;
 }
 
-.champ-saisie label, .champ-choix-menu p {
+.champ-saisie label, .champ-choix-menu legend {
     font-weight: bold;
     font-size: 0.9rem;
     margin-bottom: 0.5rem;
@@ -400,7 +401,16 @@ header {
     font-size: 0.9rem;
     font-weight: normal;
 }
+.options-menu label {
+    cursor: pointer;
+}
 
+.options-menu input[type="radio"] {
+    width: 1.3rem;
+    height: 1.3rem;
+    accent-color: #6a0b37;
+    flex-shrink: 0;
+}
 .bouton-payer {
     background-color: #4A7B59;
     color: white;
@@ -1191,4 +1201,16 @@ button:disabled {
     max-width: 300px;
     margin: 20px auto;
     text-align: center;
+}
+/* --- PAGE DE CONFIRMATION DE COMMANDE --- */
+.page-confirmation {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 40px 15px;
+    text-align: center;
+}
+
+.page-confirmation h1 {
+    color: #6a0b37;
+    font-family: Georgia, serif;
 }
