@@ -7,3 +7,4 @@ desktop.ini
 .vscode/
 # Identifiants propres à chaque machine (jamais sur GitHub)
 includes/config.php
+NOTES_REPRISE.md
