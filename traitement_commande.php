@@ -177,6 +177,18 @@ try {
 } catch (MongoDB\Driver\Exception\Exception $e) {
     error_log('Copie MongoDB impossible pour ' . $numero . ' : ' . $e->getMessage());
 }
+// 13. Mail de confirmation au client (simulé, voir includes/mail.php)
+require_once 'includes/mail.php';
+$requete = $pdo->prepare("SELECT email, prenom FROM utilisateur WHERE id = :id");
+$requete->execute(['id' => $_SESSION['utilisateur_id']]);
+$client = $requete->fetch(PDO::FETCH_ASSOC);
+
+$message = 'Bonjour ' . $client['prenom'] . ', votre commande ' . $numero
+         . ' (' . $menu['titre'] . ', ' . $nombre_personnes . ' personnes) pour le '
+         . date('d/m/Y', strtotime($date_prestation)) . ' à ' . $heure
+         . ' est bien enregistrée. Total : ' . number_format($prix_total, 2, ',', ' ') . ' €.'
+         . ' Elle sera validée par notre équipe. Vite & Gourmand';
+envoyer_mail($client['email'], 'Confirmation de votre commande ' . $numero, $message);
 // Test provisoire (remplacé plus tard par la page de confirmation)
 echo 'Commande enregistrée : ' . $numero;
 exit;
