@@ -233,6 +233,7 @@ header {
     font-size: 14px;
     width: 100%;
     box-sizing: border-box;
+    border-radius: 0;
 }
 
 .pied-de-page {
