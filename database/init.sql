@@ -68,7 +68,13 @@ INSERT INTO menu (titre, description, nombre_personne_minimum, prix_par_personne
 ('Fraîcheur Océane', 'Sélection raffinée de poissons grillés et de fruits de mer, et risotto au citron confit.', 4, 22.00, 6, 'Commande au moins 1 semaine avant. Produits de la mer à consommer le jour même.', 'images/ocean.jpg', 4, 1),
 ('Plaisir Végétal', 'Composition gourmande à base de céréales anciennes, de légumes croquants et de houmous maison.', 4, 16.00, 12, 'Commande au moins 3 jours avant la prestation.', 'images/vegetal.jpg', 1, 3),
 ('Evasion Italienne', 'Pâtes fraîches enrobées d''une sauce au pesto de basilic et de copeaux de parmesan.', 8, 21.00, 7, 'Commande au moins 1 semaine avant la prestation.', 'images/italienne.jpg', 1, 2);
-
+CREATE TABLE image_menu (
+id INT AUTO_INCREMENT PRIMARY KEY,
+menu_id INT NOT NULL,
+chemin VARCHAR(255) NOT NULL,
+texte_alternatif VARCHAR(255) NOT NULL,
+FOREIGN KEY (menu_id) REFERENCES menu(id)
+);
 CREATE TABLE plat (
 id INT AUTO_INCREMENT PRIMARY KEY,
 titre_plat VARCHAR(100) NOT NULL,
