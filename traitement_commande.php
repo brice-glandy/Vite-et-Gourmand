@@ -158,7 +158,25 @@ try {
     header('Location: commandes.php?menu=' . $menu['id']);
     exit;
 }
-
+// 12. Copie dans MongoDB pour les statistiques (même structure que init_mongo.js).
+// MySQL reste la référence : si MongoDB ne répond pas, la commande reste valable.
+try {
+    require_once 'includes/mongo.php';
+    $ecriture = new MongoDB\Driver\BulkWrite();
+    $ecriture->insert([
+        'numero_commande' => $numero,
+        'menu_id' => (int) $menu['id'],
+        'menu_titre' => $menu['titre'],
+        'date_commande' => new MongoDB\BSON\UTCDateTime(),
+        'nombre_personne' => $nombre_personnes,
+        'prix_menu' => $prix_menu,
+        'prix_total' => $prix_total,
+        'statut' => 'en attente'
+    ]);
+    $mongo->executeBulkWrite($mongo_base . '.commandes', $ecriture);
+} catch (MongoDB\Driver\Exception\Exception $e) {
+    error_log('Copie MongoDB impossible pour ' . $numero . ' : ' . $e->getMessage());
+}
 // Test provisoire (remplacé plus tard par la page de confirmation)
 echo 'Commande enregistrée : ' . $numero;
 exit;
