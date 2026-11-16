@@ -1214,3 +1214,29 @@ button:disabled {
     color: #6a0b37;
     font-family: Georgia, serif;
 }
+/* --- ESPACE CLIENT --- */
+.page-espace-client {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px 15px;
+}
+
+.page-espace-client h1,
+.page-espace-client h2 {
+    color: #6a0b37;
+    font-family: Georgia, serif;
+}
+
+.statut-commande {
+    background-color: #6a0b37;
+}
+
+.carte-commande h3 {
+    margin: 0;
+}
+
+.carte-commande ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
