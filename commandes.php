@@ -36,7 +36,17 @@ if (isset($_GET['menu']) && ctype_digit($_GET['menu'])) {
    <?php include_once 'includes/header.php'; ?>  
     <main class="page-commande">
     <h1>Détails de votre commande</h1>
-        <form action="#" method="POST" id="formulaire-commande">
+    <?php if (isset($_SESSION['erreurs_commande'])) { ?>
+    <div class="message-erreur" role="alert">
+        <ul>
+            <?php foreach ($_SESSION['erreurs_commande'] as $erreur) { ?>
+                <li><?php echo htmlspecialchars($erreur); ?></li>
+            <?php } ?>
+        </ul>
+    </div>
+    <?php unset($_SESSION['erreurs_commande']); ?>
+<?php } ?>
+        <form action="traitement_commande.php" method="POST" id="formulaire-commande">
             <div class="colonne-gauche">
                 <div class="champ-saisie">
                     <label for="nom">Nom :</label>
