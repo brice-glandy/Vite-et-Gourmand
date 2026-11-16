@@ -145,7 +145,12 @@ try {
         'prix_livraison' => $prix_livraison,
         'prix_total' => $prix_total
     ]);
-
+    // b2. Les plats de la commande : au départ, les plats par défaut du menu
+    $commande_id = $pdo->lastInsertId();
+    $requete = $pdo->prepare("INSERT INTO commande_plat (commande_id, plat_id)
+                              SELECT :commande_id, plat_id FROM menu_plat
+                              WHERE menu_id = :menu_id AND par_defaut = TRUE");
+    $requete->execute(['commande_id' => $commande_id, 'menu_id' => $menu['id']]);
     // c. Tout s'est bien passé : on valide les deux opérations d'un coup
     $pdo->commit();
 } catch (PDOException $e) {
