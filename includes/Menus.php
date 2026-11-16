@@ -81,4 +81,11 @@ class Menus {
         $requete->execute(['menu_id' => $menu_id]);
         return $requete->fetchAll(PDO::FETCH_ASSOC);
     }
+        // Les photos de la galerie d'un menu
+    public function trouver_images($menu_id) {
+        $sql = "SELECT chemin, texte_alternatif FROM image_menu WHERE menu_id = :menu_id ORDER BY id";
+        $requete = $this->pdo->prepare($sql);
+        $requete->execute(['menu_id' => $menu_id]);
+        return $requete->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

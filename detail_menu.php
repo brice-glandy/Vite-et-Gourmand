@@ -15,6 +15,7 @@ if ($id > 0) {
     $modele_menus = new Menus($pdo);
     $menu = $modele_menus->trouver_par_id($id);
     $plats = $modele_menus->trouver_plats($id);
+    $images = $modele_menus->trouver_images($id);
 }
 
 // 3. Menu introuvable : code 404 « page introuvable »
@@ -39,7 +40,12 @@ if (!$menu) {
     <a href="menus.php">Retour à tous les menus</a>
 <?php } else { ?>
     <h1><?php echo htmlspecialchars($menu['titre']); ?></h1>
-        <img class="image-detail-menu" src="<?php echo htmlspecialchars($menu['image_url']); ?>" alt="Menu <?php echo htmlspecialchars($menu['titre']); ?>">
+           <div class="galerie-menu">
+        <img src="<?php echo htmlspecialchars($menu['image_url']); ?>" alt="Menu <?php echo htmlspecialchars($menu['titre']); ?>">
+        <?php foreach ($images as $une_image) { ?>
+            <img src="<?php echo htmlspecialchars($une_image['chemin']); ?>" alt="<?php echo htmlspecialchars($une_image['texte_alternatif']); ?>">
+        <?php } ?>
+    </div>
 
     <p class="description-detail-menu"><?php echo htmlspecialchars($menu['description']); ?></p>
 
