@@ -19,4 +19,11 @@ class Commandes {
         $requete->execute(['utilisateur_id' => $utilisateur_id]);
         return $requete->fetchAll(PDO::FETCH_ASSOC);
     }
+        // Une commande précise, SEULEMENT si elle appartient à ce client (false sinon)
+    public function trouver_du_client($commande_id, $utilisateur_id) {
+        $sql = "SELECT * FROM commande WHERE id = :id AND utilisateur_id = :utilisateur_id";
+        $requete = $this->pdo->prepare($sql);
+        $requete->execute(['id' => $commande_id, 'utilisateur_id' => $utilisateur_id]);
+        return $requete->fetch(PDO::FETCH_ASSOC);
+    }
 }

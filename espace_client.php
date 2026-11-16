@@ -32,7 +32,14 @@ $client = $requete->fetch(PDO::FETCH_ASSOC);
 
     <section aria-labelledby="titre-commandes">
         <h2 id="titre-commandes">Mes commandes</h2>
-
+        <?php if (isset($_SESSION['message_commandes'])) { ?>
+            <p class="message-succes" role="status"><?php echo htmlspecialchars($_SESSION['message_commandes']); ?></p>
+            <?php unset($_SESSION['message_commandes']); ?>
+        <?php } ?>
+        <?php if (isset($_SESSION['erreur_commandes'])) { ?>
+            <p class="message-erreur" role="alert"><?php echo htmlspecialchars($_SESSION['erreur_commandes']); ?></p>
+            <?php unset($_SESSION['erreur_commandes']); ?>
+        <?php } ?>
         <?php if (count($commandes) == 0) { ?>
             <p>Vous n'avez pas encore passé de commande.</p>
             <a href="menus.php" class="bouton-principal">Découvrir nos menus</a>
@@ -51,6 +58,12 @@ $client = $requete->fetch(PDO::FETCH_ASSOC);
                     <li>Livraison : <?php echo number_format($une_commande['prix_livraison'], 2, ',', ' '); ?> €</li>
                     <li><strong>Total : <?php echo number_format($une_commande['prix_total'], 2, ',', ' '); ?> €</strong></li>
                 </ul>
+                <?php if ($une_commande['statut'] == 'en attente') { ?>
+                    <form action="traitement_annulation.php" method="POST" class="form-annulation">
+                        <input type="hidden" name="commande_id" value="<?php echo $une_commande['id']; ?>">
+                        <button type="submit" class="btn-supprimer" data-numero="<?php echo htmlspecialchars($une_commande['numero_commande']); ?>">Annuler cette commande</button>
+                    </form>
+                <?php } ?>
             </article>
         <?php } ?>
     </section>
@@ -96,5 +109,6 @@ $client = $requete->fetch(PDO::FETCH_ASSOC);
     </section>
 </main>
 <?php include_once 'includes/footer.php'; ?>
+<script src="js/espace_client.js"></script>
 </body>
 </html>
