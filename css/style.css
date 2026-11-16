@@ -1202,3 +1202,15 @@ button:disabled {
     margin: 20px auto;
     text-align: center;
 }
+/* --- PAGE DE CONFIRMATION DE COMMANDE --- */
+.page-confirmation {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 40px 15px;
+    text-align: center;
+}
+
+.page-confirmation h1 {
+    color: #6a0b37;
+    font-family: Georgia, serif;
+}

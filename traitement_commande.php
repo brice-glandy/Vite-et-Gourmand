@@ -189,6 +189,8 @@ $message = 'Bonjour ' . $client['prenom'] . ', votre commande ' . $numero
          . ' est bien enregistrée. Total : ' . number_format($prix_total, 2, ',', ' ') . ' €.'
          . ' Elle sera validée par notre équipe. Vite & Gourmand';
 envoyer_mail($client['email'], 'Confirmation de votre commande ' . $numero, $message);
-// Test provisoire (remplacé plus tard par la page de confirmation)
-echo 'Commande enregistrée : ' . $numero;
+// 14. On redirige vers la page de confirmation (Post/Redirect/Get) :
+// un F5 sur la page suivante ne renverra pas le formulaire, donc pas de commande en double
+$_SESSION['commande_confirmee'] = $numero;
+header('Location: confirmation_commande.php');
 exit;
