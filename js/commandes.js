@@ -1,12 +1,3 @@
-const donneesMenus = {
-    'burger': { prix: 15, minPersonnes: 2 },
-    'brunch': { prix: 22, minPersonnes: 4 },
-    'tradition': { prix: 18, minPersonnes: 2 },
-    'oceane': { prix: 20, minPersonnes: 2 },
-    'vegetal': { prix: 16, minPersonnes: 2 },
-    'italienne': { prix: 17, minPersonnes: 2 }
-};
-
 const boutonsRadioMenus = document.querySelectorAll('input[name="menu"]');
 const champQuantite = document.getElementById('nombre-personnes');
 const champVille = document.getElementById('ville');
@@ -23,6 +14,10 @@ function calculerFacture() {
     let nombrePersonnes = parseInt(champQuantite.value) || 0;
     let nomVille = champVille.value.trim().toLowerCase();
     let distanceKm = parseFloat(champDistance.value) || 0;
+    // Le nombre de personnes ne peut pas descendre sous le minimum du menu choisi
+    if (menuSelectionne) {
+        champQuantite.min = menuSelectionne.dataset.minimum;
+    }
 
     // Gestion de l'affichage du champ kilométrage
     if (nomVille !== '' && nomVille !== 'bordeaux') {
@@ -33,9 +28,9 @@ function calculerFacture() {
     }
 
     if (menuSelectionne && nombrePersonnes > 0) {
-        let identifiantMenu = menuSelectionne.value;
-        let prixUnitaire = donneesMenus[identifiantMenu].prix;
-        let minimumRequis = donneesMenus[identifiantMenu].minPersonnes;
+        // Le prix et le minimum sont lus dans les attributs data-prix et data-minimum du menu coché
+        let prixUnitaire = parseFloat(menuSelectionne.dataset.prix);
+        let minimumRequis = parseInt(menuSelectionne.dataset.minimum);
         
         let sousTotal = prixUnitaire * nombrePersonnes;
         
@@ -68,3 +63,5 @@ boutonsRadioMenus.forEach(bouton => {
 champQuantite.addEventListener('input', calculerFacture);
 champVille.addEventListener('input', calculerFacture);
 champDistance.addEventListener('input', calculerFacture);
+// Calcul dès l'ouverture de la page, si un menu est déjà coché (venu de la page détail)
+calculerFacture();
