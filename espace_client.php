@@ -54,16 +54,21 @@ $client = $requete->fetch(PDO::FETCH_ASSOC);
                     <li>Prestation le <?php echo date('d/m/Y', strtotime($une_commande['date_prestation'])); ?> à <?php echo substr($une_commande['heure_livraison'], 0, 5); ?></li>
                     <li>Adresse : <?php echo htmlspecialchars($une_commande['adresse_livraison'] . ' ' . $une_commande['ville_livraison']); ?></li>
                     <li>Nombre de personnes : <?php echo $une_commande['nombre_personne']; ?></li>
+                    <?php $plats_choisis = $modele_commandes->trouver_plats_choisis($une_commande['id']); ?>
+                    <li>Plats : <?php echo htmlspecialchars(implode(', ', array_column($plats_choisis, 'titre_plat'))); ?></li>
                     <li>Prix du menu : <?php echo number_format($une_commande['prix_menu'], 2, ',', ' '); ?> €</li>
                     <li>Livraison : <?php echo number_format($une_commande['prix_livraison'], 2, ',', ' '); ?> €</li>
                     <li><strong>Total : <?php echo number_format($une_commande['prix_total'], 2, ',', ' '); ?> €</strong></li>
                 </ul>
                 <?php if ($une_commande['statut'] == 'en attente') { ?>
-                    <form action="traitement_annulation.php" method="POST" class="form-annulation">
-                        <input type="hidden" name="commande_id" value="<?php echo $une_commande['id']; ?>">
-                        <button type="submit" class="btn-supprimer" data-numero="<?php echo htmlspecialchars($une_commande['numero_commande']); ?>">Annuler cette commande</button>
-                    </form>
-                <?php } ?>
+    <div class="actions-commande">
+        <a href="modifier_commande.php?id=<?php echo $une_commande['id']; ?>" class="btn-modifier">Modifier cette commande</a>
+        <form action="traitement_annulation.php" method="POST" class="form-annulation">
+            <input type="hidden" name="commande_id" value="<?php echo $une_commande['id']; ?>">
+            <button type="submit" class="btn-supprimer" data-numero="<?php echo htmlspecialchars($une_commande['numero_commande']); ?>">Annuler cette commande</button>
+        </form>
+    </div>
+<?php } ?>
             </article>
         <?php } ?>
     </section>

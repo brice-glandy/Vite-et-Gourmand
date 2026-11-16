@@ -1240,3 +1240,12 @@ button:disabled {
     padding: 0;
     margin: 0;
 }
+/* Un lien qui a l'apparence d'un bouton : sans soulignement */
+a.btn-modifier {
+    text-decoration: none;
+    display: inline-block;
+}
+.actions-commande .btn-modifier,
+.actions-commande .btn-supprimer {
+    font-size: 1rem;
+}

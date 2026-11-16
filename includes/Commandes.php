@@ -26,4 +26,15 @@ class Commandes {
         $requete->execute(['id' => $commande_id, 'utilisateur_id' => $utilisateur_id]);
         return $requete->fetch(PDO::FETCH_ASSOC);
     }
+        // Les plats choisis pour une commande, dans l'ordre du repas
+    public function trouver_plats_choisis($commande_id) {
+        $sql = "SELECT plat.id, plat.titre_plat, plat.type_plat
+                FROM commande_plat
+                JOIN plat ON plat.id = commande_plat.plat_id
+                WHERE commande_plat.commande_id = :commande_id
+                ORDER BY FIELD(plat.type_plat, 'Entrée', 'Plat', 'Dessert')";
+        $requete = $this->pdo->prepare($sql);
+        $requete->execute(['commande_id' => $commande_id]);
+        return $requete->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
