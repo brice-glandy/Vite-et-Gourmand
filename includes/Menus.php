@@ -66,4 +66,19 @@ class Menus {
         $requete->execute(['id' => $id]);
         return $requete->fetch(PDO::FETCH_ASSOC);
     }
+        // Les plats d'un menu, chacun avec la liste de ses allergènes (texte vide s'il n'en a aucun)
+    public function trouver_plats($menu_id) {
+        $sql = "SELECT plat.id, plat.titre_plat, plat.type_plat, plat.photo_url,
+                       GROUP_CONCAT(allergene.libelle ORDER BY allergene.libelle SEPARATOR ', ') AS allergenes
+                FROM menu_plat
+                JOIN plat ON menu_plat.plat_id = plat.id
+                LEFT JOIN plat_allergene ON plat_allergene.plat_id = plat.id
+                LEFT JOIN allergene ON plat_allergene.allergene_id = allergene.id
+                WHERE menu_plat.menu_id = :menu_id
+                GROUP BY plat.id, plat.titre_plat, plat.type_plat, plat.photo_url
+                ORDER BY plat.titre_plat";
+        $requete = $this->pdo->prepare($sql);
+        $requete->execute(['menu_id' => $menu_id]);
+        return $requete->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

@@ -14,6 +14,7 @@ $menu = false;
 if ($id > 0) {
     $modele_menus = new Menus($pdo);
     $menu = $modele_menus->trouver_par_id($id);
+    $plats = $modele_menus->trouver_plats($id);
 }
 
 // 3. Menu introuvable : code 404 « page introuvable »
@@ -38,6 +39,58 @@ if (!$menu) {
     <a href="menus.php">Retour à tous les menus</a>
 <?php } else { ?>
     <h1><?php echo htmlspecialchars($menu['titre']); ?></h1>
+        <img class="image-detail-menu" src="<?php echo htmlspecialchars($menu['image_url']); ?>" alt="Menu <?php echo htmlspecialchars($menu['titre']); ?>">
+
+    <p class="description-detail-menu"><?php echo htmlspecialchars($menu['description']); ?></p>
+
+    <ul class="infos-detail-menu">
+        <li><strong>Thème :</strong> <?php echo htmlspecialchars($menu['theme']); ?></li>
+        <li><strong>Régime :</strong> <?php echo htmlspecialchars($menu['regime']); ?></li>
+        <li><strong>Minimum :</strong> <?php echo $menu['nombre_personne_minimum']; ?> personnes</li>
+        <li><strong>Prix :</strong> <?php echo number_format($menu['prix_par_personne'], 2, ',', ' '); ?> € / personne</li>
+        <li><strong>Stock disponible :</strong>
+            <?php if ($menu['quantite_restante'] > 0) { ?>
+                <?php echo $menu['quantite_restante']; ?> commande(s) possible(s)
+            <?php } else { ?>
+                plus disponible pour le moment
+            <?php } ?>
+        </li>
+    </ul>
+    <section class="plats-menu" aria-labelledby="titre-plats">
+        <h2 id="titre-plats">Les plats</h2>
+        <?php foreach (['Entrée', 'Plat', 'Dessert'] as $type) { ?>
+            <?php
+            // On garde seulement les plats de ce type
+            $plats_du_type = [];
+            foreach ($plats as $un_plat) {
+                if ($un_plat['type_plat'] == $type) {
+                    $plats_du_type[] = $un_plat;
+                }
+            }
+            ?>
+            <?php if (count($plats_du_type) > 0) { ?>
+                <h3><?php echo $type; ?></h3>
+                <ul>
+                    <?php foreach ($plats_du_type as $un_plat) { ?>
+                        <li>
+                            <?php echo htmlspecialchars($un_plat['titre_plat']); ?><br>
+                            <small>Allergènes :
+                                <?php if (!empty($un_plat['allergenes'])) { echo htmlspecialchars($un_plat['allergenes']); } else { echo 'aucun allergène signalé'; } ?>
+                            </small>
+                        </li>
+                    <?php } ?>
+                </ul>
+            <?php } ?>
+        <?php } ?>
+    </section>
+    <section class="conditions-menu" aria-labelledby="titre-conditions">
+        <h2 id="titre-conditions">Conditions de ce menu</h2>
+        <?php if (!empty($menu['conditions'])) { ?>
+            <p><?php echo nl2br(htmlspecialchars($menu['conditions'])); ?></p>
+        <?php } else { ?>
+            <p>Aucune condition particulière.</p>
+        <?php } ?>
+    </section>
 <?php } ?>
 </main>
 <?php include_once 'includes/footer.php'; ?>
