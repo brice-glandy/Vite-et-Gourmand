@@ -91,6 +91,9 @@ if (!$menu) {
             <p>Aucune condition particulière.</p>
         <?php } ?>
     </section>
+        <?php if ($menu['quantite_restante'] > 0 && (!isset($_SESSION['role']) || $_SESSION['role'] == 'utilisateur')) { ?>
+        <a href="commander.php?menu=<?php echo $menu['id']; ?>" class="bouton-principal">Commander ce menu</a>
+    <?php } ?>
 <?php } ?>
 </main>
 <?php include_once 'includes/footer.php'; ?>
