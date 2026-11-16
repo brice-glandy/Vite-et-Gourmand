@@ -136,7 +136,7 @@ if (isset($_GET['menu']) && ctype_digit($_GET['menu'])) {
                 </div>
             </div>
            
-        <button type="submit" class="bouton-payer">Payer</button>
+        <button type="submit" class="bouton-payer">Valider la commande</button>
         </div>
     </form>
     </main>

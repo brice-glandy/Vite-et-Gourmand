@@ -100,6 +100,65 @@ if (!$a_bordeaux) {
 }
 $prix_total = round($prix_menu + $prix_livraison, 2);
 
-// Test provisoire (remplacé à l'étape 4b par l'enregistrement)
-var_dump($prix_menu, $prix_livraison, $prix_total);
+// 10. Le numéro de commande : l'année + 6 caractères tirés au hasard
+$numero = 'CMD-' . date('Y') . '-' . strtoupper(bin2hex(random_bytes(3)));
+
+// L'adresse complète, avec le complément et le code postal
+$adresse_complete = $adresse;
+if ($complement !== '') {
+    $adresse_complete = $adresse_complete . ', ' . $complement;
+}
+$adresse_complete = $adresse_complete . ', ' . $code_postal;
+
+// 11. Enregistrement : stock ET commande dans une même transaction (tout ou rien)
+try {
+    $pdo->beginTransaction();
+
+    // a. On retire 1 au stock, seulement s'il en reste
+    $requete = $pdo->prepare("UPDATE menu SET quantite_restante = quantite_restante - 1
+                              WHERE id = :id AND quantite_restante > 0");
+    $requete->execute(['id' => $menu['id']]);
+    if ($requete->rowCount() == 0) {
+        // Un autre client a pris la dernière commande possible entre-temps
+        $pdo->rollBack();
+        $_SESSION['erreurs_commande'] = ['Ce menu vient d\'être épuisé, désolé.'];
+        header('Location: commandes.php?menu=' . $menu['id']);
+        exit;
+    }
+
+    // b. On enregistre la commande, avec les prix calculés par le serveur
+    $sql = "INSERT INTO commande (numero_commande, utilisateur_id, menu_id, date_prestation, heure_livraison,
+                                  adresse_livraison, ville_livraison, nombre_personne, prix_menu, prix_livraison, prix_total)
+            VALUES (:numero, :utilisateur_id, :menu_id, :date_prestation, :heure,
+                    :adresse, :ville, :nombre, :prix_menu, :prix_livraison, :prix_total)";
+    $requete = $pdo->prepare($sql);
+    $requete->execute([
+        'numero' => $numero,
+        'utilisateur_id' => $_SESSION['utilisateur_id'],
+        'menu_id' => $menu['id'],
+        'date_prestation' => $date_prestation,
+        'heure' => $heure,
+        'adresse' => $adresse_complete,
+        'ville' => $ville,
+        'nombre' => $nombre_personnes,
+        'prix_menu' => $prix_menu,
+        'prix_livraison' => $prix_livraison,
+        'prix_total' => $prix_total
+    ]);
+
+    // c. Tout s'est bien passé : on valide les deux opérations d'un coup
+    $pdo->commit();
+} catch (PDOException $e) {
+    // Une erreur : on annule tout ce qui avait commencé
+    if ($pdo->inTransaction()) {
+        $pdo->rollBack();
+    }
+    error_log('Commande impossible : ' . $e->getMessage());
+    $_SESSION['erreurs_commande'] = ['Une erreur technique empêche l\'enregistrement. Merci de réessayer.'];
+    header('Location: commandes.php?menu=' . $menu['id']);
+    exit;
+}
+
+// Test provisoire (remplacé plus tard par la page de confirmation)
+echo 'Commande enregistrée : ' . $numero;
 exit;
