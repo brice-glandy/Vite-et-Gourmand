@@ -1272,3 +1272,9 @@ a.btn-modifier {
 .suivi-commande ol {
     margin: 0.5rem 0 0 0;
 }
+.formulaire-avis {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
