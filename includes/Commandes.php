@@ -1,6 +1,9 @@
 <?php
 // Modèle des commandes : les requêtes SQL qui concernent les commandes, réunies au même endroit.
 class Commandes {
+        // Les statuts possibles, dans l'ordre de la vie d'une commande (énoncé, page 8)
+    const STATUTS = ['en attente', 'accepté', 'en préparation', 'en cours de livraison', 'livré',
+                     'en attente du retour de matériel', 'terminée', 'annulée'];
     // La connexion à la base, gardée dans l'objet
     private $pdo;
 
@@ -63,5 +66,35 @@ class Commandes {
     public function ajouter_suivi($commande_id, $statut) {
         $requete = $this->pdo->prepare("INSERT INTO suivi_commande (commande_id, statut) VALUES (:commande_id, :statut)");
         $requete->execute(['commande_id' => $commande_id, 'statut' => $statut]);
+    }
+        // Toutes les commandes (espace employé), avec le client et le menu.
+    // Les deux filtres sont facultatifs : une valeur vide veut dire « pas de filtre ».
+    public function trouver_toutes($statut, $client) {
+        $conditions = [];
+        $parametres = [];
+        if ($statut !== '') {
+            $conditions[] = "commande.statut = :statut";
+            $parametres['statut'] = $statut;
+        }
+        if ($client !== '') {
+            $conditions[] = "(utilisateur.nom LIKE :client1 OR utilisateur.prenom LIKE :client2 OR utilisateur.email LIKE :client3)";
+            $parametres['client1'] = '%' . $client . '%';
+            $parametres['client2'] = '%' . $client . '%';
+            $parametres['client3'] = '%' . $client . '%';
+        }
+
+        $sql = "SELECT commande.*, menu.titre AS menu_titre,
+                       utilisateur.nom, utilisateur.prenom, utilisateur.email, utilisateur.telephone
+                FROM commande
+                JOIN menu ON commande.menu_id = menu.id
+                JOIN utilisateur ON commande.utilisateur_id = utilisateur.id";
+        if (count($conditions) > 0) {
+            $sql = $sql . " WHERE " . implode(" AND ", $conditions);
+        }
+        $sql = $sql . " ORDER BY commande.date_prestation DESC";
+
+        $requete = $this->pdo->prepare($sql);
+        $requete->execute($parametres);
+        return $requete->fetchAll(PDO::FETCH_ASSOC);
     }
 }
