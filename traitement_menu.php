@@ -31,6 +31,12 @@ $image_url = lire_champ('image_url');
 
 $modele_menus = new Menus($pdo);
 
+// 2 bis. Modification : le numéro caché doit être celui d'un menu qui existe (sinon, retour à la rubrique)
+if ($id != '' && (!ctype_digit($id) || !$modele_menus->trouver_par_id($id))) {
+    header('Location: admin.php#menus');
+    exit;
+}
+
 // 3. Vérifications côté serveur (le navigateur peut être contourné avec F12)
 $erreurs = [];
 if ($titre == '' || mb_strlen($titre) > 100) {
@@ -80,11 +86,15 @@ if (count($erreurs) > 0) {
         'conditions' => $conditions,
         'image_url' => $image_url
     ];
-    header('Location: modifier_menu.php');
+    if ($id == '') {
+        header('Location: modifier_menu.php');
+    } else {
+        header('Location: modifier_menu.php?id=' . $id);
+    }
     exit;
 }
 
-// 5. Tout est bon : les 9 valeurs, exactement avec les noms attendus par la méthode creer()
+// 5. Tout est bon : les 9 valeurs, exactement avec les noms attendus par creer() et modifier()
 $donnees = [
     'titre' => $titre,
     'description' => $description,
@@ -96,9 +106,16 @@ $donnees = [
     'theme_id' => (int) $theme_id,
     'regime_id' => (int) $regime_id
 ];
-$modele_menus->creer($donnees);
 
-// 6. Message de réussite, puis retour sur la rubrique Menus (Post/Redirect/Get)
-$_SESSION['message_menus'] = 'Le menu « ' . $titre . ' » a été ajouté.';
+// Sans numéro : c'est un nouveau menu. Avec un numéro : c'est une modification.
+if ($id == '') {
+    $modele_menus->creer($donnees);
+    $_SESSION['message_menus'] = 'Le menu « ' . $titre . ' » a été ajouté.';
+} else {
+    $modele_menus->modifier((int) $id, $donnees);
+    $_SESSION['message_menus'] = 'Le menu « ' . $titre . ' » a été modifié.';
+}
+
+// 6. Retour sur la rubrique Menus (Post/Redirect/Get)
 header('Location: admin.php#menus');
 exit;

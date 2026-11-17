@@ -119,4 +119,21 @@ class Menus {
         $requete = $this->pdo->prepare($sql);
         $requete->execute($donnees);
     }
+        // Modifie un menu existant. $donnees contient les mêmes 9 valeurs que pour creer().
+    public function modifier($id, $donnees) {
+        $sql = "UPDATE menu
+                SET titre = :titre,
+                    description = :description,
+                    nombre_personne_minimum = :nombre_personne_minimum,
+                    prix_par_personne = :prix_par_personne,
+                    quantite_restante = :quantite_restante,
+                    conditions = :conditions,
+                    image_url = :image_url,
+                    theme_id = :theme_id,
+                    regime_id = :regime_id
+                WHERE id = :id";
+        $donnees['id'] = $id;
+        $requete = $this->pdo->prepare($sql);
+        $requete->execute($donnees);
+    }
 }

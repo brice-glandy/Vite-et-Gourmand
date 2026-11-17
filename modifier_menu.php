@@ -25,7 +25,20 @@ $menu = [
     'image_url' => ''
 ];
 $titre_page = 'Ajouter un menu';
-
+// Modification : si un numéro est dans l'adresse, on charge ce menu à la place des valeurs vides
+if (isset($_GET['id'])) {
+    if (!ctype_digit($_GET['id'])) {
+        header('Location: admin.php#menus');
+        exit;
+    }
+    $menu_trouve = $modele_menus->trouver_par_id($_GET['id']);
+    if (!$menu_trouve) {
+        header('Location: admin.php#menus');
+        exit;
+    }
+    $menu = $menu_trouve;
+    $titre_page = 'Modifier le menu ' . $menu['titre'];
+}
 // Après une erreur, on remet ce que l'employé avait tapé (rien n'est perdu)
 if (isset($_SESSION['saisie_menu'])) {
     $menu = $_SESSION['saisie_menu'];
@@ -37,14 +50,14 @@ if (isset($_SESSION['saisie_menu'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $titre_page; ?></title>
+    <title><?php echo htmlspecialchars($titre_page); ?></title>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <?php include_once 'includes/header.php'; ?>
 
     <main class="page-modifier-horaire">
-        <h1><?php echo $titre_page; ?></h1>
+        <h1><?php echo htmlspecialchars($titre_page); ?></h1>
 
         <?php if (isset($_SESSION['erreurs_menu'])) { ?>
             <div class="message-erreur" role="alert">
