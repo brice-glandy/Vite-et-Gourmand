@@ -202,9 +202,37 @@ if ($est_admin) {
             <article id="equipe" class="section-admin">
                 <div class="en-tete-section">
                     <h2>Équipe</h2>
-                    <button class="btn-ajouter" id="btn-ajouter-employe">+ Ajouter un employé</button>
+                    
                 </div>
+                <?php if (isset($_SESSION['message_equipe'])) { ?>
+                    <p class="message-succes" role="status"><?php echo htmlspecialchars($_SESSION['message_equipe']); ?></p>
+                    <?php unset($_SESSION['message_equipe']); ?>
+                <?php } ?>
+                <?php if (isset($_SESSION['erreurs_equipe'])) { ?>
+                    <div class="message-erreur" role="alert">
+                        <ul>
+                            <?php foreach ($_SESSION['erreurs_equipe'] as $erreur) { ?>
+                                <li><?php echo htmlspecialchars($erreur); ?></li>
+                            <?php } ?>
+                        </ul>
+                    </div>
+                    <?php unset($_SESSION['erreurs_equipe']); ?>
+                <?php } ?>
 
+                <details class="annulation-employe">
+                    <summary>+ Ajouter un employé</summary>
+                    <form action="traitement_employe.php" method="POST" class="formulaire-avis">
+                        <label for="email-employe">Email (identifiant de connexion) :</label>
+                        <input type="email" id="email-employe" name="email" autocomplete="off" required>
+                        <label for="mot-de-passe-employe">Mot de passe :</label>
+                        <p id="aide-mot-de-passe-employe" class="aide-champ">10 caractères minimum, avec au moins une majuscule, une minuscule, un chiffre et un caractère spécial.</p>
+                        <div class="champ-mot-de-passe">
+                            <input type="password" id="mot-de-passe-employe" name="mot_de_passe" autocomplete="new-password" minlength="10" aria-describedby="aide-mot-de-passe-employe" required>
+                            <button type="button" class="btn-oeil" aria-label="Afficher le mot de passe" aria-pressed="false">👁️</button>
+                        </div>
+                        <button type="submit" class="btn-valider">Créer le compte</button>
+                    </form>
+                </details>
             <!-- Liste des employés -->
             <div class="grille-equipe">
                 <?php foreach ($employes as $un_employe) { ?>
@@ -337,5 +365,6 @@ if ($est_admin) {
   <?php include_once 'includes/footer.php'; ?>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="js/admin.js"></script>
+<script src="js/mot_de_passe.js"></script>
 </body>
 </html>

@@ -16,4 +16,22 @@ class Employes {
         $requete = $this->pdo->query($sql);
         return $requete->fetchAll(PDO::FETCH_ASSOC);
     }
+        // Vrai si un compte (quel que soit son rôle) utilise déjà cet email
+    public function email_existe($email) {
+        $requete = $this->pdo->prepare("SELECT id FROM utilisateur WHERE email = :email");
+        $requete->execute(['email' => $email]);
+        return $requete->fetch() !== false;
+    }
+
+    // Crée un compte employé. Le rôle est écrit ici, en dur : l'application
+    // ne peut créer QUE des employés, jamais un administrateur (demande de José).
+    public function creer($email, $mot_de_passe) {
+        $sql = "INSERT INTO utilisateur (role_id, email, mot_de_passe)
+                VALUES ((SELECT id FROM role WHERE libelle = 'employe'), :email, :mot_de_passe)";
+        $requete = $this->pdo->prepare($sql);
+        $requete->execute([
+            'email' => $email,
+            'mot_de_passe' => password_hash($mot_de_passe, PASSWORD_DEFAULT)
+        ]);
+    }
 }
