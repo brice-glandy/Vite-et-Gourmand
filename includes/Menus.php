@@ -88,4 +88,79 @@ class Menus {
         $requete->execute(['menu_id' => $menu_id]);
         return $requete->fetchAll(PDO::FETCH_ASSOC);
     }
+        // Tous les menus pour l'administration, avec le nom de leur thème et de leur régime
+    public function trouver_tous_admin() {
+        $sql = "SELECT menu.id, menu.titre, menu.prix_par_personne, menu.nombre_personne_minimum,
+                       menu.quantite_restante, theme.libelle AS theme, regime.libelle AS regime
+                FROM menu
+                JOIN theme ON menu.theme_id = theme.id
+                JOIN regime ON menu.regime_id = regime.id
+                ORDER BY menu.id";
+        $requete = $this->pdo->query($sql);
+        return $requete->fetchAll(PDO::FETCH_ASSOC);
+    }
+        // La liste des thèmes, pour les listes déroulantes
+    public function trouver_themes() {
+        $requete = $this->pdo->query("SELECT id, libelle FROM theme ORDER BY libelle");
+        return $requete->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // La liste des régimes, pour les listes déroulantes
+    public function trouver_regimes() {
+        $requete = $this->pdo->query("SELECT id, libelle FROM regime ORDER BY libelle");
+        return $requete->fetchAll(PDO::FETCH_ASSOC);
+    }
+        // Enregistre un nouveau menu. $donnees contient les 9 valeurs déjà vérifiées.
+    public function creer($donnees) {
+        $sql = "INSERT INTO menu (titre, description, nombre_personne_minimum, prix_par_personne,
+                                  quantite_restante, conditions, image_url, theme_id, regime_id)
+                VALUES (:titre, :description, :nombre_personne_minimum, :prix_par_personne,
+                        :quantite_restante, :conditions, :image_url, :theme_id, :regime_id)";
+        $requete = $this->pdo->prepare($sql);
+        $requete->execute($donnees);
+    }
+        // Modifie un menu existant. $donnees contient les mêmes 9 valeurs que pour creer().
+    public function modifier($id, $donnees) {
+        $sql = "UPDATE menu
+                SET titre = :titre,
+                    description = :description,
+                    nombre_personne_minimum = :nombre_personne_minimum,
+                    prix_par_personne = :prix_par_personne,
+                    quantite_restante = :quantite_restante,
+                    conditions = :conditions,
+                    image_url = :image_url,
+                    theme_id = :theme_id,
+                    regime_id = :regime_id
+                WHERE id = :id";
+        $donnees['id'] = $id;
+        $requete = $this->pdo->prepare($sql);
+        $requete->execute($donnees);
+    }
+        // Vrai si ce menu a déjà été commandé au moins une fois
+    public function est_commande($id) {
+        $requete = $this->pdo->prepare("SELECT COUNT(*) FROM commande WHERE menu_id = :id");
+        $requete->execute(['id' => $id]);
+        return $requete->fetchColumn() > 0;
+    }
+
+    // Retire un menu de la vente sans l'effacer : plus aucune commande possible
+    public function retirer_de_la_vente($id) {
+        $requete = $this->pdo->prepare("UPDATE menu SET quantite_restante = 0 WHERE id = :id");
+        $requete->execute(['id' => $id]);
+    }
+
+    // Efface un menu jamais commandé, avec ses plats associés et ses photos de galerie (tout ou rien)
+    public function supprimer($id) {
+        $this->pdo->beginTransaction();
+        try {
+            $parametres = ['id' => $id];
+            $this->pdo->prepare("DELETE FROM menu_plat WHERE menu_id = :id")->execute($parametres);
+            $this->pdo->prepare("DELETE FROM image_menu WHERE menu_id = :id")->execute($parametres);
+            $this->pdo->prepare("DELETE FROM menu WHERE id = :id")->execute($parametres);
+            $this->pdo->commit();
+        } catch (PDOException $e) {
+            $this->pdo->rollBack();
+            throw $e;
+        }
+    }
 }

@@ -846,6 +846,7 @@ button:disabled {
 .statut-valide { background-color: #4A7B59; }   /* Vert : comme le bouton Valider */
 .statut-attente { background-color: #d48b2a; }  /* Orange : à traiter */
 .statut-refuse { background-color: #a83232; }   /* Rouge : comme le bouton Refuser */
+.statut-hors-vente { background-color: #555555; } /* Gris : menu qui ne peut plus être commandé */
 /* 9. Page de connexion (réutilisée pour l'inscription) */
 .page-connexion {
     background-color: #d1b5c4;
@@ -1241,12 +1242,14 @@ button:disabled {
     margin: 0;
 }
 /* Un lien qui a l'apparence d'un bouton : sans soulignement */
-a.btn-modifier {
+a.btn-modifier, a.btn-ajouter {
     text-decoration: none;
     display: inline-block;
 }
 .actions-commande .btn-modifier,
-.actions-commande .btn-supprimer {
+.actions-commande .btn-supprimer,
+.actions-menu .btn-modifier,
+.actions-menu .btn-supprimer {
     font-size: 1rem;
 }
 /* Annulation par l'employé : formulaire replié sous un bouton */
