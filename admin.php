@@ -22,6 +22,10 @@ if ($est_admin) {
     $modele_employes = new Employes($pdo);
     $employes = $modele_employes->trouver_tous();
 }
+// Rubrique Menus (administrateur et employés)
+    require_once 'includes/Menus.php';
+    $modele_menus = new Menus($pdo);
+    $menus_admin = $modele_menus->trouver_tous_admin();
 ?>
 <?php
 $sql = "SELECT avis.*, utilisateur.prenom, utilisateur.nom
@@ -274,36 +278,25 @@ if ($est_admin) {
                         <button class="btn-ajouter" id="btn-ajouter-plat">+ Ajouter un plat</button>
                     </div>
                 </div>
-
-            <!-- Affichage des menus sous forme de cartes -->
+            <!-- Affichage des menus sous forme de cartes (depuis la base) -->
             <div class="grille-menus-admin">
-        
-                <!-- Carte Menu 1 -->
-                <div class="carte-menu-admin">
-                    <div class="infos-menu">
-                        <p><strong>Nom :</strong> Burger Artisan</p>
-                        <p><strong>Prix :</strong> 15.00 €</p>
-                        <p><strong>Thème :</strong> Classique</p>
+                <?php foreach ($menus_admin as $un_menu) { ?>
+                    <div class="carte-menu-admin">
+                        <div class="infos-menu">
+                            <p><strong>Nom :</strong> <?php echo htmlspecialchars($un_menu['titre']); ?></p>
+                            <p><strong>Prix :</strong> <?php echo number_format($un_menu['prix_par_personne'], 2, ',', ' '); ?> € par personne</p>
+                            <p><strong>Minimum :</strong> <?php echo $un_menu['nombre_personne_minimum']; ?> personnes</p>
+                            <p><strong>Thème :</strong> <?php echo htmlspecialchars($un_menu['theme']); ?></p>
+                            <p><strong>Régime :</strong> <?php echo htmlspecialchars($un_menu['regime']); ?></p>
+                            <p><strong>Stock :</strong> <?php echo $un_menu['quantite_restante']; ?> commande(s) possible(s)</p>
+                        </div>
+                        <div class="actions-menu">
+                            <a href="modifier_menu.php?id=<?php echo $un_menu['id']; ?>" class="btn-modifier">Modifier<span class="texte-cache"> le menu <?php echo htmlspecialchars($un_menu['titre']); ?></span></a>
+                        </div>
                     </div>
-                    <div class="actions-menu">
-                        <button class="btn-modifier">Modifier</button>
-                        <button class="btn-supprimer">Supprimer</button>
-                    </div>
-                </div>
-
-                <!-- Carte Menu 2 -->
-                <div class="carte-menu-admin">
-                    <div class="infos-menu">
-                        <p><strong>Nom :</strong> Brunch Complet</p>
-                        <p><strong>Prix :</strong> 22.00 €</p>
-                        <p><strong>Thème :</strong> Évènement</p>
-                    </div>
-                    <div class="actions-menu">
-                        <button class="btn-modifier">Modifier</button>
-                        <button class="btn-supprimer">Supprimer</button>
-                    </div>
-                </div>
+                <?php } ?>
             </div>
+            
         </article>
         <!-- Bloc 5 : Gestion des Horaires -->
             <article id="horaires" class="section-admin">

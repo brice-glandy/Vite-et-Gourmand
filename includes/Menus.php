@@ -88,4 +88,15 @@ class Menus {
         $requete->execute(['menu_id' => $menu_id]);
         return $requete->fetchAll(PDO::FETCH_ASSOC);
     }
+        // Tous les menus pour l'administration, avec le nom de leur thème et de leur régime
+    public function trouver_tous_admin() {
+        $sql = "SELECT menu.id, menu.titre, menu.prix_par_personne, menu.nombre_personne_minimum,
+                       menu.quantite_restante, theme.libelle AS theme, regime.libelle AS regime
+                FROM menu
+                JOIN theme ON menu.theme_id = theme.id
+                JOIN regime ON menu.regime_id = regime.id
+                ORDER BY menu.id";
+        $requete = $this->pdo->query($sql);
+        return $requete->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
