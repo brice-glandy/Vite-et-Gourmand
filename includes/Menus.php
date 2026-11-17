@@ -99,4 +99,24 @@ class Menus {
         $requete = $this->pdo->query($sql);
         return $requete->fetchAll(PDO::FETCH_ASSOC);
     }
+        // La liste des thèmes, pour les listes déroulantes
+    public function trouver_themes() {
+        $requete = $this->pdo->query("SELECT id, libelle FROM theme ORDER BY libelle");
+        return $requete->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    // La liste des régimes, pour les listes déroulantes
+    public function trouver_regimes() {
+        $requete = $this->pdo->query("SELECT id, libelle FROM regime ORDER BY libelle");
+        return $requete->fetchAll(PDO::FETCH_ASSOC);
+    }
+        // Enregistre un nouveau menu. $donnees contient les 9 valeurs déjà vérifiées.
+    public function creer($donnees) {
+        $sql = "INSERT INTO menu (titre, description, nombre_personne_minimum, prix_par_personne,
+                                  quantite_restante, conditions, image_url, theme_id, regime_id)
+                VALUES (:titre, :description, :nombre_personne_minimum, :prix_par_personne,
+                        :quantite_restante, :conditions, :image_url, :theme_id, :regime_id)";
+        $requete = $this->pdo->prepare($sql);
+        $requete->execute($donnees);
+    }
 }

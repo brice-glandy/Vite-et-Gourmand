@@ -1241,7 +1241,7 @@ button:disabled {
     margin: 0;
 }
 /* Un lien qui a l'apparence d'un bouton : sans soulignement */
-a.btn-modifier {
+a.btn-modifier, a.btn-ajouter {
     text-decoration: none;
     display: inline-block;
 }

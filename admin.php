@@ -23,9 +23,9 @@ if ($est_admin) {
     $employes = $modele_employes->trouver_tous();
 }
 // Rubrique Menus (administrateur et employés)
-    require_once 'includes/Menus.php';
-    $modele_menus = new Menus($pdo);
-    $menus_admin = $modele_menus->trouver_tous_admin();
+require_once 'includes/Menus.php';
+$modele_menus = new Menus($pdo);
+$menus_admin = $modele_menus->trouver_tous_admin();
 ?>
 <?php
 $sql = "SELECT avis.*, utilisateur.prenom, utilisateur.nom
@@ -274,10 +274,14 @@ if ($est_admin) {
                 <div class="en-tete-section">
                     <h2>Menus</h2>
                     <div class="actions-globales">
-                        <button class="btn-ajouter" id="btn-ajouter-menu">+ Ajouter un menu</button>
+                        <a href="modifier_menu.php" class="btn-ajouter">+ Ajouter un menu</a>
                         <button class="btn-ajouter" id="btn-ajouter-plat">+ Ajouter un plat</button>
                     </div>
                 </div>
+                    <?php if (isset($_SESSION['message_menus'])) { ?>
+                        <p class="message-succes" role="status"><?php echo htmlspecialchars($_SESSION['message_menus']); ?></p>
+                        <?php unset($_SESSION['message_menus']); ?>
+                    <?php } ?>
             <!-- Affichage des menus sous forme de cartes (depuis la base) -->
             <div class="grille-menus-admin">
                 <?php foreach ($menus_admin as $un_menu) { ?>
