@@ -120,7 +120,14 @@ if ($est_admin) {
         <!-- Bloc 2 : Gestion des Commandes -->
         <article id="commandes" class="section-admin">
             <h2>Commandes</h2>
-    
+                <?php if (isset($_SESSION['message_admin_commandes'])) { ?>
+                <p class="message-succes" role="status"><?php echo htmlspecialchars($_SESSION['message_admin_commandes']); ?></p>
+                <?php unset($_SESSION['message_admin_commandes']); ?>
+            <?php } ?>
+            <?php if (isset($_SESSION['erreur_admin_commandes'])) { ?>
+                <p class="message-erreur" role="alert"><?php echo htmlspecialchars($_SESSION['erreur_admin_commandes']); ?></p>
+                <?php unset($_SESSION['erreur_admin_commandes']); ?>
+            <?php } ?>
                     <!-- Filtres (énoncé : par statut et par client) -->
             <form method="GET" action="admin.php#commandes" class="filtres-recherche">
                 <div class="champ-saisie">
@@ -154,6 +161,18 @@ if ($est_admin) {
                             <p>Plats : <?php echo htmlspecialchars(implode(', ', array_column($plats_choisis, 'titre_plat'))); ?></p>
                             <span class="badge-statut statut-commande"><?php echo htmlspecialchars($une_commande['statut']); ?></span>
                         </div>
+                                                <?php if ($une_commande['statut'] != 'terminée' && $une_commande['statut'] != 'annulée') { ?>
+                            <form action="traitement_statut.php" method="POST" class="actions-commande">
+                                <input type="hidden" name="commande_id" value="<?php echo $une_commande['id']; ?>">
+                                <label for="statut-<?php echo $une_commande['id']; ?>">Nouveau statut :</label>
+                                <select id="statut-<?php echo $une_commande['id']; ?>" name="statut">
+                                    <?php foreach (Commandes::STATUTS_MISE_A_JOUR as $un_statut) { ?>
+                                        <option value="<?php echo $un_statut; ?>" <?php if ($un_statut == $une_commande['statut']) { echo 'selected'; } ?>><?php echo $un_statut; ?></option>
+                                    <?php } ?>
+                                </select>
+                                <button type="submit" class="btn-valider">Mettre à jour</button>
+                            </form>
+                        <?php } ?>
                     </div>
                 <?php } ?>
             </div>        

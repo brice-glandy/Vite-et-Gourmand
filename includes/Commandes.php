@@ -4,6 +4,9 @@ class Commandes {
         // Les statuts possibles, dans l'ordre de la vie d'une commande (énoncé, page 8)
     const STATUTS = ['en attente', 'accepté', 'en préparation', 'en cours de livraison', 'livré',
                      'en attente du retour de matériel', 'terminée', 'annulée'];
+        // Les statuts que l'employé peut choisir (énoncé, page 8) : ni « en attente », ni « annulée »
+    const STATUTS_MISE_A_JOUR = ['accepté', 'en préparation', 'en cours de livraison', 'livré',
+                                 'en attente du retour de matériel', 'terminée'];                 
     // La connexion à la base, gardée dans l'objet
     private $pdo;
 
@@ -96,5 +99,15 @@ class Commandes {
         $requete = $this->pdo->prepare($sql);
         $requete->execute($parametres);
         return $requete->fetchAll(PDO::FETCH_ASSOC);
+    }
+        // Une commande précise (espace employé), avec l'email et le prénom du client
+    public function trouver_par_id($commande_id) {
+        $sql = "SELECT commande.*, utilisateur.email, utilisateur.prenom
+                FROM commande
+                JOIN utilisateur ON commande.utilisateur_id = utilisateur.id
+                WHERE commande.id = :id";
+        $requete = $this->pdo->prepare($sql);
+        $requete->execute(['id' => $commande_id]);
+        return $requete->fetch(PDO::FETCH_ASSOC);
     }
 }
