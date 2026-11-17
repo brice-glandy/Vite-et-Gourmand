@@ -339,6 +339,10 @@ if ($est_admin) {
                                 </div>
                                 <div class="actions-menu">
                                     <a href="modifier_plat.php?id=<?php echo $un_plat['id']; ?>" class="btn-modifier">Modifier<span class="texte-cache"> le plat <?php echo htmlspecialchars($un_plat['titre_plat']); ?></span></a>
+                                                                    <form action="traitement_suppression_plat.php" method="POST" class="form-suppression-plat">
+                                        <input type="hidden" name="plat_id" value="<?php echo $un_plat['id']; ?>">
+                                        <button type="submit" class="btn-supprimer" data-titre="<?php echo htmlspecialchars($un_plat['titre_plat']); ?>">Supprimer<span class="texte-cache"> le plat <?php echo htmlspecialchars($un_plat['titre_plat']); ?></span></button>
+                                    </form>
                                 </div>
                             </div>
                         <?php } ?>

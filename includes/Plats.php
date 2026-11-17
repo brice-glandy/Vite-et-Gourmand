@@ -78,4 +78,26 @@ class Plats {
             $requete->execute(['plat_id' => $plat_id, 'allergene_id' => $allergene_id]);
         }
     }
+        // Vrai si le plat est proposé par un menu ou choisi dans une commande
+    public function est_utilise($id) {
+        $requete = $this->pdo->prepare("SELECT
+                (SELECT COUNT(*) FROM menu_plat WHERE plat_id = :id1)
+              + (SELECT COUNT(*) FROM commande_plat WHERE plat_id = :id2)");
+        $requete->execute(['id1' => $id, 'id2' => $id]);
+        return $requete->fetchColumn() > 0;
+    }
+
+    // Efface un plat utilisé nulle part, avec ses allergènes (tout ou rien)
+    public function supprimer($id) {
+        $this->pdo->beginTransaction();
+        try {
+            $this->pdo->prepare("DELETE FROM plat_allergene WHERE plat_id = :id")->execute(['id' => $id]);
+            $this->pdo->prepare("DELETE FROM plat WHERE id = :id")->execute(['id' => $id]);
+            $this->pdo->commit();
+        } catch (PDOException $e) {
+            $this->pdo->rollBack();
+            throw $e;
+        }
+    }
+    
 }
