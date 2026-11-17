@@ -59,4 +59,9 @@ class Commandes {
             'prix_total' => round($prix_menu + $prix_livraison, 2)
         ];
     }
+        // Ajoute une étape au suivi d'une commande (la date et l'heure sont mises par MySQL)
+    public function ajouter_suivi($commande_id, $statut) {
+        $requete = $this->pdo->prepare("INSERT INTO suivi_commande (commande_id, statut) VALUES (:commande_id, :statut)");
+        $requete->execute(['commande_id' => $commande_id, 'statut' => $statut]);
+    }
 }
