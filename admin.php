@@ -16,6 +16,12 @@ if (isset($_GET['client']) && is_string($_GET['client'])) {
 }
 $modele_commandes = new Commandes($pdo);
 $commandes = $modele_commandes->trouver_toutes($filtre_statut, $filtre_client);
+// Rubrique Équipe (administrateur uniquement)
+if ($est_admin) {
+    require_once 'includes/Employes.php';
+    $modele_employes = new Employes($pdo);
+    $employes = $modele_employes->trouver_tous();
+}
 ?>
 <?php
 $sql = "SELECT avis.*, utilisateur.prenom, utilisateur.nom
@@ -201,32 +207,23 @@ if ($est_admin) {
 
             <!-- Liste des employés -->
             <div class="grille-equipe">
-        
-                <!-- Carte Employé 1 (Administrateur principal) -->
-                <div class="carte-employe">
-                    <div class="infos-employe">
-                        <p><strong>Nom :</strong> José</p>
-                        <p><strong>Email :</strong> jose@vite-gourmand.fr</p>
-                        <p><strong>Statut :</strong> <span class="badge-statut statut-actif">Actif</span></p>
+                <?php foreach ($employes as $un_employe) { ?>
+                    <div class="carte-employe">
+                        <div class="infos-employe">
+                            <p><strong>Email :</strong> <?php echo htmlspecialchars($un_employe['email']); ?></p>
+                            <?php if (!empty($un_employe['prenom'])) { ?>
+                                <p><strong>Nom :</strong> <?php echo htmlspecialchars($un_employe['prenom'] . ' ' . $un_employe['nom']); ?></p>
+                            <?php } ?>
+                            <p><strong>Statut :</strong>
+                                <?php if ($un_employe['actif']) { ?>
+                                    <span class="badge-statut statut-actif">Actif</span>
+                                <?php } else { ?>
+                                    <span class="badge-statut statut-refuse">Désactivé</span>
+                                <?php } ?>
+                            </p>
+                        </div>
                     </div>
-                    <div class="actions-employe">
-                        <button class="btn-modifier" disabled>Inactif</button>
-                        <button class="btn-supprimer" disabled>Supprimer</button>
-                    </div>
-                </div>
-
-                <!-- Carte Employé 2 (Employé classique) -->
-                <div class="carte-employe">
-                    <div class="infos-employe">
-                        <p><strong>Nom :</strong> Julie</p>
-                        <p><strong>Email :</strong> julie@vite-gourmand.fr</p>
-                        <p><strong>Statut :</strong> <span class="badge-statut statut-actif">Actif</span></p>
-                    </div>
-                    <div class="actions-employe">
-                        <button class="btn-modifier">Inactif</button>
-                        <button class="btn-supprimer">Supprimer</button>
-                    </div>
-                </div>
+                <?php } ?>
             </div>
         </article>
         <?php } ?>
