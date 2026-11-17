@@ -85,5 +85,10 @@ db.commandes.insertMany([
     prix_menu: 178.20,
     prix_total: 186.74,
     statut: "terminée"
-  }
+  },
+  { numero_commande: "CMD-2026-0009", menu_id: 2, menu_titre: "Brunch Complet", date_commande: new Date("2026-11-12T10:00:00Z"), nombre_personne: 4, prix_menu: 88.00, prix_total: 88.00, statut: "accepté" },
+  { numero_commande: "CMD-2026-0010", menu_id: 5, menu_titre: "Plaisir Végétal", date_commande: new Date("2026-11-08T15:00:00Z"), nombre_personne: 6, prix_menu: 96.00, prix_total: 106.31, statut: "en cours de livraison" },
+  { numero_commande: "CMD-2026-0011", menu_id: 4, menu_titre: "Fraîcheur Océane", date_commande: new Date("2026-11-05T18:00:00Z"), nombre_personne: 6, prix_menu: 132.00, prix_total: 140.54, statut: "livré" },
+  { numero_commande: "CMD-2026-0012", menu_id: 1, menu_titre: "Burger Artisan", date_commande: new Date("2026-11-09T09:00:00Z"), nombre_personne: 5, prix_menu: 95.00, prix_total: 95.00, statut: "annulée" },
+  { numero_commande: "CMD-2026-0013", menu_id: 3, menu_titre: "Tradition Française", date_commande: new Date("2026-11-15T20:00:00Z"), nombre_personne: 8, prix_menu: 208.00, prix_total: 220.08, statut: "en attente" }
 ]);

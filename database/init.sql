@@ -243,7 +243,13 @@ INSERT INTO commande (numero_commande, utilisateur_id, menu_id, date_commande, d
 ('CMD-2026-0006', 6, 6, '2026-09-12 16:20:00', '2026-09-20', '12:30:00', '14 avenue Jean Jaurès', 'Pessac', 8, 168.00, 10.31, 178.31, 'terminée', FALSE, FALSE),
 ('CMD-2026-0007', 7, 3, '2026-09-25 10:00:00', '2026-10-04', '12:00:00', '3 place des Quinconces', 'Bordeaux', 10, 260.00, 0.00, 260.00, 'terminée', TRUE, TRUE),
 ('CMD-2026-0008', 8, 4, '2026-10-08 09:30:00', '2026-10-18', '19:30:00', '22 rue Pasteur', 'Talence', 9, 178.20, 8.54, 186.74, 'terminée', FALSE, FALSE);
-
+-- Commandes de démonstration supplémentaires : un exemple pour chaque statut
+INSERT INTO commande (numero_commande, utilisateur_id, menu_id, date_commande, date_prestation, heure_livraison, adresse_livraison, ville_livraison, nombre_personne, prix_menu, prix_livraison, prix_total, statut, pret_materiel, restitution_materiel) VALUES
+('CMD-2026-0009', 5, 2, '2026-11-12 10:00:00', '2026-11-22', '11:00:00', '5 cours de l''Intendance', 'Bordeaux', 4, 88.00, 0.00, 88.00, 'accepté', FALSE, FALSE),
+('CMD-2026-0010', 6, 5, '2026-11-08 15:00:00', '2026-11-17', '12:30:00', '14 avenue Jean Jaurès', 'Pessac', 6, 96.00, 10.31, 106.31, 'en cours de livraison', FALSE, FALSE),
+('CMD-2026-0011', 8, 4, '2026-11-05 18:00:00', '2026-11-15', '19:30:00', '22 rue Pasteur', 'Talence', 6, 132.00, 8.54, 140.54, 'livré', FALSE, FALSE),
+('CMD-2026-0012', 7, 1, '2026-11-09 09:00:00', '2026-11-21', '19:00:00', '3 place des Quinconces', 'Bordeaux', 5, 95.00, 0.00, 95.00, 'annulée', FALSE, FALSE),
+('CMD-2026-0013', 4, 3, '2026-11-15 20:00:00', '2026-12-19', '19:30:00', '8 avenue de la Marne', 'Mérignac', 8, 208.00, 12.08, 220.08, 'en attente', FALSE, FALSE);
 CREATE TABLE avis (
     id INT AUTO_INCREMENT PRIMARY KEY,
     utilisateur_id INT NOT NULL,
@@ -279,3 +285,54 @@ SELECT commande.id, menu_plat.plat_id
 FROM commande
 JOIN menu_plat ON menu_plat.menu_id = commande.menu_id
 WHERE menu_plat.par_defaut = TRUE;
+-- Le suivi des commandes : une ligne par changement de statut, avec la date et l'heure
+CREATE TABLE suivi_commande (
+id INT AUTO_INCREMENT PRIMARY KEY,
+commande_id INT NOT NULL,
+statut VARCHAR(50) NOT NULL,
+date_changement DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+FOREIGN KEY (commande_id) REFERENCES commande(id)
+);
+
+-- Historique complet des commandes de démonstration, étape par étape.
+-- Les dates sont reconstituées à partir de la date de commande et de la prestation.
+-- (Les vraies commandes, elles, enregistrent chaque changement au moment où il a lieu.)
+
+-- 1. Création : « en attente », à la date de la commande
+INSERT INTO suivi_commande (commande_id, statut, date_changement)
+SELECT id, 'en attente', date_commande FROM commande;
+
+-- 2. Acceptée le lendemain
+INSERT INTO suivi_commande (commande_id, statut, date_changement)
+SELECT id, 'accepté', date_commande + INTERVAL 1 DAY
+FROM commande WHERE statut NOT IN ('en attente', 'annulée');
+
+-- 3. En préparation la veille de la prestation, à 9h
+INSERT INTO suivi_commande (commande_id, statut, date_changement)
+SELECT id, 'en préparation', TIMESTAMP(date_prestation - INTERVAL 1 DAY, '09:00:00')
+FROM commande WHERE statut NOT IN ('en attente', 'accepté', 'annulée');
+
+-- 4. En cours de livraison une heure avant l'heure prévue
+INSERT INTO suivi_commande (commande_id, statut, date_changement)
+SELECT id, 'en cours de livraison', TIMESTAMP(date_prestation, heure_livraison) - INTERVAL 1 HOUR
+FROM commande WHERE statut IN ('en cours de livraison', 'livré', 'en attente du retour de matériel', 'terminée');
+
+-- 5. Livrée à l'heure prévue
+INSERT INTO suivi_commande (commande_id, statut, date_changement)
+SELECT id, 'livré', TIMESTAMP(date_prestation, heure_livraison)
+FROM commande WHERE statut IN ('livré', 'en attente du retour de matériel', 'terminée');
+
+-- 6. En attente du retour de matériel (seulement si du matériel a été prêté), le lendemain à 10h
+INSERT INTO suivi_commande (commande_id, statut, date_changement)
+SELECT id, 'en attente du retour de matériel', TIMESTAMP(date_prestation + INTERVAL 1 DAY, '10:00:00')
+FROM commande WHERE pret_materiel = TRUE AND statut IN ('en attente du retour de matériel', 'terminée');
+
+-- 7. Terminée : le lendemain à 10h, ou 3 jours après si du matériel devait être rendu
+INSERT INTO suivi_commande (commande_id, statut, date_changement)
+SELECT id, 'terminée', TIMESTAMP(date_prestation + INTERVAL IF(pret_materiel, 3, 1) DAY, '10:00:00')
+FROM commande WHERE statut = 'terminée';
+
+-- 8. Annulée par le client deux jours après la commande
+INSERT INTO suivi_commande (commande_id, statut, date_changement)
+SELECT id, 'annulée', date_commande + INTERVAL 2 DAY
+FROM commande WHERE statut = 'annulée';
