@@ -60,6 +60,17 @@ $client = $requete->fetch(PDO::FETCH_ASSOC);
                     <li>Livraison : <?php echo number_format($une_commande['prix_livraison'], 2, ',', ' '); ?> €</li>
                     <li><strong>Total : <?php echo number_format($une_commande['prix_total'], 2, ',', ' '); ?> €</strong></li>
                 </ul>
+                    <?php if ($une_commande['statut'] != 'en attente') { ?>
+                        <?php $etapes = $modele_commandes->trouver_suivi($une_commande['id']); ?>
+                        <details class="suivi-commande">
+                            <summary>Suivi de la commande</summary>
+                            <ol>
+                                <?php foreach ($etapes as $une_etape) { ?>
+                                    <li><?php echo date('d/m/Y à H\hi', strtotime($une_etape['date_changement'])); ?> : <?php echo htmlspecialchars($une_etape['statut']); ?></li>
+                                <?php } ?>
+                            </ol>
+                        </details>
+                    <?php } ?>
                 <?php if ($une_commande['statut'] == 'en attente') { ?>
     <div class="actions-commande">
         <a href="modifier_commande.php?id=<?php echo $une_commande['id']; ?>" class="btn-modifier">Modifier cette commande</a>

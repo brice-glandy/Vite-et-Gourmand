@@ -110,4 +110,13 @@ class Commandes {
         $requete->execute(['id' => $commande_id]);
         return $requete->fetch(PDO::FETCH_ASSOC);
     }
+        // Le suivi d'une commande : toutes ses étapes, de la plus ancienne à la plus récente
+    public function trouver_suivi($commande_id) {
+        $sql = "SELECT statut, date_changement FROM suivi_commande
+                WHERE commande_id = :commande_id
+                ORDER BY date_changement, id";
+        $requete = $this->pdo->prepare($sql);
+        $requete->execute(['commande_id' => $commande_id]);
+        return $requete->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

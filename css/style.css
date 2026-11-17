@@ -1262,3 +1262,13 @@ a.btn-modifier {
     gap: 0.5rem;
     margin-top: 0.5rem;
 }
+/* Suivi d'une commande dans l'espace client */
+.suivi-commande summary {
+    cursor: pointer;
+    color: #6a0b37;
+    font-weight: bold;
+}
+
+.suivi-commande ol {
+    margin: 0.5rem 0 0 0;
+}
