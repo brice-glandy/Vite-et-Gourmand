@@ -49,6 +49,8 @@ try {
     // b. On rend 1 au stock du menu
     $requete = $pdo->prepare("UPDATE menu SET quantite_restante = quantite_restante + 1 WHERE id = :menu_id");
     $requete->execute(['menu_id' => $commande['menu_id']]);
+    // c. Une étape de plus dans le suivi : « annulée »
+    $modele_commandes->ajouter_suivi($commande['id'], 'annulée');
 
     $pdo->commit();
 } catch (PDOException $e) {

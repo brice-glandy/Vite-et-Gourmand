@@ -146,6 +146,8 @@ try {
                               SELECT :commande_id, plat_id FROM menu_plat
                               WHERE menu_id = :menu_id AND par_defaut = TRUE");
     $requete->execute(['commande_id' => $commande_id, 'menu_id' => $menu['id']]);
+        // b3. Première étape du suivi : « en attente »
+    $modele_commandes->ajouter_suivi($commande_id, 'en attente');
     // c. Tout s'est bien passé : on valide les deux opérations d'un coup
     $pdo->commit();
 } catch (PDOException $e) {

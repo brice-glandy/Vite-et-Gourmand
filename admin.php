@@ -4,6 +4,18 @@ require_once 'includes/verif_equipe.php';
 require_once 'includes/db.php';
 // L'administrateur voit tout ; l'employé ne voit pas le tableau de bord ni l'équipe
 $est_admin = ($_SESSION['role'] == 'administrateur');
+// Rubrique Commandes : filtres lus dans l'adresse (formulaire GET), puis la liste
+require_once 'includes/Commandes.php';
+$filtre_statut = '';
+if (isset($_GET['statut']) && in_array($_GET['statut'], Commandes::STATUTS)) {
+    $filtre_statut = $_GET['statut'];
+}
+$filtre_client = '';
+if (isset($_GET['client']) && is_string($_GET['client'])) {
+    $filtre_client = trim($_GET['client']);
+}
+$modele_commandes = new Commandes($pdo);
+$commandes = $modele_commandes->trouver_toutes($filtre_statut, $filtre_client);
 ?>
 <?php
 $sql = "SELECT avis.*, utilisateur.prenom, utilisateur.nom
@@ -108,69 +120,76 @@ if ($est_admin) {
         <!-- Bloc 2 : Gestion des Commandes -->
         <article id="commandes" class="section-admin">
             <h2>Commandes</h2>
-    
-                <!-- Zone de filtres exigée par le cahier des charges -->
-                <div class="filtres-recherche">
-        
-                    <div class="champ-saisie">
-                        <label for="tri-statut">Trier par statut :</label>
-                        <select id="tri-statut" name="tri-statut">
-                            <option value="toutes">Toutes les commandes</option>
-                            <option value="accepte">Accepté</option>
-                            <option value="preparation">En préparation</option>
-                            <option value="livraison">En cours de livraison</option>
-                            <option value="livre">Livré</option>
-                            <option value="attente">En attente de retour matériel</option>
-                            <option value="terminee">Terminée</option>
-                        </select>
-                    </div>
-
-                    <div class="champ-saisie">
-                        <label for="recherche-client">Rechercher un client :</label>
-                        <input type="text" id="recherche-client" name="recherche-client" placeholder="Nom du client...">
-                    </div>
+                <?php if (isset($_SESSION['message_admin_commandes'])) { ?>
+                <p class="message-succes" role="status"><?php echo htmlspecialchars($_SESSION['message_admin_commandes']); ?></p>
+                <?php unset($_SESSION['message_admin_commandes']); ?>
+            <?php } ?>
+            <?php if (isset($_SESSION['erreur_admin_commandes'])) { ?>
+                <p class="message-erreur" role="alert"><?php echo htmlspecialchars($_SESSION['erreur_admin_commandes']); ?></p>
+                <?php unset($_SESSION['erreur_admin_commandes']); ?>
+            <?php } ?>
+                    <!-- Filtres (énoncé : par statut et par client) -->
+            <form method="GET" action="admin.php#commandes" class="filtres-recherche">
+                <div class="champ-saisie">
+                    <label for="filtre-statut">Statut :</label>
+                    <select id="filtre-statut" name="statut">
+                        <option value="">Tous les statuts</option>
+                        <?php foreach (Commandes::STATUTS as $un_statut) { ?>
+                            <option value="<?php echo $un_statut; ?>" <?php if ($un_statut == $filtre_statut) { echo 'selected'; } ?>><?php echo $un_statut; ?></option>
+                        <?php } ?>
+                    </select>
                 </div>
+                <div class="champ-saisie">
+                    <label for="filtre-client">Client (nom, prénom ou email) :</label>
+                    <input type="text" id="filtre-client" name="client" value="<?php echo htmlspecialchars($filtre_client); ?>">
+                </div>
+                <button type="submit" class="btn-valider">Filtrer</button>
+                <a href="admin.php#commandes">Effacer les filtres</a>
+            </form>
 
-            <!-- Affichage des commandes sous forme de cartes -->
+            <p role="status"><?php echo count($commandes); ?> commande(s)</p>
+
             <div class="grille-commandes">
-        
-                <!-- Carte Commande 1 -->
-                <div class="carte-commande">
-                    <div class="infos-principales">
-                        <p class="nom-client"><strong>Julien Dupont</strong></p>
-                        <p class="date-prestation">Prestation : 25/12/2026</p>
-                        <span class="badge-statut statut-accepte">Accepté</span>
+                <?php foreach ($commandes as $une_commande) { ?>
+                    <?php $plats_choisis = $modele_commandes->trouver_plats_choisis($une_commande['id']); ?>
+                    <div class="carte-commande">
+                        <div class="infos-principales">
+                            <p class="nom-client"><strong><?php echo htmlspecialchars($une_commande['prenom'] . ' ' . $une_commande['nom']); ?></strong></p>
+                            <p><?php echo htmlspecialchars($une_commande['email']); ?> - <?php echo htmlspecialchars($une_commande['telephone']); ?></p>
+                            <p><?php echo htmlspecialchars($une_commande['numero_commande']); ?> - <?php echo htmlspecialchars($une_commande['menu_titre']); ?>, <?php echo $une_commande['nombre_personne']; ?> personnes, <?php echo number_format($une_commande['prix_total'], 2, ',', ' '); ?> €</p>
+                            <p class="date-prestation">Prestation : <?php echo date('d/m/Y', strtotime($une_commande['date_prestation'])); ?> à <?php echo substr($une_commande['heure_livraison'], 0, 5); ?>, <?php echo htmlspecialchars($une_commande['adresse_livraison'] . ' ' . $une_commande['ville_livraison']); ?></p>
+                            <p>Plats : <?php echo htmlspecialchars(implode(', ', array_column($plats_choisis, 'titre_plat'))); ?></p>
+                            <span class="badge-statut statut-commande"><?php echo htmlspecialchars($une_commande['statut']); ?></span>
+                        </div>
+                            <?php if ($une_commande['statut'] != 'terminée' && $une_commande['statut'] != 'annulée') { ?>
+                            <form action="traitement_statut.php" method="POST" class="actions-commande">
+                                <input type="hidden" name="commande_id" value="<?php echo $une_commande['id']; ?>">
+                                <label for="statut-<?php echo $une_commande['id']; ?>">Nouveau statut :</label>
+                                <select id="statut-<?php echo $une_commande['id']; ?>" name="statut">
+                                    <?php foreach (Commandes::STATUTS_MISE_A_JOUR as $un_statut) { ?>
+                                        <option value="<?php echo $un_statut; ?>" <?php if ($un_statut == $une_commande['statut']) { echo 'selected'; } ?>><?php echo $un_statut; ?></option>
+                                    <?php } ?>
+                                </select>
+                                <button type="submit" class="btn-valider">Mettre à jour</button>
+                            </form>
+                            <details class="annulation-employe">
+                                <summary>Annuler cette commande</summary>
+                                <form action="traitement_annulation_employe.php" method="POST">
+                                    <input type="hidden" name="commande_id" value="<?php echo $une_commande['id']; ?>">
+                                    <fieldset>
+                                        <legend>Client contacté par :</legend>
+                                        <label><input type="radio" name="mode_contact" value="GSM" required> Appel GSM</label>
+                                        <label><input type="radio" name="mode_contact" value="mail"> Mail</label>
+                                    </fieldset>
+                                    <label for="motif-<?php echo $une_commande['id']; ?>">Motif de l'annulation :</label>
+                                    <textarea id="motif-<?php echo $une_commande['id']; ?>" name="motif" maxlength="1000" required></textarea>
+                                    <button type="submit" class="btn-supprimer">Confirmer l'annulation</button>
+                                </form>
+                            </details> 
+                        <?php } ?>
                     </div>
-                    <div class="actions-commande">
-                        <button class="btn-modifier">Voir / Modifier</button>
-                    </div>
-                </div>
-
-                <!-- Carte Commande 2 -->
-                <div class="carte-commande">
-                    <div class="infos-principales">
-                        <p class="nom-client"><strong>Marie Martin</strong></p>
-                        <p class="date-prestation">Prestation : 31/12/2026</p>
-                        <span class="badge-statut statut-preparation">En préparation</span>
-                    </div>
-                    <div class="actions-commande">
-                        <button class="btn-modifier">Voir / Modifier</button>
-                    </div>
-                </div>
-
-                <!-- Carte Commande 3 -->
-                <div class="carte-commande">
-                    <div class="infos-principales">
-                        <p class="nom-client"><strong>Pierre Durand</strong></p>
-                        <p class="date-prestation">Prestation : 05/01/2027</p>
-                        <span class="badge-statut statut-livraison">En cours de livraison</span>
-                    </div>
-                    <div class="actions-commande">
-                        <button class="btn-modifier">Voir / Modifier</button>
-                    </div>
-                </div>
-
-            </div>
+                <?php } ?>
+            </div>        
         </article>
             <!-- Bloc 3 : Gestion de l'équipe -->
              <?php if ($est_admin) { ?>

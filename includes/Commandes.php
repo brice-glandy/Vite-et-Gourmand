@@ -1,6 +1,12 @@
 <?php
 // Modèle des commandes : les requêtes SQL qui concernent les commandes, réunies au même endroit.
 class Commandes {
+        // Les statuts possibles, dans l'ordre de la vie d'une commande (énoncé, page 8)
+    const STATUTS = ['en attente', 'accepté', 'en préparation', 'en cours de livraison', 'livré',
+                     'en attente du retour de matériel', 'terminée', 'annulée'];
+        // Les statuts que l'employé peut choisir (énoncé, page 8) : ni « en attente », ni « annulée »
+    const STATUTS_MISE_A_JOUR = ['accepté', 'en préparation', 'en cours de livraison', 'livré',
+                                 'en attente du retour de matériel', 'terminée'];                 
     // La connexion à la base, gardée dans l'objet
     private $pdo;
 
@@ -58,5 +64,50 @@ class Commandes {
             'prix_livraison' => $prix_livraison,
             'prix_total' => round($prix_menu + $prix_livraison, 2)
         ];
+    }
+        // Ajoute une étape au suivi d'une commande (la date et l'heure sont mises par MySQL)
+    public function ajouter_suivi($commande_id, $statut) {
+        $requete = $this->pdo->prepare("INSERT INTO suivi_commande (commande_id, statut) VALUES (:commande_id, :statut)");
+        $requete->execute(['commande_id' => $commande_id, 'statut' => $statut]);
+    }
+        // Toutes les commandes (espace employé), avec le client et le menu.
+    // Les deux filtres sont facultatifs : une valeur vide veut dire « pas de filtre ».
+    public function trouver_toutes($statut, $client) {
+        $conditions = [];
+        $parametres = [];
+        if ($statut !== '') {
+            $conditions[] = "commande.statut = :statut";
+            $parametres['statut'] = $statut;
+        }
+        if ($client !== '') {
+            $conditions[] = "(utilisateur.nom LIKE :client1 OR utilisateur.prenom LIKE :client2 OR utilisateur.email LIKE :client3)";
+            $parametres['client1'] = '%' . $client . '%';
+            $parametres['client2'] = '%' . $client . '%';
+            $parametres['client3'] = '%' . $client . '%';
+        }
+
+        $sql = "SELECT commande.*, menu.titre AS menu_titre,
+                       utilisateur.nom, utilisateur.prenom, utilisateur.email, utilisateur.telephone
+                FROM commande
+                JOIN menu ON commande.menu_id = menu.id
+                JOIN utilisateur ON commande.utilisateur_id = utilisateur.id";
+        if (count($conditions) > 0) {
+            $sql = $sql . " WHERE " . implode(" AND ", $conditions);
+        }
+        $sql = $sql . " ORDER BY commande.date_prestation DESC";
+
+        $requete = $this->pdo->prepare($sql);
+        $requete->execute($parametres);
+        return $requete->fetchAll(PDO::FETCH_ASSOC);
+    }
+        // Une commande précise (espace employé), avec l'email et le prénom du client
+    public function trouver_par_id($commande_id) {
+        $sql = "SELECT commande.*, utilisateur.email, utilisateur.prenom
+                FROM commande
+                JOIN utilisateur ON commande.utilisateur_id = utilisateur.id
+                WHERE commande.id = :id";
+        $requete = $this->pdo->prepare($sql);
+        $requete->execute(['id' => $commande_id]);
+        return $requete->fetch(PDO::FETCH_ASSOC);
     }
 }
