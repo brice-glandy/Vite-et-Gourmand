@@ -17,3 +17,7 @@ $config_mongo_base = 'v_et_g';
 
 // Cookie de session : true seulement si le site est servi en HTTPS
 $config_cookie_secure = false;
+
+// Envoi des mails : 'mailpit' en local (boîte de réception sur http://localhost:8026),
+// 'journal' en production (le mail est seulement écrit dans le journal du serveur)
+$config_mail_mode = 'mailpit';
