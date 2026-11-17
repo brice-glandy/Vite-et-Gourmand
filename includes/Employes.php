@@ -34,4 +34,12 @@ class Employes {
             'mot_de_passe' => password_hash($mot_de_passe, PASSWORD_DEFAULT)
         ]);
     }
+
+    // Active (1) ou désactive (0) un compte, SEULEMENT si c'est un compte employé
+    public function changer_actif($employe_id, $actif) {
+        $sql = "UPDATE utilisateur SET actif = :actif
+                WHERE id = :id AND role_id = (SELECT id FROM role WHERE libelle = 'employe')";
+        $requete = $this->pdo->prepare($sql);
+        $requete->execute(['actif' => $actif, 'id' => $employe_id]);
+    }
 }

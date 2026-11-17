@@ -250,6 +250,16 @@ if ($est_admin) {
                                 <?php } ?>
                             </p>
                         </div>
+                                                <form action="traitement_actif.php" method="POST" class="actions-employe">
+                            <input type="hidden" name="employe_id" value="<?php echo $un_employe['id']; ?>">
+                            <?php if ($un_employe['actif']) { ?>
+                                <input type="hidden" name="actif" value="0">
+                                <button type="submit" class="btn-supprimer">Désactiver le compte</button>
+                            <?php } else { ?>
+                                <input type="hidden" name="actif" value="1">
+                                <button type="submit" class="btn-valider">Réactiver le compte</button>
+                            <?php } ?>
+                        </form>
                     </div>
                 <?php } ?>
             </div>
