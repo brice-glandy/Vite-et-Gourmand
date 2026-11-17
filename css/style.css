@@ -1249,3 +1249,16 @@ a.btn-modifier {
 .actions-commande .btn-supprimer {
     font-size: 1rem;
 }
+/* Annulation par l'employé : formulaire replié sous un bouton */
+.annulation-employe summary {
+    cursor: pointer;
+    color: #a83232;
+    font-weight: bold;
+}
+
+.annulation-employe form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}

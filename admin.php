@@ -161,7 +161,7 @@ if ($est_admin) {
                             <p>Plats : <?php echo htmlspecialchars(implode(', ', array_column($plats_choisis, 'titre_plat'))); ?></p>
                             <span class="badge-statut statut-commande"><?php echo htmlspecialchars($une_commande['statut']); ?></span>
                         </div>
-                                                <?php if ($une_commande['statut'] != 'terminée' && $une_commande['statut'] != 'annulée') { ?>
+                            <?php if ($une_commande['statut'] != 'terminée' && $une_commande['statut'] != 'annulée') { ?>
                             <form action="traitement_statut.php" method="POST" class="actions-commande">
                                 <input type="hidden" name="commande_id" value="<?php echo $une_commande['id']; ?>">
                                 <label for="statut-<?php echo $une_commande['id']; ?>">Nouveau statut :</label>
@@ -172,6 +172,20 @@ if ($est_admin) {
                                 </select>
                                 <button type="submit" class="btn-valider">Mettre à jour</button>
                             </form>
+                            <details class="annulation-employe">
+                                <summary>Annuler cette commande</summary>
+                                <form action="traitement_annulation_employe.php" method="POST">
+                                    <input type="hidden" name="commande_id" value="<?php echo $une_commande['id']; ?>">
+                                    <fieldset>
+                                        <legend>Client contacté par :</legend>
+                                        <label><input type="radio" name="mode_contact" value="GSM" required> Appel GSM</label>
+                                        <label><input type="radio" name="mode_contact" value="mail"> Mail</label>
+                                    </fieldset>
+                                    <label for="motif-<?php echo $une_commande['id']; ?>">Motif de l'annulation :</label>
+                                    <textarea id="motif-<?php echo $une_commande['id']; ?>" name="motif" maxlength="1000" required></textarea>
+                                    <button type="submit" class="btn-supprimer">Confirmer l'annulation</button>
+                                </form>
+                            </details> 
                         <?php } ?>
                     </div>
                 <?php } ?>
