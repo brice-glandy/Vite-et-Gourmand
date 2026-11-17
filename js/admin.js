@@ -281,3 +281,13 @@ async function changerStatutAvis() {
 boutonsAvis.forEach(bouton => {
     bouton.addEventListener('click', changerStatutAvis);
 });
+
+// Demande de confirmation avant de supprimer un menu
+document.querySelectorAll('.form-suppression-menu').forEach(function (formulaire) {
+    formulaire.addEventListener('submit', function (event) {
+        const titre = formulaire.querySelector('button').dataset.titre;
+        if (!confirm('Voulez-vous vraiment supprimer le menu « ' + titre + ' » ?')) {
+            event.preventDefault();
+        }
+    });
+});

@@ -293,9 +293,16 @@ if ($est_admin) {
                             <p><strong>Thème :</strong> <?php echo htmlspecialchars($un_menu['theme']); ?></p>
                             <p><strong>Régime :</strong> <?php echo htmlspecialchars($un_menu['regime']); ?></p>
                             <p><strong>Stock :</strong> <?php echo $un_menu['quantite_restante']; ?> commande(s) possible(s)</p>
+                            <?php if ($un_menu['quantite_restante'] == 0) { ?>
+                                <p><span class="badge-statut statut-hors-vente">Plus en vente</span></p>
+                            <?php } ?>
                         </div>
                         <div class="actions-menu">
                             <a href="modifier_menu.php?id=<?php echo $un_menu['id']; ?>" class="btn-modifier">Modifier<span class="texte-cache"> le menu <?php echo htmlspecialchars($un_menu['titre']); ?></span></a>
+                                <form action="traitement_suppression_menu.php" method="POST" class="form-suppression-menu">
+                                <input type="hidden" name="menu_id" value="<?php echo $un_menu['id']; ?>">
+                                <button type="submit" class="btn-supprimer" data-titre="<?php echo htmlspecialchars($un_menu['titre']); ?>">Supprimer<span class="texte-cache"> le menu <?php echo htmlspecialchars($un_menu['titre']); ?></span></button>
+                            </form>
                         </div>
                     </div>
                 <?php } ?>
