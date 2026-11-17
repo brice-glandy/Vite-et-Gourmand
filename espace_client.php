@@ -60,6 +60,38 @@ $client = $requete->fetch(PDO::FETCH_ASSOC);
                     <li>Livraison : <?php echo number_format($une_commande['prix_livraison'], 2, ',', ' '); ?> €</li>
                     <li><strong>Total : <?php echo number_format($une_commande['prix_total'], 2, ',', ' '); ?> €</strong></li>
                 </ul>
+                    <?php if ($une_commande['statut'] != 'en attente') { ?>
+                        <?php $etapes = $modele_commandes->trouver_suivi($une_commande['id']); ?>
+                        <details class="suivi-commande">
+                            <summary>Suivi de la commande</summary>
+                            <ol>
+                                <?php foreach ($etapes as $une_etape) { ?>
+                                    <li><?php echo date('d/m/Y à H\hi', strtotime($une_etape['date_changement'])); ?> : <?php echo htmlspecialchars($une_etape['statut']); ?></li>
+                                <?php } ?>
+                            </ol>
+                        </details>
+                    <?php } ?>
+                    <?php if ($une_commande['statut'] == 'terminée') { ?>
+                        <?php if ($une_commande['avis_note'] === null) { ?>
+                            <details class="suivi-commande">
+                                <summary>Donner mon avis sur cette commande</summary>
+                                <form action="traitement_avis_client.php" method="POST" class="formulaire-avis">
+                                    <input type="hidden" name="commande_id" value="<?php echo $une_commande['id']; ?>">
+                                    <fieldset>
+                                        <legend>Votre note (sur 5) :</legend>
+                                        <?php for ($note = 1; $note <= 5; $note++) { ?>
+                                            <label><input type="radio" name="note" value="<?php echo $note; ?>" required> <?php echo $note; ?></label>
+                                        <?php } ?>
+                                    </fieldset>
+                                    <label for="commentaire-<?php echo $une_commande['id']; ?>">Votre commentaire :</label>
+                                    <textarea id="commentaire-<?php echo $une_commande['id']; ?>" name="commentaire" maxlength="1000" required></textarea>
+                                    <button type="submit" class="btn-valider">Envoyer mon avis</button>
+                                </form>
+                            </details>
+                        <?php } else { ?>
+                            <p>Votre avis : <?php echo $une_commande['avis_note']; ?>/5 (<?php echo htmlspecialchars($une_commande['avis_statut']); ?>)</p>
+                        <?php } ?>
+                    <?php } ?>
                 <?php if ($une_commande['statut'] == 'en attente') { ?>
     <div class="actions-commande">
         <a href="modifier_commande.php?id=<?php echo $une_commande['id']; ?>" class="btn-modifier">Modifier cette commande</a>

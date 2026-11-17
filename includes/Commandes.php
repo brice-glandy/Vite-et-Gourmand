@@ -16,9 +16,11 @@ class Commandes {
 
     // Les commandes d'un client, de la plus récente à la plus ancienne, avec le titre du menu
     public function trouver_par_client($utilisateur_id) {
-        $sql = "SELECT commande.*, menu.titre AS menu_titre
+                $sql = "SELECT commande.*, menu.titre AS menu_titre,
+                       avis.note AS avis_note, avis.statut AS avis_statut
                 FROM commande
                 JOIN menu ON commande.menu_id = menu.id
+                LEFT JOIN avis ON avis.commande_id = commande.id
                 WHERE commande.utilisateur_id = :utilisateur_id
                 ORDER BY commande.date_commande DESC";
         $requete = $this->pdo->prepare($sql);
@@ -109,5 +111,14 @@ class Commandes {
         $requete = $this->pdo->prepare($sql);
         $requete->execute(['id' => $commande_id]);
         return $requete->fetch(PDO::FETCH_ASSOC);
+    }
+        // Le suivi d'une commande : toutes ses étapes, de la plus ancienne à la plus récente
+    public function trouver_suivi($commande_id) {
+        $sql = "SELECT statut, date_changement FROM suivi_commande
+                WHERE commande_id = :commande_id
+                ORDER BY date_changement, id";
+        $requete = $this->pdo->prepare($sql);
+        $requete->execute(['commande_id' => $commande_id]);
+        return $requete->fetchAll(PDO::FETCH_ASSOC);
     }
 }
