@@ -66,7 +66,38 @@ try {
     retour_erreur('Une erreur technique empêche la mise à jour. Merci de réessayer.');
 }
 
-// 4. (étape G2b : MongoDB et mails)
+// 4a. La copie MongoDB suit le statut (les statistiques excluent seulement « annulée »)
+try {
+    require_once 'includes/mongo.php';
+    $ecriture = new MongoDB\Driver\BulkWrite();
+    $ecriture->update(
+        ['numero_commande' => $commande['numero_commande']],
+        ['$set' => ['statut' => $nouveau_statut]]
+    );
+    $mongo->executeBulkWrite($mongo_base . '.commandes', $ecriture);
+} catch (MongoDB\Driver\Exception\Exception $e) {
+    error_log('Mise à jour MongoDB impossible pour ' . $commande['numero_commande'] . ' : ' . $e->getMessage());
+}
+
+// 4b. Les mails prévus par l'énoncé (simulés, voir includes/mail.php)
+require_once 'includes/mail.php';
+if ($nouveau_statut == 'en attente du retour de matériel') {
+    envoyer_mail(
+        $commande['email'],
+        'Retour du matériel prêté - commande ' . $commande['numero_commande'],
+        'Bonjour ' . $commande['prenom'] . ', du matériel vous a été prêté pour votre commande ' . $commande['numero_commande'] . '.'
+        . ' Merci de prendre contact avec nous pour le restituer. Sans restitution sous 10 jours ouvrés,'
+        . ' des frais de 600 € vous seront facturés, conformément à nos conditions générales de vente. Vite & Gourmand'
+    );
+}
+if ($nouveau_statut == 'terminée') {
+    envoyer_mail(
+        $commande['email'],
+        'Votre avis nous intéresse - commande ' . $commande['numero_commande'],
+        'Bonjour ' . $commande['prenom'] . ', votre commande ' . $commande['numero_commande'] . ' est terminée.'
+        . ' Connectez-vous à votre espace pour nous donner votre avis (une note de 1 à 5 et un commentaire). Merci ! Vite & Gourmand'
+    );
+}
 
 // 5. Post/Redirect/Get : retour à la rubrique Commandes
 $_SESSION['message_admin_commandes'] = 'La commande ' . $commande['numero_commande'] . ' est maintenant « ' . $nouveau_statut . ' ».';
