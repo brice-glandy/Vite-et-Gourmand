@@ -26,6 +26,10 @@ if ($est_admin) {
 require_once 'includes/Menus.php';
 $modele_menus = new Menus($pdo);
 $menus_admin = $modele_menus->trouver_tous_admin();
+// Rubrique Plats (administrateur et employés)
+require_once 'includes/Plats.php';
+$modele_plats = new Plats($pdo);
+$plats_admin = $modele_plats->trouver_tous();
 ?>
 <?php
 $sql = "SELECT avis.*, utilisateur.prenom, utilisateur.nom
@@ -73,6 +77,7 @@ if ($est_admin) {
     <li><a href="#equipe">Équipe</a></li>
 <?php } ?>
 <li><a href="#menus">Menus</a></li>
+<li><a href="#plats">Plats</a></li>
 <li><a href="#horaires">Horaires</a></li>
 <li><a href="#avis">Avis</a></li>
 <li><a href="deconnexion.php" class="btn-deconnexion">Déconnexion</a></li>
@@ -275,7 +280,7 @@ if ($est_admin) {
                     <h2>Menus</h2>
                     <div class="actions-globales">
                         <a href="modifier_menu.php" class="btn-ajouter">+ Ajouter un menu</a>
-                        <button class="btn-ajouter" id="btn-ajouter-plat">+ Ajouter un plat</button>
+                        
                     </div>
                 </div>
                     <?php if (isset($_SESSION['message_menus'])) { ?>
@@ -308,6 +313,38 @@ if ($est_admin) {
                 <?php } ?>
             </div>
             
+        </article>
+
+                <!-- Bloc 4 bis : Gestion des Plats -->
+        <article id="plats" class="section-admin">
+            <div class="en-tete-section">
+                <h2>Plats</h2>
+                <div class="actions-globales">
+                    <a href="modifier_plat.php" class="btn-ajouter">+ Ajouter un plat</a>
+                </div>
+            </div>
+            <?php if (isset($_SESSION['message_plats'])) { ?>
+                <p class="message-succes" role="status"><?php echo htmlspecialchars($_SESSION['message_plats']); ?></p>
+                <?php unset($_SESSION['message_plats']); ?>
+            <?php } ?>
+                       <?php foreach (Plats::TYPES as $type) { ?>
+                <h3><?php echo $type; ?>s</h3>
+                <div class="grille-menus-admin">
+                    <?php foreach ($plats_admin as $un_plat) { ?>
+                        <?php if ($un_plat['type_plat'] == $type) { ?>
+                            <div class="carte-menu-admin">
+                                <div class="infos-menu">
+                                    <p><strong>Nom :</strong> <?php echo htmlspecialchars($un_plat['titre_plat']); ?></p>
+                                    <p><strong>Allergènes :</strong> <?php if ($un_plat['allergenes']) { echo htmlspecialchars($un_plat['allergenes']); } else { echo 'aucun'; } ?></p>
+                                </div>
+                                <div class="actions-menu">
+                                    <a href="modifier_plat.php?id=<?php echo $un_plat['id']; ?>" class="btn-modifier">Modifier<span class="texte-cache"> le plat <?php echo htmlspecialchars($un_plat['titre_plat']); ?></span></a>
+                                </div>
+                            </div>
+                        <?php } ?>
+                    <?php } ?>
+                </div>
+            <?php } ?>
         </article>
         <!-- Bloc 5 : Gestion des Horaires -->
             <article id="horaires" class="section-admin">
