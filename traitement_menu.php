@@ -109,8 +109,10 @@ $donnees = [
 
 // Sans numéro : c'est un nouveau menu. Avec un numéro : c'est une modification.
 if ($id == '') {
-    $modele_menus->creer($donnees);
-    $_SESSION['message_menus'] = 'Le menu « ' . $titre . ' » a été ajouté.';
+    $nouvel_id = $modele_menus->creer($donnees);
+    $_SESSION['message_menus'] = 'Le menu « ' . $titre . ' » a été ajouté. Choisissez maintenant ses plats.';
+    header('Location: plats_menu.php?id=' . $nouvel_id);
+    exit;  
 } else {
     $modele_menus->modifier((int) $id, $donnees);
     $_SESSION['message_menus'] = 'Le menu « ' . $titre . ' » a été modifié.';

@@ -118,6 +118,7 @@ class Menus {
                         :quantite_restante, :conditions, :image_url, :theme_id, :regime_id)";
         $requete = $this->pdo->prepare($sql);
         $requete->execute($donnees);
+        return (int) $this->pdo->lastInsertId();
     }
         // Modifie un menu existant. $donnees contient les mêmes 9 valeurs que pour creer().
     public function modifier($id, $donnees) {
@@ -157,6 +158,37 @@ class Menus {
             $this->pdo->prepare("DELETE FROM menu_plat WHERE menu_id = :id")->execute($parametres);
             $this->pdo->prepare("DELETE FROM image_menu WHERE menu_id = :id")->execute($parametres);
             $this->pdo->prepare("DELETE FROM menu WHERE id = :id")->execute($parametres);
+            $this->pdo->commit();
+        } catch (PDOException $e) {
+            $this->pdo->rollBack();
+            throw $e;
+        }
+    }
+        // Les plats associés à un menu : pour chaque numéro de plat, vrai s'il est le plat par défaut
+    // Exemple : [1 => true, 13 => false] (plat 1 par défaut, plat 13 proposé au choix)
+    public function trouver_associations_plats($menu_id) {
+        $requete = $this->pdo->prepare("SELECT plat_id, par_defaut FROM menu_plat WHERE menu_id = :menu_id");
+        $requete->execute(['menu_id' => $menu_id]);
+        $associations = [];
+        foreach ($requete->fetchAll(PDO::FETCH_ASSOC) as $ligne) {
+            $associations[$ligne['plat_id']] = (bool) $ligne['par_defaut'];
+        }
+        return $associations;
+    }
+    // Remplace les plats d'un menu (tout ou rien).
+    // $proposes : numéros des plats proposés ; $defauts : numéros des plats par défaut (un par type proposé)
+    public function enregistrer_plats($menu_id, $proposes, $defauts) {
+        $this->pdo->beginTransaction();
+        try {
+            $this->pdo->prepare("DELETE FROM menu_plat WHERE menu_id = :menu_id")->execute(['menu_id' => $menu_id]);
+            $requete = $this->pdo->prepare("INSERT INTO menu_plat (menu_id, plat_id, par_defaut) VALUES (:menu_id, :plat_id, :par_defaut)");
+            foreach ($proposes as $plat_id) {
+                $requete->execute([
+                    'menu_id' => $menu_id,
+                    'plat_id' => $plat_id,
+                    'par_defaut' => in_array($plat_id, $defauts, true) ? 1 : 0
+                ]);
+            }
             $this->pdo->commit();
         } catch (PDOException $e) {
             $this->pdo->rollBack();
