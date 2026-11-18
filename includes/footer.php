@@ -30,8 +30,8 @@ $horaires = $requete->fetchAll(PDO::FETCH_ASSOC);
         <p>0612345678</p>
     </div>
     <div class="footer-liens">
-        <a href="#">Conditions Générales de vente</a>
-        <a href="#">Mentions Légales</a>
+        <a href="cgv.php">Conditions générales de vente</a>
+        <a href="mentions_legales.php">Mentions légales</a>
     </div>
 </footer>
 <script src="js/menu.js"></script>
