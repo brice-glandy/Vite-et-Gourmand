@@ -47,7 +47,10 @@ $titre_page = 'Plats du menu ' . $menu['titre'];
     <main class="page-modifier-horaire">
         <h1><?php echo htmlspecialchars($titre_page); ?></h1>
         <p>Cochez les plats proposés par ce menu. Pour chaque type proposé, choisissez le plat servi par défaut.</p>
-
+        <?php if (isset($_SESSION['message_menus'])) { ?>
+            <p class="message-succes" role="status"><?php echo htmlspecialchars($_SESSION['message_menus']); ?></p>
+            <?php unset($_SESSION['message_menus']); ?>
+        <?php } ?>
         <?php if (isset($_SESSION['erreurs_plats_menu'])) { ?>
             <div class="message-erreur" role="alert">
                 <ul>

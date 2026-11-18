@@ -118,6 +118,7 @@ class Menus {
                         :quantite_restante, :conditions, :image_url, :theme_id, :regime_id)";
         $requete = $this->pdo->prepare($sql);
         $requete->execute($donnees);
+        return (int) $this->pdo->lastInsertId();
     }
         // Modifie un menu existant. $donnees contient les mêmes 9 valeurs que pour creer().
     public function modifier($id, $donnees) {
