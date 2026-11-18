@@ -400,7 +400,7 @@ if ($est_admin) {
     ?>
     <div class="carte-avis" id="avis-<?php echo $un_avis['id']; ?>">
         <div class="en-tete-avis">
-            <p><strong><?php echo htmlspecialchars($un_avis['prenom'] . ' ' . substr($un_avis['nom'], 0, 1) . '.'); ?></strong> - <?php echo date('d/m/Y à H\hi', strtotime($un_avis['date_publication'])); ?></p>
+            <p><strong><?php echo htmlspecialchars($un_avis['prenom'] . ' ' . mb_substr($un_avis['nom'], 0, 1) . '.'); ?></strong> - <?php echo date('d/m/Y à H\hi', strtotime($un_avis['date_publication'])); ?></p>
             <p class="note-avis">Note : <?php echo $un_avis['note']; ?>/5</p>
             <span class="badge-statut <?php echo $classe_statut; ?>"><?php echo $un_avis['statut']; ?></span>
         </div>
