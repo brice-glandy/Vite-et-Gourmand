@@ -829,6 +829,22 @@ button:disabled {
     font-size: 1rem;
 }
 
+/* Plats d'un menu : le bouton « par défaut » à gauche, puis la case et le nom du plat */
+.ligne-plat-menu {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.choix-defaut {
+    white-space: nowrap;
+}
+
+.lien-plats-menu {
+    max-width: 500px;
+    margin: 0 auto 1rem;
+    text-align: center;
+}
 .actions-horaires a {
     text-decoration: none;
 }

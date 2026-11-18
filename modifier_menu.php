@@ -69,7 +69,12 @@ if (isset($_SESSION['saisie_menu'])) {
             </div>
             <?php unset($_SESSION['erreurs_menu']); ?>
         <?php } ?>
-
+            <?php if ($menu['id'] != '') { ?>
+            <p class="lien-plats-menu">
+                <a href="plats_menu.php?id=<?php echo $menu['id']; ?>" class="btn-modifier">Choisir les plats de ce menu</a><br>
+                Enregistrez d'abord vos changements ci-dessous : ils seraient perdus en quittant la page.
+            </p>
+        <?php } ?>
         <form action="traitement_menu.php" method="POST" class="formulaire-horaire formulaire-menu">
             <input type="hidden" name="id" value="<?php echo htmlspecialchars($menu['id']); ?>">
 
