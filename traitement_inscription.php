@@ -1,6 +1,7 @@
 <?php
 require_once 'includes/session.php';
 require_once 'includes/db.php';
+require_once 'includes/mail.php';
 
 // 1. On n'accepte que les envois du formulaire (POST)
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -96,7 +97,16 @@ $requete->execute([
     'adresse_postale' => $adresse_postale,
     'ville' => $ville
 ]);
-
+// 6 bis. Mail de bienvenue automatique (énoncé, page 5), sans aucun mot de passe
+envoyer_mail(
+    $email,
+    'Bienvenue chez Vite & Gourmand',
+    "Bonjour " . $prenom . ",\n\n"
+    . "Votre compte client Vite & Gourmand a bien été créé.\n"
+    . "Vous pouvez dès maintenant vous connecter avec votre adresse email pour commander nos menus et suivre vos commandes.\n\n"
+    . "À très bientôt,\n"
+    . "Julie et José, Vite & Gourmand"
+);
 // 7. Retour à la connexion avec un message de succès
 header('Location: connexion.php?inscription=ok');
 exit;

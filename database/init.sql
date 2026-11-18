@@ -336,3 +336,12 @@ FROM commande WHERE statut = 'terminée';
 INSERT INTO suivi_commande (commande_id, statut, date_changement)
 SELECT id, 'annulée', date_commande + INTERVAL 2 DAY
 FROM commande WHERE statut = 'annulée';
+
+-- Réinitialisation des mots de passe : un jeton par demande (seule son empreinte est stockée)
+CREATE TABLE reinitialisation_mot_de_passe (
+id INT AUTO_INCREMENT PRIMARY KEY,
+utilisateur_id INT NOT NULL,
+jeton_hash CHAR(64) NOT NULL,
+date_expiration DATETIME NOT NULL,
+FOREIGN KEY (utilisateur_id) REFERENCES utilisateur(id)
+);

@@ -18,6 +18,9 @@ require_once 'includes/db.php';
         <?php if (isset($_GET['inscription'])) { ?>
         <p class="message-succes" role="status">Votre compte a bien été créé. Vous pouvez maintenant vous connecter.</p>
         <?php } ?>
+                <?php if (isset($_GET['reinitialisation'])) { ?>
+            <p class="message-succes" role="status">Votre mot de passe a été modifié. Vous pouvez maintenant vous connecter.</p>
+        <?php } ?>
         <?php if (isset($_GET['commande'])) { ?>
             <p class="message-succes" role="status">Pour commander ce menu, connectez-vous ou créez un compte.</p>
         <?php } ?>
@@ -40,7 +43,7 @@ require_once 'includes/db.php';
 </div>
 
             <button type="submit" class="btn-valider">Se connecter</button>
-            <a href="#" class="lien-secondaire">Mot de passe oublié ?</a>
+            <a href="mot_de_passe_oublie.php" class="lien-secondaire">Mot de passe oublié ?</a>
         </form>
 
         <p class="texte-inscription">Pas encore de compte ? <a href="inscription.php">Créer un compte</a></p>
