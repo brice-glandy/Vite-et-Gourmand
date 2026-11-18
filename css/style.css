@@ -943,8 +943,14 @@ button:disabled {
     transform: translateY(-50%);
     background: none;
     border: none;
-    font-size: 1.2rem;
+    color: #555555;
+    display: flex;
     cursor: pointer;
+}
+
+/* L'œil devient bordeaux quand le mot de passe est affiché */
+.btn-oeil[aria-pressed="true"] {
+    color: #6a0b37;
 }
 /* 11. Compléments de la page d'inscription */
 .aide-champ {

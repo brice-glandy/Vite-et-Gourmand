@@ -36,7 +36,7 @@ require_once 'includes/db.php';
             <label for="mot_de_passe">Mot de passe</label>
             <div class="champ-mot-de-passe">
     <input type="password" id="mot_de_passe" name="mot_de_passe" autocomplete="current-password" required>
-    <button type="button" class="btn-oeil" aria-label="Afficher le mot de passe" aria-pressed="false">👁️</button>
+    <button type="button" class="btn-oeil" aria-label="Afficher le mot de passe" aria-pressed="false"><svg class="icone-oeil" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
 </div>
 
             <button type="submit" class="btn-valider">Se connecter</button>

@@ -68,13 +68,13 @@ function valeurSaisie($saisie, $champ) {
             <p id="aide-mot-de-passe" class="aide-champ">10 caractères minimum, avec au moins une majuscule, une minuscule, un chiffre et un caractère spécial.</p>
             <div class="champ-mot-de-passe">
                 <input type="password" id="mot_de_passe" name="mot_de_passe" autocomplete="new-password" minlength="10" aria-describedby="aide-mot-de-passe" required>
-                <button type="button" class="btn-oeil" aria-label="Afficher le mot de passe" aria-pressed="false">👁️</button>
+                <button type="button" class="btn-oeil" aria-label="Afficher le mot de passe" aria-pressed="false"><svg class="icone-oeil" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
             </div>
 
             <label for="confirmation">Confirmer le mot de passe</label>
             <div class="champ-mot-de-passe">
                 <input type="password" id="confirmation" name="confirmation" autocomplete="new-password" required>
-                <button type="button" class="btn-oeil" aria-label="Afficher le mot de passe" aria-pressed="false">👁️</button>
+                <button type="button" class="btn-oeil" aria-label="Afficher le mot de passe" aria-pressed="false"><svg class="icone-oeil" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="12" cy="12" r="3" fill="none" stroke="currentColor" stroke-width="2"/></svg></button>
             </div>
 
             <label class="case-rgpd">
