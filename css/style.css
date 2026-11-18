@@ -592,7 +592,7 @@ header {
 }
 
 .statut-accepte, .statut-actif { background-color: #4A7B59; } /* Vert */
-.statut-preparation { background-color: #d48b2a; } /* Orange */
+.statut-preparation { background-color: #a8611c; } /* Orange */
 
 /* 6. Mise en forme des boutons d'action */
 .actions-commande, .actions-employe, .actions-menu, .actions-avis, .actions-horaires {
@@ -860,7 +860,7 @@ button:disabled {
 }
  /* 8. Couleurs des statuts d'avis */
 .statut-valide { background-color: #4A7B59; }   /* Vert : comme le bouton Valider */
-.statut-attente { background-color: #d48b2a; }  /* Orange : à traiter */
+.statut-attente { background-color: #a8611c; }  /* Orange : à traiter */
 .statut-refuse { background-color: #a83232; }   /* Rouge : comme le bouton Refuser */
 .statut-hors-vente { background-color: #555555; } /* Gris : menu qui ne peut plus être commandé */
 /* 9. Page de connexion (réutilisée pour l'inscription) */
