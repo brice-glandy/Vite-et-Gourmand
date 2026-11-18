@@ -44,7 +44,7 @@ $avis_valides = $requete->fetchAll(PDO::FETCH_ASSOC);
             </ul>
         </section>
 
-        <!-- 3. Les avis clients validés (écrits en dur pour l'instant, lus en base au bloc 3) -->
+        <!-- 3. Les avis clients validés, lus en base (6 au maximum, du plus récent au plus ancien) -->
         <section class="accueil-avis" aria-labelledby="titre-avis">
             <h2 id="titre-avis">Ils nous ont fait confiance</h2>
             <?php if (count($avis_valides) == 0) { ?>
