@@ -1,0 +1,10 @@
+# Fichiers système Windows et Mac
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Configuration personnelle de l'éditeur
+.vscode/
+# Identifiants propres à chaque machine (jamais sur GitHub)
+includes/config.php
+NOTES_REPRISE.md

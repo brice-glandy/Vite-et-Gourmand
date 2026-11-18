@@ -1,0 +1,1333 @@
+/* 1. STYLES GLOBAUX ET MOBILE FIRST */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+}
+
+header {
+    background-color: #6a0b37;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 25px 20px;
+}
+
+.logo a {
+    color: white;
+    text-decoration: none;
+    font-size: 22px;
+    font-weight: bold;
+}
+
+.menu-burger {
+    display: block;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+}
+
+.menu-burger span {
+    display: block;
+    width: 25px;
+    height: 3px;
+    background-color: white;
+    margin: 5px 0;
+}
+
+.navigation-principale {
+    display: none;
+}
+/* Le style du menu mobile lorsqu'il est déployé */
+.navigation-principale.actif {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 70px; /* À ajuster si le menu chevauche ton logo */
+    left: 0;
+    width: 100%;
+    background-color: #6a0b37; /* Le bordeaux de ton thème */
+    padding: 20px 0;
+    z-index: 10;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+}
+
+.navigation-principale.actif ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.navigation-principale.actif a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.conteneur-principal {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    gap: 30px;
+}
+
+.zone-filtres {
+    width: 100%;
+}
+
+.groupe-filtre {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.groupe-filtre label {
+    font-weight: bold;
+    font-style: italic;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.groupe-filtre select, 
+.groupe-filtre input[type="number"] {
+    background-color: #6a0b37;
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 16px;
+    width: 100%;
+    max-width: 250px;
+}
+
+.groupe-filtre input[type="range"] {
+    width: 100%;
+    max-width: 250px;
+}
+
+.actions-filtres {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.btn-valider {
+    background-color: #4A7B59;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 40px;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+    max-width: 200px;
+}
+
+.btn-effacer {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+}
+.grille-menus {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+    width: 100%;
+}
+#titre-menus {
+    grid-column: 1 / -1;
+    margin: 0;
+    color: #6a0b37;
+    font-family: Georgia, serif;
+    text-align: center;
+}
+#message-filtres {
+    grid-column: 1 / -1;
+    margin: 0;
+    text-align: center;
+    font-weight: bold;
+}
+.carte-menu {
+    display: flex;
+    flex-direction: column;
+    background-color: #e8d4df;
+    border: 1px solid #c9a4b9;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+.carte-contenu {
+    padding: 20px;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.carte-contenu h2 {
+    color: #6a0b37;
+    margin-top: 0;
+    text-align: center;
+    font-family: Georgia, serif;
+}
+
+.carte-caracteristiques {
+    padding-left: 20px;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.carte-description {
+    font-size: 13px;
+    font-style: italic;
+    text-align: center;
+}
+
+.carte-visuel {
+    position: relative;
+    height: 200px;
+}
+
+.carte-visuel img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.btn-detail {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(106, 11, 55, 0.85);
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    text-decoration: none;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+.filtre-prix-inputs {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+.filtre-prix-inputs input,
+.groupe-filtre select, 
+.groupe-filtre input[type="number"] {
+    background-color: #6a0b37;
+    color: white;
+    border: none;
+    padding: 10px;
+    font-size: 14px;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: 0;
+}
+
+.pied-de-page {
+    background-color: #6a0b37;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 30px;
+    gap: 30px;
+    text-align: center;
+    font-size: 14px;
+}
+
+.footer-horaires p, .footer-contact p {
+    margin: 5px 0;
+}
+
+.footer-titre {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 15px !important;
+}
+
+.footer-liens {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+}
+
+.footer-liens a {
+    color: #6a0b37;
+    background-color: #e5d3dc;
+    padding: 10px 20px;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    width: 80%;
+    text-align: center;
+}
+/* 2. ADAPTATION POUR LES ECRANS LARGES (DESKTOP) */
+/* 2. ADAPTATION POUR LES ECRANS LARGES (DESKTOP) */
+@media (min-width: 768px) {
+    header {
+        padding: 25px 30px;
+    }
+
+    .logo a {
+        font-size: 28px;
+    }
+
+    .menu-burger {
+        display: none;
+    }
+
+    .navigation-principale {
+        display: block;
+    }
+
+    .navigation-principale ul {
+        list-style: none;
+        display: flex;
+        gap: 15px;
+        margin: 0;
+        padding: 0;
+    }
+
+    .navigation-principale a {
+        color: white;
+        text-decoration: none;
+        text-transform: uppercase;
+        font-size: 14px;
+        padding: 8px 12px;
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 5px;
+    }
+
+    .conteneur-principal {
+        flex-direction: row;
+        padding: 0;
+        align-items: flex-start;
+    }
+
+    .zone-filtres {
+        width: 250px;
+        flex-shrink: 0;
+        padding: 30px 20px;
+        background-color: white;
+    }
+
+    .grille-menus {
+        flex-grow: 1;
+        background-color: #dfc4d1;
+        padding: 30px;
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .pied-de-page {
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: flex-start;
+        text-align: center;
+    }
+}
+/* --- STYLES DE LA PAGE COMMANDE --- */
+
+/* Base pour mobile (1 seule colonne) */
+.page-commande {
+    background-color: #d1b5c4;
+    padding: 3rem 1.5rem;
+    color: #000;
+}
+
+.page-commande h1 {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+#formulaire-commande {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.page-commande fieldset {
+    border: none;
+    padding: 0;
+    margin: 0;
+}
+
+.champ-saisie {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 1.5rem;
+}
+
+.champ-saisie label, .champ-choix-menu legend {
+    font-weight: bold;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+
+.champ-saisie input {
+    padding: 0.8rem;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    background-color: #ffffff;
+}
+
+/* Organisation des boutons radio pour qu'ils s'alignent proprement */
+.options-menu {
+    display: flex;
+    flex-direction: column; /* Force l'affichage en liste verticale stricte */
+    gap: 0.8rem;
+    margin-bottom: 1.5rem;
+}
+
+.options-menu label {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 0.9rem;
+    font-weight: normal;
+}
+.options-menu label {
+    cursor: pointer;
+}
+
+.options-menu input[type="radio"] {
+    width: 1.3rem;
+    height: 1.3rem;
+    accent-color: #6a0b37;
+    flex-shrink: 0;
+}
+.bouton-payer {
+    background-color: #4A7B59;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 1rem;
+}
+.zone-recap {
+    margin-top: 2rem;
+}
+
+.titre-recap {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+}
+
+.ligne-recap {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.ligne-recap label {
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+/* Le secret : rendre l'input invisible mais garder le texte */
+.ligne-recap input {
+    background-color: transparent;
+    border: none;
+    text-align: right;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #000;
+    width: 80px;
+    padding: 0;
+}
+
+.total-recap label, .total-recap input {
+    font-size: 1.2rem;
+}
+/* Adaptation pour les écrans larges (Desktop) */
+@media (min-width: 768px) {
+    .page-commande h1 {
+        margin-bottom: 4rem;
+    }
+    
+    #formulaire-commande {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+    }
+}
+/* --- STYLES DE LA PAGE ADMINISTRATION --- */
+
+/* 1. Structure globale Mobile */
+.page-admin {
+    display: flex;
+    flex-direction: column;
+    background-color: #d1b5c4;
+    min-height: 100vh;
+}
+
+/* 2. Menu latéral (Navigation de l'admin) */
+.menu-lateral {
+    background-color: #ffffff;
+    padding: 1.5rem;
+}
+
+.menu-lateral h2 {
+    font-size: 1.2rem;
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #6a0b37;
+}
+
+.menu-lateral ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap; /* Sur mobile, les boutons s'alignent horizontalement */
+    gap: 0.5rem;
+    justify-content: center;
+}
+
+.menu-lateral a {
+    display: block;
+    padding: 0.8rem 1rem;
+    text-decoration: none;
+    color: #000;
+    background-color: #e5d3dc;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+.menu-lateral a.actif {
+    background-color: #6a0b37;
+    color: #ffffff;
+}
+
+/* 3. Zone de contenu principale */
+.contenu-admin {
+    padding: 1.5rem;
+}
+
+.section-admin h2 {
+    margin-bottom: 1.5rem;
+    color: #000;
+    border-bottom: 2px solid #6a0b37;
+    padding-bottom: 0.5rem;
+}
+
+/* 4. Design commun des cartes blanches (Commandes, Equipe, Menus...) */
+.carte-commande, .carte-employe, .carte-menu-admin, .carte-avis {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); /* L'ombre portée légère de ta maquette */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 1rem;
+}
+.liste-horaires {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    max-width: 700px;
+}
+
+.ligne-horaire {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.jour-horaire {
+    width: 100px;
+    font-weight: bold;
+}
+
+.heures-horaire {
+    flex-grow: 1;
+    text-align: center;
+}
+
+.bouton-modifier {
+    text-decoration: none;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+/* 5. Mise en forme des badges de statuts */
+.badge-statut {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    color: white;
+}
+
+.statut-accepte, .statut-actif { background-color: #4A7B59; } /* Vert */
+.statut-preparation { background-color: #a8611c; } /* Orange */
+
+/* 6. Mise en forme des boutons d'action */
+.actions-commande, .actions-employe, .actions-menu, .actions-avis, .actions-horaires {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+    border-top: 1px solid #eee;
+    padding-top: 1rem;
+}
+
+.btn-modifier, .btn-valider, .btn-ajouter {
+    background-color: #4A7B59;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.btn-supprimer, .btn-refuser {
+    background-color: #a83232; /* Rouge sombre pour les actions destructrices */
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+/* Le style visuel pour un bouton désactivé (ex: l'admin ne peut pas se supprimer lui-même) */
+button:disabled {
+    background-color: #cccccc;
+    color: #666666;
+    cursor: not-allowed;
+}
+.liste-checkbox-scroll {
+    max-height: 110px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    padding: 0.5rem;
+    border-radius: 4px;
+    background-color: #fff;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+/* --- ADAPTATION POUR ECRANS LARGES (DESKTOP) --- */
+@media (min-width: 1024px) {
+    
+    /* On active la grille pour scinder l'écran en deux */
+    .page-admin {
+        display: grid;
+        grid-template-columns: 250px 1fr; /* 250px figés pour le menu, le reste fluide pour le contenu */
+        align-items: start;
+            /* Les trois filtres côte à côte sur grand écran */
+    .filtres-dashboard {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 3rem;
+    }
+    }
+
+    /* Le menu devient une colonne figée à gauche */
+    .menu-lateral {
+        min-height: 100vh;
+        border-right: 1px solid #c9a4b9;
+        position: sticky;
+        top: 0;
+    }
+
+    .menu-lateral ul {
+        flex-direction: column; /* Les liens s'empilent verticalement */
+    }
+
+    .menu-lateral a {
+        background-color: transparent;
+        border-radius: 0;
+        border-left: 4px solid transparent;
+        color: #000;
+    }
+
+    /* L'indicateur de page active change de style sur bureau */
+    .menu-lateral a.actif {
+        background-color: #f9f9f9;
+        color: #6a0b37;
+        border-left: 4px solid #6a0b37;
+    }
+
+    /* On affiche les cartes en grille de 2 colonnes pour exploiter l'espace */
+    .grille-commandes, .grille-equipe, .grille-menus-admin, .grille-horaires, .grille-avis {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.5rem;
+    }
+}
+/* Conteneur du graphique pour bloquer sa hauteur maximale */
+.graphique-conteneur {
+    position: relative;
+    height: 300px;
+    width: 100%;
+    margin-top: 2rem;
+}
+/* 8. Tableau de bord : filtres, graphique et chiffre d'affaires */
+
+/* Le groupe des menus : on retire le cadre gris ajouté par le navigateur */
+.filtres-dashboard fieldset {
+    border: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+}
+
+/* Le titre du groupe prend le même style que les autres titres de filtres */
+.filtres-dashboard legend {
+    font-weight: bold;
+    font-style: italic;
+    font-size: 14px;
+    padding: 0;
+    margin: 0 auto 8px auto;
+}
+
+/* Les noms des menus à côté des cases restent en texte normal */
+.liste-checkbox-scroll label {
+    font-weight: normal;
+    font-style: normal;
+    font-size: 16px;
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+/* Les champs de date : lisibles, et en 16 px pour éviter le zoom de l'iPhone */
+.groupe-filtre input[type="date"] {
+    font-size: 16px;
+    padding: 8px;
+    border: 1px solid #6a0b37;
+    border-radius: 4px;
+    background-color: #ffffff;
+}
+/* Les sous-titres du tableau de bord */
+.section-admin h3 {
+    color: #6a0b37;
+    margin-top: 2rem;
+}
+
+/* Le graphique dans une carte blanche, comme les autres blocs de l'administration */
+.graphique-conteneur {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 1rem;
+    box-sizing: border-box;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+/* La liste du chiffre d'affaires : une carte blanche, une ligne par menu */
+.liste-chiffre-affaires {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.liste-chiffre-affaires li {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid #eeeeee;
+}
+
+/* Pas de trait sous la dernière ligne */
+.liste-chiffre-affaires li:last-child {
+    border-bottom: none;
+}
+
+/* Le montant : en gras, et jamais coupé sur deux lignes */
+.montant-chiffre-affaires {
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+/* Le total général, aligné à droite sous la liste */
+.total-chiffre-affaires {
+    text-align: right;
+    font-size: 1.1rem;
+    margin-top: 1rem;
+}
+
+.total-chiffre-affaires strong {
+    color: #6a0b37;
+}
+/* 7. Page de modification des horaires */
+.page-modifier-horaire {
+    background-color: #d1b5c4;
+    padding: 2rem 1rem;
+    min-height: 60vh;
+}
+
+.page-modifier-horaire h1 {
+    font-size: 1.5rem;
+    text-align: center;
+    color: #6a0b37;
+}
+
+.formulaire-horaire {
+    background-color: white;
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.formulaire-horaire fieldset {
+    border: 1px solid #e0e0e0;
+    border-radius: 4px;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.formulaire-horaire legend {
+    font-weight: bold;
+    color: #6a0b37;
+}
+
+.formulaire-horaire input[type="time"] {
+    padding: 0.5rem;
+    font-size: 1rem;
+}
+
+/* Plats d'un menu : le bouton « par défaut » à gauche, puis la case et le nom du plat */
+.ligne-plat-menu {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.choix-defaut {
+    white-space: nowrap;
+}
+
+.lien-plats-menu {
+    max-width: 500px;
+    margin: 0 auto 1rem;
+    text-align: center;
+}
+.actions-horaires a {
+    text-decoration: none;
+}
+.message-erreur {
+    background-color: #f8d7da;
+    color: #a83232;
+    border: 1px solid #a83232;
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    max-width: 500px;
+    margin: 0 auto 1rem;
+    text-align: center;
+}
+ /* 8. Couleurs des statuts d'avis */
+.statut-valide { background-color: #4A7B59; }   /* Vert : comme le bouton Valider */
+.statut-attente { background-color: #a8611c; }  /* Orange : à traiter */
+.statut-refuse { background-color: #a83232; }   /* Rouge : comme le bouton Refuser */
+.statut-hors-vente { background-color: #555555; } /* Gris : menu qui ne peut plus être commandé */
+/* 9. Page de connexion (réutilisée pour l'inscription) */
+.page-connexion {
+    background-color: #d1b5c4;
+    padding: 2rem 1rem;
+    min-height: 60vh;
+}
+
+.page-connexion h1 {
+    font-size: 1.5rem;
+    text-align: center;
+    color: #6a0b37;
+}
+
+.formulaire-connexion {
+    background-color: white;
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.formulaire-connexion input {
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 0.75rem;
+}
+
+.formulaire-connexion input:focus {
+    border-color: #6a0b37;
+    outline: 2px solid #6a0b37;
+    outline-offset: 1px;
+}
+
+.formulaire-connexion .btn-valider {
+    padding: 0.75rem;
+    font-size: 1rem;
+    margin-top: 0.5rem;
+}
+
+.lien-secondaire {
+    text-align: center;
+    color: #6a0b37;
+    font-size: 0.9rem;
+}
+
+.texte-inscription {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.texte-inscription a {
+    color: #6a0b37;
+    font-weight: bold;
+}
+/* 10. Bouton œil pour afficher le mot de passe */
+.champ-mot-de-passe {
+    position: relative;
+    margin-bottom: 0.75rem;
+}
+
+.champ-mot-de-passe input {
+    width: 100%;
+    box-sizing: border-box;
+    padding-right: 3rem;
+    margin-bottom: 0;
+}
+
+.btn-oeil {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #555555;
+    display: flex;
+    cursor: pointer;
+}
+
+/* L'œil devient bordeaux quand le mot de passe est affiché */
+.btn-oeil[aria-pressed="true"] {
+    color: #6a0b37;
+}
+/* 11. Compléments de la page d'inscription */
+.aide-champ {
+    font-size: 0.85rem;
+    color: #555;
+    margin: 0;
+}
+
+.case-rgpd {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    margin-top: 0.5rem;
+}
+
+.case-rgpd input {
+    margin: 0.2rem 0 0;
+    padding: 0;
+}
+
+.case-rgpd a {
+    color: #6a0b37;
+}
+/* 12. Messages : liste d'erreurs et succès */
+.message-erreur ul {
+    text-align: left;
+    margin: 0.5rem 0 0;
+}
+
+.message-succes {
+    background-color: #d4edda;
+    color: #2e5e3a;
+    border: 1px solid #4A7B59;
+    border-radius: 4px;
+    padding: 0.75rem 1rem;
+    max-width: 500px;
+    margin: 0 auto 1rem;
+    text-align: center;
+}
+/* --- STYLES DE LA PAGE D'ACCUEIL --- */
+
+/* Le fond rose et l'espacement entre les trois parties */
+.page-accueil {
+    background-color: #d1b5c4;
+    padding: 2rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Chaque partie est une carte blanche, centrée et de largeur limitée */
+.page-accueil section {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+    box-sizing: border-box;
+}
+
+/* Les titres aux couleurs du site */
+.page-accueil h1 {
+    color: #6a0b37;
+    font-size: 1.6rem;
+    margin-top: 0;
+}
+
+.page-accueil h2 {
+    color: #6a0b37;
+    border-bottom: 2px solid #6a0b37;
+    padding-bottom: 0.5rem;
+    margin-top: 0;
+}
+
+/* 1. La présentation, centrée */
+.accueil-presentation {
+    text-align: center;
+}
+
+.accueil-presentation p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+}
+
+/* Le lien "Découvrir nos menus" présenté comme un bouton */
+.bouton-principal {
+    display: inline-block;
+    background-color: #6a0b37;
+    color: #ffffff;
+    padding: 0.8rem 1.5rem;
+    border-radius: 4px;
+    text-decoration: none;
+    font-weight: bold;
+    margin-top: 0.5rem;
+}
+
+.bouton-principal:hover {
+    background-color: #4a0727;
+}
+
+.bouton-principal:focus-visible {
+    outline: 3px solid #4A7B59;
+    outline-offset: 3px;
+}
+
+/* 2. La liste des engagements */
+.liste-engagements {
+    padding-left: 1.2rem;
+    line-height: 1.6;
+}
+
+.liste-engagements li {
+    margin-bottom: 0.5rem;
+}
+
+/* 3. Les avis : une colonne sur mobile */
+.grille-avis-accueil {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.carte-avis-accueil {
+    background-color: #f9f3f6;
+    border-left: 4px solid #6a0b37;
+    border-radius: 4px;
+    padding: 1rem;
+}
+
+.note-avis-accueil {
+    font-weight: bold;
+    color: #6a0b37;
+    margin-top: 0;
+}
+
+.texte-avis-accueil {
+    font-style: italic;
+    line-height: 1.5;
+}
+
+.auteur-avis-accueil {
+    text-align: right;
+    font-size: 0.9rem;
+    color: #555555;
+    margin-bottom: 0;
+}
+
+/* Sur les écrans à partir de 768 px : titre plus grand, avis sur deux colonnes */
+@media (min-width: 768px) {
+    .page-accueil h1 {
+        font-size: 2rem;
+    }
+
+    .grille-avis-accueil {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+/* Texte invisible à l'écran, mais lu par les lecteurs d'écran */
+.texte-cache {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    padding: 0;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+/* --- PAGE DÉTAIL D'UN MENU --- */
+.page-detail-menu {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px 15px;
+}
+
+.page-detail-menu h1 {
+    color: #6a0b37;
+    font-family: Georgia, serif;
+    text-align: center;
+}
+
+/* Galerie : couverture en grand, les autres photos en vignettes */
+.galerie-menu {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.galerie-menu img {
+    width: 100%;
+    height: 160px;
+    object-fit: cover;
+    border-radius: 5px;
+    display: block;
+}
+
+.galerie-menu img:first-child {
+    grid-column: 1 / -1;
+    height: 250px;
+}
+
+@media (min-width: 768px) {
+    .galerie-menu {
+        grid-template-columns: 2fr 1fr;
+        grid-auto-rows: 190px;
+    }
+
+    .galerie-menu img {
+        height: 100%;
+    }
+
+    .galerie-menu img:first-child {
+        grid-column: auto;
+        grid-row: span 2;
+        height: 100%;
+    }
+}
+.description-detail-menu {
+    font-style: italic;
+    text-align: center;
+}
+
+/* Les informations clés dans un bloc rose, comme les cartes de la vue globale */
+.infos-detail-menu {
+    list-style: none;
+    padding: 15px 20px;
+    background-color: #e8d4df;
+    border-radius: 5px;
+}
+
+.infos-detail-menu li {
+    padding: 4px 0;
+}
+
+.plats-menu h2,
+.conditions-menu h2 {
+    color: #6a0b37;
+    font-family: Georgia, serif;
+}
+
+.plats-menu h3 {
+    margin-bottom: 5px;
+}
+
+.plats-menu ul {
+    margin-top: 0;
+}
+
+.plats-menu small {
+    color: #555555;
+}
+
+/* Conditions bien mises en évidence (demande de l'énoncé) */
+.conditions-menu {
+    background-color: #fdf0f5;
+    border: 2px solid #6a0b37;
+    border-left-width: 10px;
+    border-radius: 5px;
+    padding: 5px 20px 15px;
+    margin: 30px 0;
+}
+
+/* Le bouton Commander, centré sous les conditions */
+.page-detail-menu .bouton-principal {
+    display: block;
+    max-width: 300px;
+    margin: 20px auto;
+    text-align: center;
+}
+/* --- PAGE DE CONFIRMATION DE COMMANDE --- */
+.page-confirmation {
+    max-width: 700px;
+    margin: 0 auto;
+    padding: 40px 15px;
+    text-align: center;
+}
+
+.page-confirmation h1 {
+    color: #6a0b37;
+    font-family: Georgia, serif;
+}
+/* --- ESPACE CLIENT --- */
+.page-espace-client {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 20px 15px;
+}
+
+.page-espace-client h1,
+.page-espace-client h2 {
+    color: #6a0b37;
+    font-family: Georgia, serif;
+}
+
+.statut-commande {
+    background-color: #6a0b37;
+}
+
+.carte-commande h3 {
+    margin: 0;
+}
+
+.carte-commande ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+/* Un lien qui a l'apparence d'un bouton : sans soulignement */
+a.btn-modifier, a.btn-ajouter {
+    text-decoration: none;
+    display: inline-block;
+}
+.actions-commande .btn-modifier,
+.actions-commande .btn-supprimer,
+.actions-menu .btn-modifier,
+.actions-menu .btn-supprimer {
+    font-size: 1rem;
+}
+/* Annulation par l'employé : formulaire replié sous un bouton */
+.annulation-employe summary {
+    cursor: pointer;
+    color: #a83232;
+    font-weight: bold;
+}
+
+.annulation-employe form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+/* Suivi d'une commande dans l'espace client */
+.suivi-commande summary {
+    cursor: pointer;
+    color: #6a0b37;
+    font-weight: bold;
+}
+
+.suivi-commande ol {
+    margin: 0.5rem 0 0 0;
+}
+.formulaire-avis {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+/* Pages de texte : mentions légales et CGV */
+.page-legale {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    line-height: 1.6;
+}
+
+.page-legale h1 {
+    color: #6a0b37;
+    text-align: center;
+}
+
+.page-legale h2 {
+    color: #6a0b37;
+    font-size: 1.2rem;
+    margin-top: 1.5rem;
+}
+
+.avertissement-examen {
+    background-color: #f8f0f3;
+    border-left: 4px solid #6a0b37;
+    padding: 0.75rem 1rem;
+}

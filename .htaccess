@@ -1,0 +1,12 @@
+# Règles du serveur web (Apache) pour ce dossier.
+# Ces fichiers servent au développement ou au serveur, pas aux visiteurs :
+# on répond « introuvable » (code 404).
+
+# Le dossier caché de Git et le fichier .gitignore
+RedirectMatch 404 /\.git
+
+# Les scripts de création des bases et les fichiers inclus par PHP
+RedirectMatch 404 ^/(database|includes)/
+
+# La documentation interne et les fichiers de Docker
+RedirectMatch 404 ^/(NOTES_REPRISE\.md|README\.md|docker-compose\.yml|Dockerfile)$
