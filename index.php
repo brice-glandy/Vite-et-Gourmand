@@ -23,13 +23,19 @@ $avis_valides = $requete->fetchAll(PDO::FETCH_ASSOC);
 <body>
     <?php include_once 'includes/header.php'; ?>
 
+    <!-- Photo d'ambiance en bannière, sur mobile seulement (image de fond décorative, déclarée dans le CSS) -->
+    <div class="photo-accueil-mobile"></div>
     <main class="page-accueil">
 
         <!-- 1. Présentation de l'entreprise -->
         <section class="accueil-presentation" aria-labelledby="titre-presentation">
-            <h1 id="titre-presentation">Vite & Gourmand, traiteur à Bordeaux depuis 25 ans</h1>
-            <p>Noël, Pâques, anniversaire ou simple repas entre amis : Julie et José préparent pour vous des menus faits maison, adaptés à chaque occasion et livrés à l'heure de votre choix.</p>
-            <a href="menus.php" class="bouton-principal">Découvrir nos menus</a>
+            <div class="texte-presentation">
+                <h1 id="titre-presentation">Vite & Gourmand, traiteur à Bordeaux depuis 25 ans</h1>
+                <p>Noël, Pâques, anniversaire ou simple repas entre amis : Julie et José préparent pour vous des menus faits maison, adaptés à chaque occasion et livrés à l'heure de votre choix.</p>
+                <a href="menus.php" class="bouton-principal">Découvrir nos menus</a>
+            </div>
+            <!-- Photo d'ambiance dans la carte, sur grand écran seulement (image de fond décorative) -->
+            <div class="photo-presentation"></div>
         </section>
 
         <!-- 2. Le professionnalisme de l'équipe -->

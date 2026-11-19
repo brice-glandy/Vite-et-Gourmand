@@ -1126,6 +1126,39 @@ button:disabled {
         grid-template-columns: repeat(2, 1fr);
     }
 }
+/* Photo d'accueil (Matheus Bertelli, Pexels) : image de fond décorative,
+   téléchargée seulement sur le type d'écran où elle s'affiche */
+
+/* Mobile : bannière sur toute la largeur, entre le header et le contenu */
+@media (max-width: 767px) {
+    .photo-accueil-mobile {
+        height: 220px;
+        background-image: url("../images/accueil.jpg");
+        background-size: cover;
+        background-position: center 90%;
+    }
+}
+
+/* Grand écran : le texte à gauche, la photo à droite dans la carte */
+@media (min-width: 768px) {
+    .accueil-presentation {
+        display: grid;
+        grid-template-columns: 3fr 2fr;
+        gap: 1.5rem;
+    }
+
+    .texte-presentation {
+        align-self: center;
+    }
+
+    .photo-presentation {
+        min-height: 350px;
+        border-radius: 8px;
+        background-image: url("../images/accueil.jpg");
+        background-size: cover;
+        background-position: center 90%;
+    }
+}
 /* Texte invisible à l'écran, mais lu par les lecteurs d'écran */
 .texte-cache {
     position: absolute;
