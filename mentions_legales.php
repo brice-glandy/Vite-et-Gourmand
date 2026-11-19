@@ -39,7 +39,7 @@ require_once 'includes/db.php';
 
         <h2>Crédits des photos</h2>
         <p>Photos de couverture des menus : Unsplash (licence Unsplash).<br>
-        Photos des galeries : Pexels (licence Pexels) — Valeria Boltneva, Sara Free, Casa Lalla Takerkoust, Vincent Rivaud, Katrin Bolovtsova, Maria Orlova, Nadin Sh, Daka, Airam Dato-on.</p>
+        Photo de la page d'accueil et photos des galeries : Pexels (licence Pexels) — Matheus Bertelli, Valeria Boltneva, Sara Free, Casa Lalla Takerkoust, Vincent Rivaud, Katrin Bolovtsova, Maria Orlova, Nadin Sh, Daka, Airam Dato-on.</p>
     </main>
 
     <?php include_once 'includes/footer.php'; ?>
