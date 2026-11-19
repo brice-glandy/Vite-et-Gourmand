@@ -4,6 +4,14 @@ body {
     font-family: Arial, sans-serif;
 }
 
+/* Tous les champs de formulaire du site : 16 px minimum (pas de zoom automatique sur iPhone) et la police du site */
+input,
+select,
+textarea {
+    font-size: 1rem;
+    font-family: inherit;
+}
+
 header {
     background-color: #6a0b37;
     display: flex;
@@ -824,9 +832,15 @@ button:disabled {
     color: #6a0b37;
 }
 
-.formulaire-horaire input[type="time"] {
+.formulaire-horaire input[type="time"],
+.formulaire-horaire input[type="text"],
+.formulaire-horaire input[type="email"],
+.formulaire-horaire input[type="number"],
+.formulaire-horaire select,
+.formulaire-horaire textarea {
     padding: 0.5rem;
     font-size: 1rem;
+    font-family: inherit;
 }
 
 /* Plats d'un menu : le bouton « par défaut » à gauche, puis la case et le nom du plat */
